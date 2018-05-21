@@ -1,0 +1,32 @@
+{
+  "name": "KalejdoskopApp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./config/www.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dragt12/KalejdoskopApp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dragt12/KalejdoskopApp/issues"
+  },
+  "homepage": "https://github.com/dragt12/KalejdoskopApp#readme",
+  "dependencies": {
+    "bcrypt": "2.0.1",
+    "body-parser": "1.18.2",
+    "express": "4.16.3",
+    "express-validator": "5.2.0",
+    "jsonwebtoken": "8.2.1",
+    "mongoose": "5.0.17"
+  },
+  "devDependencies": {
+    "debug": "3.1.0"
+  }
+}
