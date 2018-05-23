@@ -1,4 +1,4 @@
-let CustomError = require('../lib/errors/customError');
+const CustomError = require('../lib/errors/customError');
 
 module.exports = (err, req, res, next) => {
     let responseErr = err instanceof CustomError ? err : null;
