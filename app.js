@@ -19,11 +19,14 @@ let dbUsername = nconf.get('DB_USERNAME');
 let dbPassword = nconf.get('DB_PASSWORD');
 
 var mongoose = require('mongoose');
-console.log(`mongodb://${dbUsername}:${dbPassword}@35.205.131.216:27017/kalejdoskop`)
-mongoose.connect(`mongodb://35.205.131.216:27017/kalejdoskop`, (err) => {
+mongoose.connect(`mongodb://${dbUsername}:${dbPassword}@35.205.131.216:27017/kalejdoskop`, (err) => {
     console.log(err);
     if(err) console.log(err);
 });
+
+//express-validator
+var validator = require('express-validator');
+app.use(validator());
 
 //routes
 var auth = require('./routes/auth');

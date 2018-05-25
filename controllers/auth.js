@@ -48,7 +48,6 @@ var register = async (req, res, next) => {
         fullName: {
             notEmpty: { errorMessage: "Missing full name!" },
             isLength: { options: { min: 6, max: 60}, errorMessage: "Is this your full name?" },
-            matches: { options: /^[A-Za-z]+$/, errorMessage: "Don't use nonalphabetic characters!" }
         }
     });
     let validationErrors = req.validationErrors();
