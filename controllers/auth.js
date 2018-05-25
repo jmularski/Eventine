@@ -25,9 +25,10 @@ var login = async (req, res, next) => {
     //login
     var { email, password } = req.body;
     var user = await User.findOne({email}).exec();
-
+    console.log(user);
     if(!user) return next(new NotAuthenticated("User with this email doesn't exist!"));
-    if(await !encryptUtils.compare(password, user.password)) return next(new NotAuthenticated("Bad password"));
+    var passComparison = await encryptUtils.compare(password, user.password);
+    if(!passComparison) return next(new NotAuthenticated("Bad password"));
     
     var token = jwt.sign({'fullName': user.fullName, 'id': user.id}, 'kalejdoskop', {expiresIn: '1h'});
     res.status(200).send({success: true, token});
