@@ -6,7 +6,7 @@ const nconf = require('nconf');
 nconf
     .argv()
     .env()
-    .file('keys.json');
+    .file('./keys.json');
 
 //bodyParser
 var bodyParser = require('body-parser');
