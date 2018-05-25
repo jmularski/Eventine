@@ -5,7 +5,8 @@ var app = express();
 const nconf = require('nconf');
 nconf
     .argv()
-    .env();
+    .env()
+    .file('./keys.json');
 
 //bodyParser
 var bodyParser = require('body-parser');
@@ -18,7 +19,8 @@ let dbUsername = nconf.get('DB_USERNAME');
 let dbPassword = nconf.get('DB_PASSWORD');
 
 var mongoose = require('mongoose');
-mongoose.connect(`mongodb://${dbUsername}:${dbPassword}@35.233.93.250:27017/kalejdoskop`, (err) => {
+console.log(`mongodb://${dbUsername}:${dbPassword}@35.205.131.216:27017/kalejdoskop`)
+mongoose.connect(`mongodb://35.205.131.216:27017/kalejdoskop`, (err) => {
     console.log(err);
     if(err) console.log(err);
 });
