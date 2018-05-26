@@ -28,6 +28,10 @@ mongoose.connect(`mongodb://${dbUsername}:${dbPassword}@35.205.131.216:27017/kal
 var validator = require('express-validator');
 app.use(validator());
 
+//morgan
+var morgan = require('morgan');
+app.use(morgan('dev'));
+
 //routes
 var auth = require('./routes/auth');
 app.use('/auth', auth);

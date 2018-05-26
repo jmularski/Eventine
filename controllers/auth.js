@@ -25,7 +25,7 @@ var login = async (req, res, next) => {
     //login
     var { email, password } = req.body;
     var user = await User.findOne({email}).exec();
-    console.log(user);
+
     if(!user) return next(new NotAuthenticated("User with this email doesn't exist!"));
     var passComparison = await encryptUtils.compare(password, user.password);
     if(!passComparison) return next(new NotAuthenticated("Bad password"));
