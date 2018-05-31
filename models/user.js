@@ -8,8 +8,7 @@ var UserSchema = new Schema({
     fullName: {type: String, required: true},
     notifToken: {type: String, required: false},
     invitations: {type: Array, default: []},
-    groups: {type: Array, default: []},
-    adminGroups: { type: Array, default: [] }
+    groups: {type: Array, default: []}
 });
 
 module.exports = mongoose.model('user', UserSchema);

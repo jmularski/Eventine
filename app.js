@@ -53,6 +53,9 @@ app.use('/notif', notifications);
 var user = require('./routes/user');
 app.use('/user', user);
 
+var ping = require('./routes/ping');
+app.use('/ping', ping);
+
 //middlewares
 var notFound = require('./middlewares/notFound');
 var errorHandler = require('./middlewares/errorHandler');
