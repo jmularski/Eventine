@@ -3,7 +3,7 @@
 //var Group = require('../models/group');
 var User = require('../models/user');
 
-var groupList = (req, res, next) => {
+var groupList = async (req, res, next) => {
     var { id } = req.token;
     var groups = await User.findById(id).select('groups');
     res.send({groups: groups.groups});
