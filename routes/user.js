@@ -5,7 +5,7 @@ const jwtReader = require('../middlewares/jwtReader');
 router.use(jwtReader);
 
 const groupController = require('../controllers/user');
-router.get('/list/:userId', groupController.list);
+router.get('/groupList', groupController.groupList);
 router.get('/invitations', groupController.invitations);
 
 module.exports = router;

@@ -3,8 +3,10 @@
 //var Group = require('../models/group');
 var User = require('../models/user');
 
-var list = (req, res, next) => {
-
+var groupList = (req, res, next) => {
+    var { id } = req.token;
+    var groups = await User.findById(id).select('groups');
+    res.send({groups: groups.groups});
 };
 var invitations = async (req, res, next) => {
     var { id } = req.token;
@@ -13,6 +15,6 @@ var invitations = async (req, res, next) => {
 };
 
 module.exports = {
-    list,
+    groupList,
     invitations
 };
