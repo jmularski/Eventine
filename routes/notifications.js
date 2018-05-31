@@ -5,6 +5,6 @@ const jwtReader = require('../middlewares/jwtReader');
 router.use(jwtReader);
 
 const notifController = require('../controllers/notifications');
-router.patch('/updateToken', notifController.updateToken);
+router.post('/updateToken', notifController.updateToken);
 
 module.exports = router;
