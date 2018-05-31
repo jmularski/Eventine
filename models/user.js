@@ -11,4 +11,6 @@ var UserSchema = new Schema({
     groups: {type: Array, default: []}
 });
 
+
+
 module.exports = mongoose.model('user', UserSchema);
