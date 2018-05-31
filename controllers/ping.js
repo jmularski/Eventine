@@ -13,7 +13,7 @@ var create = async (req, res, next) => {
         targetGroups,
         howManyPeople,
         plannedTime,
-        geo: {lat, lng},
+        geo: [lat, lng],
     });
 
     await ping.save();
