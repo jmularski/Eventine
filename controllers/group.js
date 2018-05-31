@@ -78,9 +78,10 @@ var join = async (req, res, next) => {
         subgroup: 'user'
     };
 
+    if(!groupName) res.sendStatus(403);
     var groupUpdated = await Group.findOneAndUpdate({groupName}, { $push: { people: data }}).exec();
     var userUpdated = await User.findOneAndUpdate({'_id': id}, { $push: { groups: { id: groupUpdated.id, name: groupUpdated.groupName }}});
-    if(!groupUpdated || !userUpdated) res.sendStatus(403);
+    
     res.status(200).send(groupUpdated.id);
 };
 var acceptInvitation = async (req, res, next) => {
