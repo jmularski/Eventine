@@ -1,8 +1,22 @@
+require('express-validator');
 var admin = require('firebase-admin');
 var Group = require('../models/group');
 var User = require('../models/user');
+var GroupError = require('../lib/errors/GroupError');
 
 var create = async (req, res, next) => {
+
+    req.checkBody({
+        groupCode: {
+            notEmpty: { errorMessage: "Missing groupCode" }
+        },
+        groupName: {
+            notEmpty: { errorMessage: "Missing groupName" }
+        }
+    });
+    let validationErrors = req.validationErrors();
+    if(validationErrors) return next(new GroupError(validationErrors[0]));
+
     var { groupCode, groupName, facebookIds } = req.body;
     var { id, fullName } = req.token;
     
