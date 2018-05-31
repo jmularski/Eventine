@@ -20,14 +20,17 @@ var create = async (req, res, next) => {
 
     //update User invitations field and create a new Group object - I should get rid of foreach, replace it with map (done)
     var newGroup = new Group();
+    
     var peopleData = await User.find({
         'facebookId': {
             $in: facebookIds
         }
     }).select('_id fullName notifToken').exec();
-    await User.updateMany({'id': { $in: peopleData }}, {$push: {invitations: {id: newGroup.id, name: groupName}}}).exec();
-    var peopleSchema = [];
     
+    var peopleIds = peopleData.map(person => person.id);
+    await User.updateMany({'_id': { $in: peopleIds }}, {$push: {invitations: {id: newGroup.id, name: groupName}}}).exec();
+    
+    var peopleSchema = [];
     peopleSchema = peopleData.map( person => {
         return {
             id: person.id,
@@ -35,7 +38,6 @@ var create = async (req, res, next) => {
             subgroup: 'invited'
         }
     });
-
     peopleSchema.push({
         id: id,
         name: fullName,
@@ -49,7 +51,7 @@ var create = async (req, res, next) => {
 
     //send notification
     var notifIds = peopleData.map(person => person.notifToken);
-    
+
     var payload = {
         data: {
             groupName: groupName,
