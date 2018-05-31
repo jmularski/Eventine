@@ -7,9 +7,6 @@ var GroupError = require('../lib/errors/GroupError');
 var create = async (req, res, next) => {
 
     req.checkBody({
-        groupCode: {
-            notEmpty: { errorMessage: "Missing groupCode" }
-        },
         groupName: {
             notEmpty: { errorMessage: "Missing groupName" }
         }
@@ -17,9 +14,10 @@ var create = async (req, res, next) => {
     let validationErrors = req.validationErrors();
     if(validationErrors) return next(new GroupError(validationErrors[0]));
 
-    var { groupCode, groupName, facebookIds } = req.body;
+    var { groupName, facebookIds } = req.body;
     var { id, fullName } = req.token;
-    
+    var groupCode = groupName;
+
     //update User invitations field and create a new Group object - I should get rid of foreach, replace it with map (done)
     var newGroup = new Group();
     var peopleData = await User.find({
@@ -60,8 +58,20 @@ var create = async (req, res, next) => {
 
     res.status(200).send(newGroup.id);
 };
-var join = (req, res, next) => {
+var join = async (req, res, next) => {
+    var { groupName } = req.body;
+    var { id, fullName } = req.token;
 
+    var data = {
+        id: id,
+        name: fullName,
+        subgroup: 'user'
+    };
+
+    var groupUpdated = await Group.findOneAndUpdate({groupName}, { $push: { people: data }}).exec();
+    var userUpdated = await User.findOneAndUpdate({id}, { $push: { groups: { id: groupUpdated.id, name: groupUpdated.groupName }}});
+    
+    res.status(200).send(groupUpdated.id);
 };
 var list = (req, res, next) => {
 

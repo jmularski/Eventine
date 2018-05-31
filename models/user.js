@@ -7,7 +7,8 @@ var UserSchema = new Schema({
     password: {type: String, required: false},
     fullName: {type: String, required: true},
     notifToken: {type: String, required: false},
-    invitations: {type: Array, default: []}
+    invitations: {type: Array, default: []},
+    groups: {type: Array, default: []}
 });
 
 module.exports = mongoose.model('user', UserSchema);
