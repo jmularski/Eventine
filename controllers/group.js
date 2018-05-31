@@ -26,19 +26,22 @@ var create = async (req, res, next) => {
         }
     }).select('_id fullName notifToken').exec();
     await User.updateMany({'id': { $in: peopleData }}, {$push: {invitations: {id: newGroup.id, name: groupName}}}).exec();
-    var peopleSchema;
-    peopleSchema.push({
-        id: id,
-        name: fullName,
-        subgroup: 'admin'
-    });
-    var personSchema = peopleData.map( person => {
+    var peopleSchema = [];
+    
+    peopleSchema = peopleData.map( person => {
         return {
             id: person.id,
             name: person.fullName,
             subgroup: 'invited'
         }
     });
+
+    peopleSchema.push({
+        id: id,
+        name: fullName,
+        subgroup: 'admin'
+    });
+
     newGroup.groupCode = groupCode;
     newGroup.people = peopleSchema;
     newGroup.groupName = groupName;
@@ -55,7 +58,7 @@ var create = async (req, res, next) => {
     };
 
     await admin.messaging().sendToDevice(notifIds, payload);
-
+    
     res.status(200).send(newGroup.id);
 };
 var join = async (req, res, next) => {
@@ -70,9 +73,15 @@ var join = async (req, res, next) => {
 
     var groupUpdated = await Group.findOneAndUpdate({groupName}, { $push: { people: data }}).exec();
     var userUpdated = await User.findOneAndUpdate({id}, { $push: { groups: { id: groupUpdated.id, name: groupUpdated.groupName }}});
-    
+    if(!groupUpdated || !userUpdated) res.sendStatus(403);
     res.status(200).send(groupUpdated.id);
 };
+var acceptInvitation = (req, res, next) => {
+    var { id, fullName } = req.token;
+    var { invitation } = req.body;
+
+    
+}
 var list = (req, res, next) => {
 
 };
@@ -85,7 +94,8 @@ var latestPing = (req, res, next) => {
 
 module.exports = {
     create,
-    join, 
+    join,
+    acceptInvitation, 
     list,
     invitations,
     latestPing
