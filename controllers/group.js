@@ -111,6 +111,14 @@ var acceptInvitation = async (req, res, next) => {
     res.send(groupId);
 }
 
+var subgroups = async (req, res, next) => {
+    var { groupId } = req.params;
+    var groupMembers = await Group.findById(groupId).select("-_id people");
+
+    groupMembers = _.sortBy(groupMembers, 'subgroup');
+    res.send(groupMembers);
+};
+
 var latestPing = (req, res, next) => {
 
 };
@@ -119,5 +127,6 @@ module.exports = {
     create,
     join,
     acceptInvitation,
+    subgroups,
     latestPing
 };
