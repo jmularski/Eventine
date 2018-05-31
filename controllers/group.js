@@ -28,7 +28,7 @@ var create = async (req, res, next) => {
     }).select('_id fullName notifToken').exec();
     
     var peopleIds = peopleData.map(person => person.id);
-    await User.updateMany({'_id': { $in: peopleIds }}, {$push: {invitations: {id: newGroup.id, name: groupName}}}).exec();
+    await User.updateMany({'_id': { $in: peopleIds }}, {$push: {invitations: {id: newGroup.id, name: groupName, invitedBy: fullName}}}).exec();
     
     var peopleSchema = [];
     peopleSchema = peopleData.map( person => {
