@@ -3,6 +3,7 @@ var admin = require('firebase-admin');
 var Group = require('../models/group');
 var User = require('../models/user');
 var GroupError = require('../lib/errors/GroupError');
+var _ = require('lodash');
 
 var create = async (req, res, next) => {
 
@@ -78,9 +79,35 @@ var join = async (req, res, next) => {
     if(!groupUpdated || !userUpdated) res.sendStatus(403);
     res.status(200).send(groupUpdated.id);
 };
-var acceptInvitation = (req, res, next) => {
+var acceptInvitation = async (req, res, next) => {
     var { id, fullName } = req.token;
-    var { invitation } = req.body;    
+    var { groupId } = req.body;
+
+    var group = await Group.findById(groupId).exec();
+
+    _.remove(group.people, {
+        id
+    });
+    group.people.push({
+        id: id,
+        name: fullName,
+        subgroup: 'user'
+    });
+    
+    var user = await User.findById(id).exec();
+
+    _.remove(user.invitations, {
+        id: groupId
+    });
+    user.groups.push({
+        id: group.id, 
+        name: group.groupName
+    });
+
+    await group.save();
+    await user.save();
+
+    res.send(groupId);
 }
 
 var latestPing = (req, res, next) => {
