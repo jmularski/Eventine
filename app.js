@@ -50,6 +50,9 @@ app.use('/group', groups);
 var notifications = require('./routes/notifications');
 app.use('/notif', notifications);
 
+var user = require('./routes/user');
+app.use('/user', user);
+
 //middlewares
 var notFound = require('./middlewares/notFound');
 var errorHandler = require('./middlewares/errorHandler');

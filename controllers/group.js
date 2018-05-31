@@ -80,16 +80,9 @@ var join = async (req, res, next) => {
 };
 var acceptInvitation = (req, res, next) => {
     var { id, fullName } = req.token;
-    var { invitation } = req.body;
-
-    
+    var { invitation } = req.body;    
 }
-var list = (req, res, next) => {
 
-};
-var invitations = (req, res, next) => {
-
-};
 var latestPing = (req, res, next) => {
 
 };
@@ -97,8 +90,6 @@ var latestPing = (req, res, next) => {
 module.exports = {
     create,
     join,
-    acceptInvitation, 
-    list,
-    invitations,
+    acceptInvitation,
     latestPing
 };
