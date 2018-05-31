@@ -98,7 +98,7 @@ var acceptInvitation = async (req, res, next) => {
     
     var user = await User.findById(id).exec();
 
-    user.groups = user.groups.filter(group => { return group.id !== groupId})
+    user.invitations = user.invitations.filter(group => { return group.id !== groupId})
 
     user.groups.push({
         id: group.id, 
