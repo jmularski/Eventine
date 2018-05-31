@@ -19,6 +19,7 @@ var create = async (req, res, next) => {
     var { id, fullName } = req.token;
     var groupCode = groupName;
 
+    
     //update User invitations field and create a new Group object - I should get rid of foreach, replace it with map (done)
     var newGroup = new Group();
     
@@ -31,6 +32,9 @@ var create = async (req, res, next) => {
     var peopleIds = peopleData.map(person => person.id);
     await User.updateMany({'_id': { $in: peopleIds }}, {$push: {invitations: {id: newGroup.id, name: groupName, invitedBy: fullName}}}).exec();
     
+    //adding admin to groups
+    await User.update({'_id': id}, {$push: {groups: {id: newGroup.id, name: groupName}}}).exec();
+
     var peopleSchema = [];
     peopleSchema = peopleData.map( person => {
         return {
