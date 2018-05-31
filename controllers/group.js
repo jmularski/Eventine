@@ -74,7 +74,7 @@ var join = async (req, res, next) => {
     };
 
     var groupUpdated = await Group.findOneAndUpdate({groupName}, { $push: { people: data }}).exec();
-    var userUpdated = await User.findOneAndUpdate({id}, { $push: { groups: { id: groupUpdated.id, name: groupUpdated.groupName }}});
+    var userUpdated = await User.findOneAndUpdate({'_id': id}, { $push: { groups: { id: groupUpdated.id, name: groupUpdated.groupName }}});
     if(!groupUpdated || !userUpdated) res.sendStatus(403);
     res.status(200).send(groupUpdated.id);
 };
