@@ -113,9 +113,8 @@ var acceptInvitation = async (req, res, next) => {
 
 var subgroups = async (req, res, next) => {
     var { groupId } = req.params;
-    var groupMembers = await Group.findById(groupId).select("-_id people");
+    var groupMembers = await Group.findById(groupId).select("-_id people").exec();
 
-    groupMembers = _.sortBy(groupMembers, 'subgroup');
     res.send(groupMembers);
 };
 
