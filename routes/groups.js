@@ -9,6 +9,7 @@ router.post('/join', groupController.join);
 router.post('/create', groupController.create);
 router.post('/acceptInvitation', groupController.acceptInvitation);
 router.get('/subgroups/:groupId', groupController.subgroups);
+router.get('/allSubgroups/:groupId', groupController.allSubgroups);
 router.get('/latestPings', groupController.latestPing);
 
 

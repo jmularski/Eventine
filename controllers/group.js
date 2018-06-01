@@ -118,6 +118,15 @@ var subgroups = async (req, res, next) => {
     res.send(groupMembers);
 };
 
+var allSubgroups = async ( req, res, next ) => {
+    var { groupId } = req.params;
+    var groupMembers = await Group.findById(groupId).select("-_id people").exec();
+
+    const unique = [...new Set(groupMembers.map(item => item.subgroup))];
+
+    res.send(unique);
+}
+
 var latestPing = (req, res, next) => {
 
 };
@@ -127,5 +136,6 @@ module.exports = {
     join,
     acceptInvitation,
     subgroups,
+    allSubgroups,
     latestPing
 };
