@@ -38,7 +38,7 @@ var create = async (req, res, next) => {
             }
         };
 
-        await admin.messaging().sendToDevice(notifIds, payload);
+        await admin.messaging().sendToDevice(userNotifs, payload);
     }
     
  
