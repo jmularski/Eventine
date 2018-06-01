@@ -127,9 +127,18 @@ var allSubgroups = async ( req, res, next ) => {
     res.send(unique);
 }
 
-var changeSubgroup = (req, res, next) => {
-    var { changingId, groupId } = req.body
+var changeSubgroup = async (req, res, next) => {
+    var { changingId, groupId, changedSubgroup } = req.body
     var { id } = req.token;
+
+    var group = await Group.findById(groupId).exec();
+    var userSubgroup = (group.people.filter(person => { return person.id === id})).subgroup;
+    if(userSubgroup !== 'admin') res.sendStatus(403);
+
+    group.people.find(person => { return person.id === changingId}).subgroup = changedSubgroup;
+    await group.save();
+
+    res.sendStatus(200);
 };
 
 var latestPing = (req, res, next) => {
