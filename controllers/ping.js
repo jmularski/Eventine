@@ -49,7 +49,9 @@ var list = async (req, res, next) => {
     var { id } = req.token;
     var group = await Group.findById(groupId).exec();
     if( !group ) res.sendStatus(403);
-    var userStatus = (group.people.filter( person => { return person.id == id })).status;
+    var user = group.people.filter( person => { return person.id == id });
+    var userStatus = user[0].subgroup;
+    console.log(userStatus);
     if( !userStatus ) res.sendStatus(403);
     else if(userStatus === 'admin'){
         var pings = await Ping.find({ groupId, ended: false }).exec();
