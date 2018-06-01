@@ -37,8 +37,8 @@ var create = async (req, res, next) => {
                 action: "pingCreate"
             }
         };
-
-        await admin.messaging().sendToDevice(userNotifs, payload);
+        var notifIds = userNotifs.map(person => { return person.notifToken});
+        await admin.messaging().sendToDevice(notifIds, payload);
     }
     
  
