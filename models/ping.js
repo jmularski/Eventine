@@ -11,7 +11,10 @@ var PingSchema = new Schema({
     plannedTime: { type: Date, required: false},
     geo: { type: [Number], index: '2d'},
     ended: { type: Boolean, default: false},
-    executor: { type: String, required: false }
+    executor: { type: String, required: false },
+    currentPeopleNumber: { type: Number, default: 0 },
+    inProgress: { type: Boolean, default: false},
+    done: { type: Boolean, default: false}
 });
 
 module.exports = mongoose.model('ping', PingSchema);
