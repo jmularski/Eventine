@@ -4,8 +4,8 @@ const router = express.Router();
 const jwtReader = require('../middlewares/jwtReader');
 router.use(jwtReader);
 
-var pingController = require('../controllers/ping');
-router.post('/create', pingController.create);
-router.get('/list/:groupId', pingController.list);
+var infoController = require('../controllers/info');
+router.post('/create', infoController.create);
+router.get('/list/:groupId', infoController.list);
 
 module.exports = router;

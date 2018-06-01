@@ -17,7 +17,7 @@ var create = async (req, res, next) => {
     await newInfo.save();
     res.sendStatus(200);
 };
-var list = (req, res, next) => {
+var list = async (req, res, next) => {
     var { groupId } = req.params;
     var { id } = req.token;
 
