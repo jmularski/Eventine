@@ -60,6 +60,8 @@ app.use('/user', user);
 var ping = require('./routes/ping');
 app.use('/ping', ping);
 
+var info = require('./routes/info');
+app.use('/info', info);
 //middlewares
 var notFound = require('./middlewares/notFound');
 var errorHandler = require('./middlewares/errorHandler');
