@@ -21,7 +21,7 @@ var create = async (req, res, next) => {
 
     var group = await Group.findById(groupId).exec();
     if(targetGroups){
-        var usersInTarget = group.people.map(person => { return targetGroups.contains(person.subgroup)});
+        var usersInTarget = group.people.map(person => { return targetGroups.includes(person.subgroup)});
         var usersIds = usersInTarget.map(person => { return person.id });
         var userNotifs = await User.find({
             _id: {
@@ -63,7 +63,7 @@ var list = async (req, res, next) => {
                 {'plannedTime': { "$gte": currentDate}},
                 {'plannedTime': null}
             ],
-            targetGroups,
+            targetGroups: userStatus,
             ended: false}).exec();
         res.send({pings});
     }

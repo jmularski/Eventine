@@ -6,7 +6,7 @@ var PingSchema = new Schema({
     creator: { type: String, required: true },
     title: { type: String, required: true},
     desc: { type: String, required: true},
-    targetGroups: { type: Array, default: [] },
+    targetGroups: { type: [String], default: [] },
     howManyPeople: { type: Number, default: 1},
     plannedTime: { type: Date, required: false},
     geo: { type: [Number], index: '2d'},

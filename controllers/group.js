@@ -55,16 +55,18 @@ var create = async (req, res, next) => {
     await newGroup.save();
 
     //send notification
-    var notifIds = peopleData.map(person => person.notifToken);
+    if(peopleData){
+        var notifIds = peopleData.map(person => person.notifToken);
 
-    var payload = {
-        data: {
-            groupName: groupName,
-            action: 'invitation'
-        }
-    };
+        var payload = {
+            data: {
+                groupName: groupName,
+                action: 'invitation'
+            }
+        };
 
-    await admin.messaging().sendToDevice(notifIds, payload);
+        await admin.messaging().sendToDevice(notifIds, payload);
+    }
     
     res.status(200).send(newGroup.id);
 };
