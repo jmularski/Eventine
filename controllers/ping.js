@@ -63,7 +63,7 @@ var list = async (req, res, next) => {
             ],
             targetGroups,
             ended: false}).exec();
-        res.send(pings);
+        res.send({pings});
     }
 };
 
