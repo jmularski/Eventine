@@ -3,7 +3,7 @@ var Ping = require('../models/ping');
 var Group = require('../models/group');
 
 var create = async (req, res, next) => {
-    var { groupId, title, desc, targetGroups, howManyPeople, plannedTime, lat, lng } = req.body;
+    var { groupId, title, desc, targetGroups, howManyPeople, plannedTime, geo } = req.body;
     var { id } = req.token;
 
     var ping = new Ping({
@@ -14,30 +14,32 @@ var create = async (req, res, next) => {
         targetGroups,
         howManyPeople,
         plannedTime,
-        geo: [lat, lng],
+        geo
     });
 
     await ping.save();
 
     var group = await Group.findById(groupId).exec();
+    if(targetGroups){
+        var usersInTarget = group.people.map(person => { return targetGroups.contains(person.subgroup)});
+        var usersIds = usersInTarget.map(person => { return person.id });
+        var userNotifs = await User.find({
+            _id: {
+                $in: usersIds
+            }
+        }).select("-_id notifToken").exec();
 
-    var usersInTarget = group.people.map(person => { return targetGroups.contains(person.subgroup)});
-    var usersIds = usersInTarget.map(person => { return person.id });
-    var userNotifs = await User.find({
-        _id: {
-            $in: usersIds
-        }
-    }).select("-_id notifToken").exec();
+        var payload = {
+            data: {
+                title,
+                desc,
+                action: "pingCreate"
+            }
+        };
 
-    var payload = {
-        data: {
-            title,
-            desc,
-            action: "pingCreate"
-        }
-    };
-
-    await admin.messaging().sendToDevice(notifIds, payload);
+        await admin.messaging().sendToDevice(notifIds, payload);
+    }
+    
  
     res.sendStatus(200);
 };
