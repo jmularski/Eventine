@@ -53,7 +53,7 @@ var list = async (req, res, next) => {
     if( !userStatus ) res.sendStatus(403);
     else if(userStatus === 'admin'){
         var pings = await Ping.find({ groupId, ended: false }).exec();
-        res.send(pings);
+        res.send({pings});
     } else {
         var currentDate = new Date();
         var pings = await Ping.find({ groupId, 
