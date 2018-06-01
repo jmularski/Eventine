@@ -22,7 +22,10 @@ var create = async (req, res, next) => {
 
     var group = await Group.findById(groupId).exec();
     if(targetGroups){
-        var usersInTarget = group.people.map(person => { return targetGroups.includes(person.subgroup)});
+        var usersInTarget = group.people.map(person => { if(targetGroups.includes(person.subgroup)){
+            return person;
+        }});
+        console.log(usersInTarget);
         var usersIds = usersInTarget.map(person => { return person.id });
         var userNotifs = await User.find({
             _id: {
@@ -37,6 +40,7 @@ var create = async (req, res, next) => {
                 action: "pingCreate"
             }
         };
+        console.log(userNotifs);
         var notifIds = userNotifs.map(person => { return person.notifToken});
         await admin.messaging().sendToDevice(notifIds, payload);
     }
