@@ -121,8 +121,8 @@ var subgroups = async (req, res, next) => {
 var allSubgroups = async ( req, res, next ) => {
     var { groupId } = req.params;
     var groupMembers = await Group.findById(groupId).select("-_id people").exec();
-
-    const unique = [...new Set(groupMembers.map(item => item.subgroup))];
+    console.log(groupMembers);
+    const unique = [...new Set(groupMembers.people.map(item => item.subgroup))];
 
     res.send(unique);
 }
