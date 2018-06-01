@@ -127,6 +127,11 @@ var allSubgroups = async ( req, res, next ) => {
     res.send(unique);
 }
 
+var changeSubgroup = (req, res, next) => {
+    var { changingId, groupId } = req.body
+    var { id } = req.token;
+};
+
 var latestPing = (req, res, next) => {
 
 };
@@ -137,5 +142,6 @@ module.exports = {
     acceptInvitation,
     subgroups,
     allSubgroups,
+    changeSubgroup,
     latestPing
 };

@@ -1,6 +1,10 @@
 var express = require('express');
 var app = express();
 
+//cors
+var cors = require('cors');
+app.use(cors());
+
 //setup nconf
 const nconf = require('nconf');
 nconf
