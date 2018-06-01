@@ -134,13 +134,18 @@ var changeSubgroup = async (req, res, next) => {
     var { id } = req.token;
 
     var group = await Group.findById(groupId).exec();
-    var userSubgroup = (group.people.filter(person => { return person.id === id})).subgroup;
-    if(userSubgroup !== 'admin') res.sendStatus(403);
+    var userSubgroup = group.people.filter(person => { if (person.id === id) return person});
+    var userSubgroup = userSubgroup[0].subgroup;
+    console.log(userSubgroup);
+    if(userSubgroup != 'admin') res.sendStatus(403);
+    else{
+        group.people.filter(person => { if(person.id == changingId) return person})[0].subgroup = changedSubgroup;
+        group.markModified('people');
+        await group.save();
 
-    group.people.find(person => { return person.id === changingId}).subgroup = changedSubgroup;
-    await group.save();
-
-    res.sendStatus(200);
+        res.sendStatus(200);
+    }
+    
 };
 
 var latestPing = (req, res, next) => {
