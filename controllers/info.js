@@ -31,7 +31,7 @@ var list = (req, res, next) => {
         var info = await Info.find({ groupId }).exec();
         res.send({info});
     } else {
-        var info = await Ping.find({ groupId, targetGroups}).exec();
+        var info = await Info.find({ groupId, targetGroups: userStatus}).exec();
         res.send({info});
     }
 
