@@ -5,11 +5,12 @@ var User = require('../models/user');
 
 var create = async (req, res, next) => {
     var { groupId, content, targetGroups } = req.body;
-    var { id } = req.token;
+    var { id, fullName } = req.token;
 
     var newInfo = new Info({
         groupId,
         creator: id,
+        creatorName: fullName,
         content,
         targetGroups
     });

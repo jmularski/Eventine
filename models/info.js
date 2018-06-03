@@ -4,6 +4,7 @@ var Schema = mongoose.Schema;
 var InfoSchema = new Schema({
     groupId: { type: String, required: true },
     creator: { type: String, required: true },
+    creatorName: { type: String, required: true },
     content: { type: String, required: true },
     targetGroups: { type: [String], required: true }
 });

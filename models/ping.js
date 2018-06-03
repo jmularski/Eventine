@@ -4,6 +4,7 @@ var Schema = mongoose.Schema;
 var PingSchema = new Schema({
     groupId: { type: String, required: true },
     creator: { type: String, required: true },
+    creatorName: { type: String, required: true },
     title: { type: String, required: true},
     desc: { type: String, required: true},
     targetGroups: { type: [String], default: [] },
