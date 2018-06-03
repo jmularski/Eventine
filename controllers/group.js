@@ -57,15 +57,16 @@ var create = async (req, res, next) => {
     //send notification
     if(peopleData){
         var notifIds = peopleData.map(person => person.notifToken);
-
-        var payload = {
-            data: {
-                groupName: groupName,
-                action: 'invitation'
-            }
-        };
-
-        await admin.messaging().sendToDevice(notifIds, payload);
+        if(notifIds){
+            var payload = {
+                data: {
+                    groupName: groupName,
+                    action: 'invitation'
+                }
+            };
+    
+            await admin.messaging().sendToDevice(notifIds, payload);
+        }
     }
     
     res.status(200).send(newGroup.id);
