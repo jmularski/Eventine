@@ -57,7 +57,7 @@ var create = async (req, res, next) => {
     //send notification
     if(peopleData){
         var notifIds = peopleData.map(person => person.notifToken);
-        if(notifIds){
+        if(notifIds.length != 0){
             var payload = {
                 data: {
                     groupName: groupName,
