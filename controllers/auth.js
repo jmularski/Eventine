@@ -30,7 +30,7 @@ var login = async (req, res, next) => {
     var passComparison = await encryptUtils.compare(password, user.password);
     if(!passComparison) return next(new NotAuthenticated("Bad password"));
     
-    var token = jwt.sign({'fullName': user.fullName, 'id': user.id}, 'kalejdoskop', {expiresIn: '1h'});
+    var token = jwt.sign({'fullName': user.fullName, 'id': user.id}, 'kalejdoskop', {expiresIn: '7d'});
     res.status(200).send({success: true, token});
 };
 
@@ -69,7 +69,7 @@ var register = async (req, res, next) => {
         password
     });
     await newUser.save();
-    var token = jwt.sign({'fullName': newUser.fullName, 'id': newUser.id}, 'kalejdoskop', {expiresIn: '1h'});
+    var token = jwt.sign({'fullName': newUser.fullName, 'id': newUser.id}, 'kalejdoskop', {expiresIn: '7d'});
     res.status(200).send({success: true, token});
 };
 
@@ -100,7 +100,7 @@ var social = async (req, res, next) => {
         await user.save();
     }
 
-    var token = jwt.sign({'fullName': user.fullName, 'id': user.id}, 'kalejdoskop', {expiresIn: '1h'});
+    var token = jwt.sign({'fullName': user.fullName, 'id': user.id}, 'kalejdoskop', {expiresIn: '7d'});
     res.status(200).send({success: true, token});
 
 };
