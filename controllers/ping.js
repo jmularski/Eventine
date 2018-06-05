@@ -23,11 +23,14 @@ var create = async (req, res, next) => {
 
     var group = await Group.findById(groupId).exec();
     if(targetGroups){
-        var usersInTarget = group.people.map(person => { if(targetGroups.includes(person.subgroup)){
-            return person;
-        }});
+        var usersInTarget = group.people.filter(person => { 
+        if(targetGroups.includes(person.subgroup)){
+            return true;
+        }
+        return false;
+        });
         console.log(usersInTarget);
-        var usersIds = usersInTarget.map(person => { return person.id });
+        var usersIds = usersInTarget.map(person => { if(person.id) return person.id });
         var userNotifs = await User.find({
             _id: {
                 $in: usersIds
