@@ -75,7 +75,15 @@ var list = async (req, res, next) => {
     }
 };
 
+var end = async (req, res, next) => {
+    var { pingId } = req.body;
+    var { id, fullName } = req.token;
+    await Ping.findByIdAndUpdate(pingId, { executor: id, executorName: fullName, ended: true });
+    res.sendStatus(200);
+}
+
 module.exports = {
     create,
-    list
+    list,
+    end
 };
