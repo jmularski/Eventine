@@ -2,13 +2,12 @@ var express = require('express');
 var app = express();
 
 //setup cors
-app.all('/*', function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type");
-    res.header("Access-Control-Allow-Methods", "GET, POST","PUT");
-    next();
-});
-
+var cors = require('cors');
+var corsOptions = {
+    origin: "https://kalejdoskop-e9e20.firebaseapp.com",
+    optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
 //setup nconf
 const nconf = require('nconf');
 nconf
