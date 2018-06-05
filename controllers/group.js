@@ -102,6 +102,9 @@ var acceptInvitation = async (req, res, next) => {
     var { groupId } = req.body;
 
     var group = await Group.findById(groupId).exec();
+    var user = await User.findById(id).exec();
+
+    if(!group || !user) res.status(401).send();
     group.people = group.people.filter(person => { return person.id !== id})
     group.people.push({
         id: id,
@@ -109,7 +112,6 @@ var acceptInvitation = async (req, res, next) => {
         subgroup: 'user'
     });
     
-    var user = await User.findById(id).exec();
 
     user.invitations = user.invitations.filter(group => { return group.id !== groupId})
 
