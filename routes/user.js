@@ -7,5 +7,6 @@ router.use(jwtReader);
 const groupController = require('../controllers/user');
 router.get('/groupList', groupController.groupList);
 router.get('/invitations', groupController.invitations);
+router.get('/friends', groupController.returnFriends);
 
 module.exports = router;

@@ -13,8 +13,12 @@ var invitations = async (req, res, next) => {
     var invitations = await User.findById(id).select('invitations');
     res.send({invitations: invitations.invitations});
 };
-
+var returnFriends = async (req, res, next) => {
+    var users = await User.find({"facebookId": { "$exists": false } }).select('fullName').exec();
+    res.send({users});
+};
 module.exports = {
     groupList,
-    invitations
+    invitations,
+    returnFriends
 };
