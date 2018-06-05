@@ -15,20 +15,27 @@ var create = async (req, res, next) => {
     let validationErrors = req.validationErrors();
     if(validationErrors) return next(new GroupError(validationErrors[0]));
 
-    var { groupName, facebookIds } = req.body;
+    var { groupName, facebookIds, normalIds } = req.body;
     var { id, fullName } = req.token;
     var groupCode = groupName;
 
     
     //update User invitations field and create a new Group object - I should get rid of foreach, replace it with map (done)
     var newGroup = new Group();
-    
-    var peopleData = await User.find({
+    var normalData = await User.find({
+        '_id':{
+            $in: normalIds
+        }
+    }).select('_id fullName notifToken').exec();
+
+    var facebookData = await User.find({
         'facebookId': {
             $in: facebookIds
         }
     }).select('_id fullName notifToken').exec();
     
+    var peopleData = normalData.concat(facebookData);
+
     var peopleIds = peopleData.map(person => person.id);
     await User.updateMany({'_id': { $in: peopleIds }}, {$push: {invitations: {id: newGroup.id, name: groupName, invitedBy: fullName}}}).exec();
     
@@ -48,6 +55,9 @@ var create = async (req, res, next) => {
         name: fullName,
         subgroup: 'admin'
     });
+
+    //adding normal people to group
+    
 
     newGroup.groupCode = groupCode;
     newGroup.people = peopleSchema;
