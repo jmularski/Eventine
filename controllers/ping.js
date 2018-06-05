@@ -42,7 +42,7 @@ var create = async (req, res, next) => {
             }
         };
         console.log(userNotifs);
-        var notifIds = userNotifs.map(person => { return person.notifToken});
+        var notifIds = userNotifs.map(person => { if(person.notifToken) return person.notifToken});
         await admin.messaging().sendToDevice(notifIds, payload);
     }
     
