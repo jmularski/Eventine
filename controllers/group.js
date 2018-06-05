@@ -68,14 +68,18 @@ var create = async (req, res, next) => {
     if(peopleData){
         var notifIds = peopleData.map(person => person.notifToken);
         if(notifIds.length != 0){
-            var payload = {
-                data: {
-                    groupName: groupName,
-                    action: 'invitation'
-                }
-            };
-    
-            await admin.messaging().sendToDevice(notifIds, payload);
+            try{
+                var payload = {
+                    data: {
+                        groupName: groupName,
+                        action: 'invitation'
+                    }
+                };
+        
+                await admin.messaging().sendToDevice(notifIds, payload);
+            } catch(e) {
+                console.log(e);
+            }
         }
     }
     
