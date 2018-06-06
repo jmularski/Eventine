@@ -2,9 +2,11 @@ var express = require('express');
 var app = express();
 
 //setup cors
+
 var cors = require('cors');
 var corsOptions = {
     origin: "https://kalejdoskop-e9e20.firebaseapp.com",
+    credentials: true
     optionsSuccessStatus: 200
 };
 app.use(cors(corsOptions));
