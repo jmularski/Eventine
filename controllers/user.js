@@ -16,7 +16,7 @@ var getTasks = async (req, res, next) => {
     var { id } = req.token;
     var user = await User.findById(id).exec();
     if(user.groups) {
-        var groupId = user.group[0].id;
+        var groupId = user.groups[0].id;
 
         //getting subgroup of user
         var foundGroup = await Group.findById(groupId).exec();
