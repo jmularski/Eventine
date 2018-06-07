@@ -39,6 +39,11 @@ var create = async (req, res, next) => {
         }).select("-_id notifToken").exec();
 
         var payload = {
+            notification: {
+                title: `W twojej grupie powstał ping o nazwie ${title}`,
+                body: `Opis: ${desc}`,
+                sound: 'default'
+            },
             data: {
                 title,
                 desc,

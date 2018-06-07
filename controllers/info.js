@@ -34,6 +34,11 @@ var create = async (req, res, next) => {
         }).select("-_id notifToken").exec();
 
         var payload = {
+            notification: {
+                title: `Twojej grupie została przekazana informacja`,
+                body: `Opis: ${content}`,
+                sound: 'default'
+            },
             data: {
                 content,
                 action: "infoCreate"
