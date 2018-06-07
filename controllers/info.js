@@ -15,6 +15,7 @@ var create = async (req, res, next) => {
         targetGroups,
         plannedTime
     });
+
     if(targetGroups && !plannedTime){
         var group = await Group.findById(groupId).exec();
 
@@ -34,8 +35,7 @@ var create = async (req, res, next) => {
 
         var payload = {
             data: {
-                title,
-                desc,
+                content,
                 action: "infoCreate"
             }
         };
