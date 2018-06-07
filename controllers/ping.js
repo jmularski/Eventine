@@ -2,6 +2,7 @@ var admin = require('firebase-admin');
 var Ping = require('../models/ping');
 var Group = require('../models/group');
 var User = require('../models/user');
+var sendDelayedNotif = require('../lib/sendDelayedNotif').ping;
 
 var create = async (req, res, next) => {
     var { groupId, title, desc, targetGroups, howManyPeople, plannedTime, geo } = req.body;
@@ -21,7 +22,7 @@ var create = async (req, res, next) => {
 
     await ping.save();
 
-    if(targetGroups && !plannedTime){
+    if(targetGroups){
         var group = await Group.findById(groupId).exec();
 
         var usersInTarget = group.people.filter(person => { 
@@ -52,9 +53,12 @@ var create = async (req, res, next) => {
         };
         console.log(userNotifs);
         var notifIds = userNotifs.map(person => { if(person.notifToken) return person.notifToken});
-        await admin.messaging().sendToDevice(notifIds, payload);
+        if(!plannedTime) await admin.messaging().sendToDevice(notifIds, payload);
+        else sendDelayedNotif(payload, notifIds, plannedTime);
     }
-    
+    if(targetGroups && plannedTime){
+
+    }
  
     res.sendStatus(200);
 };
@@ -90,7 +94,7 @@ var list = async (req, res, next) => {
 var inProgress = async (req, res, next) => {
     var { pingId } = req.body;
     var { id, fullName } = req.token;
-    await Ping.findOneAndUpdate(pingId, { progressor: id, progressorName: fullName, inProgress: true }).exec();
+    await Ping.findByIdAndUpdate(pingId, { progressor: id, progressorName: fullName, inProgress: true }).exec();
     res.sendStatus(200);
 };
 
