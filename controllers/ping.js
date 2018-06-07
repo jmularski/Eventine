@@ -53,11 +53,13 @@ var create = async (req, res, next) => {
         };
         console.log(userNotifs);
         var notifIds = userNotifs.map(person => { if(person.notifToken) return person.notifToken});
-        if(!plannedTime && plannedTime>Date.now()) await admin.messaging().sendToDevice(notifIds, payload);
-        else sendDelayedNotif(payload, notifIds, plannedTime);
-    }
-    if(targetGroups && plannedTime){
-
+        try {
+            if(!plannedTime && plannedTime>Date.now()) await admin.messaging().sendToDevice(notifIds, payload);
+            else sendDelayedNotif(payload, notifIds, plannedTime);
+        } catch(e){
+            console.log(e);
+        }
+        
     }
  
     res.sendStatus(200);
