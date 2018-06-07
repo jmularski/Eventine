@@ -2,7 +2,7 @@ var admin = require('firebase-admin');
 var Ping = require('../models/ping');
 var Group = require('../models/group');
 var User = require('../models/user');
-var sendDelayedNotif = require('../lib/sendDelayedNotif').ping;
+var sendDelayedNotif = require('../lib/sendDelayedNotif');
 
 var create = async (req, res, next) => {
     var { groupId, title, desc, targetGroups, howManyPeople, plannedTime, geo } = req.body;
