@@ -8,7 +8,7 @@ var create = async (req, res, next) => {
     var { groupId, content, targetGroups, plannedTime } = req.body;
     var { id, fullName } = req.token;
     
-    plannedTime = new Date(plannedTime);
+    if(plannedTime) plannedTime = new Date(plannedTime);
 
     var newInfo = new Info({
         groupId,
