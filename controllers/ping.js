@@ -7,7 +7,7 @@ var sendDelayedNotif = require('../lib/sendDelayedNotif').ping;
 var create = async (req, res, next) => {
     var { groupId, title, desc, targetGroups, howManyPeople, plannedTime, geo } = req.body;
     var { id, fullName } = req.token;
-
+    plannedTime = new Time(plannedTime);
     var ping = new Ping({
         groupId,
         creator: id,
@@ -53,7 +53,7 @@ var create = async (req, res, next) => {
         };
         console.log(userNotifs);
         var notifIds = userNotifs.map(person => { if(person.notifToken) return person.notifToken});
-        if(!plannedTime) await admin.messaging().sendToDevice(notifIds, payload);
+        if(!plannedTime && plannedTime>Date.now()) await admin.messaging().sendToDevice(notifIds, payload);
         else sendDelayedNotif(payload, notifIds, plannedTime);
     }
     if(targetGroups && plannedTime){
