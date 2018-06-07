@@ -67,13 +67,16 @@ var list = async (req, res, next) => {
         res.send({pings});
     } else {
         var currentDate = new Date();
-        var pings = await Ping.find({ groupId, 
-            $or: [
-                {'plannedTime': { "$gte": currentDate}},
-                {'plannedTime': null}
-            ],
-            targetGroups: userStatus,
-            ended: false}).exec();
+        var pings = await Ping.find({$or: [
+                { groupId, 
+                $or: [
+                    {'plannedTime': { "$gte": currentDate}},
+                    {'plannedTime': null}
+                ],
+                targetGroups: userStatus,
+                ended: false },
+                { creator: id} ]
+        }).exec();
         res.send({pings});
     }
 };
