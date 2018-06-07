@@ -70,6 +70,11 @@ var create = async (req, res, next) => {
         if(notifIds.length != 0){
             try{
                 var payload = {
+                    notification:{
+                        title: "Zaproszenie do grupy!",
+                        body: `Zostałeś zaproszony do grupy ${groupName}`,
+                        sound: 'default'
+                    },
                     data: {
                         groupName: groupName,
                         action: 'invitation'
