@@ -49,6 +49,7 @@ var create = async (req, res, next) => {
         };
         console.log(userNotifs);
         var notifIds = userNotifs.map(person => { if(person.notifToken) return person.notifToken});
+        notifIds = notifIds.filter(id => Object.keys(id).length !== 0);
         try {
             if(!plannedTime && plannedTime>Date.now()) await admin.messaging().sendToDevice(notifIds, payload);
             else sendDelayedNotif(payload, notifIds, plannedTime);
