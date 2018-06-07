@@ -78,6 +78,13 @@ var list = async (req, res, next) => {
     }
 };
 
+var inProgress = async (req, res, next) => {
+    var { pingId } = req.body;
+    var { id, fullName } = req.token;
+    await Ping.findOneAndUpdate(pingId, { progressor: id, progressorName: fullName, inProgress: true }).exec();
+    res.sendStatus(200);
+};
+
 var end = async (req, res, next) => {
     var { pingId } = req.body;
     var { id, fullName } = req.token;
@@ -88,5 +95,6 @@ var end = async (req, res, next) => {
 module.exports = {
     create,
     list,
+    inProgress,
     end
 };
