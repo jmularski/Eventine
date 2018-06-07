@@ -38,7 +38,13 @@ var getTasks = async (req, res, next) => {
     }
 };
 var returnFriends = async (req, res, next) => {
-    var users = await User.find({"facebookId": { "$exists": false } }).select('fullName').exec();
+    var { id } = req.token;
+    var user = User.findById(id).exec();
+    if(user.facebookId){
+        var users = await User.find({"facebookId": { "$exists": false } }).select('fullName').exec();
+    } else {
+        var users = await User.find({'_id': { $ne: id }}).exec();
+    }
     res.send({users});
 };
 module.exports = {
