@@ -7,7 +7,7 @@ var sendDelayedNotif = require('../lib/sendDelayedNotif').ping;
 var create = async (req, res, next) => {
     var { groupId, title, desc, targetGroups, howManyPeople, plannedTime, geo } = req.body;
     var { id, fullName } = req.token;
-    plannedTime = new Time(plannedTime);
+    plannedTime = new Date(plannedTime);
     var ping = new Ping({
         groupId,
         creator: id,
