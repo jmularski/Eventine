@@ -3,6 +3,7 @@ var Ping = require('../models/ping');
 var Group = require('../models/group');
 var User = require('../models/user');
 var sendDelayedNotif = require('../lib/sendDelayedNotif');
+var _ = require('lodash');
 
 var create = async (req, res, next) => {
     var { groupId, title, desc, targetGroups, howManyPeople, plannedTime, geo } = req.body;
@@ -53,8 +54,10 @@ var create = async (req, res, next) => {
         };
         console.log(userNotifs);
         var notifIds = userNotifs.map(person => { if(person.notifToken) return person.notifToken});
-        notifIds = notifIds.filter(id => Object.keys(id).length !== 0);
-
+        notifIds = notifIds.filter(id => {
+            if(_.isEmpty(id)) return false
+            else return true
+        });
         try {
             if(!plannedTime && plannedTime>Date.now()) await admin.messaging().sendToDevice(notifIds, payload);
             else sendDelayedNotif(payload, notifIds, plannedTime);
