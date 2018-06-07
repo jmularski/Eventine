@@ -4,7 +4,7 @@ var Group = require('../models/group');
 var User = require('../models/user');
 
 var create = async (req, res, next) => {
-    var { groupId, content, targetGroups } = req.body;
+    var { groupId, content, targetGroups, plannedTime } = req.body;
     var { id, fullName } = req.token;
 
     var newInfo = new Info({
@@ -12,9 +12,37 @@ var create = async (req, res, next) => {
         creator: id,
         creatorName: fullName,
         content,
-        targetGroups
+        targetGroups,
+        plannedTime
     });
+    if(targetGroups && !plannedTime){
+        var group = await Group.findById(groupId).exec();
 
+        var usersInTarget = group.people.filter(person => { 
+            if(targetGroups.includes(person.subgroup)){
+                return true;
+            }
+            return false;
+        });
+        console.log(usersInTarget);
+        var usersIds = usersInTarget.map(person => { if(person.id) return person.id });
+        var userNotifs = await User.find({
+            _id: {
+                $in: usersIds
+            }
+        }).select("-_id notifToken").exec();
+
+        var payload = {
+            data: {
+                title,
+                desc,
+                action: "infoCreate"
+            }
+        };
+        console.log(userNotifs);
+        var notifIds = userNotifs.map(person => { if(person.notifToken) return person.notifToken});
+        await admin.messaging().sendToDevice(notifIds, payload);
+    }
     await newInfo.save();
     res.sendStatus(200);
 };

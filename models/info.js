@@ -6,7 +6,8 @@ var InfoSchema = new Schema({
     creator: { type: String, required: true },
     creatorName: { type: String, required: true },
     content: { type: String, required: true },
-    targetGroups: { type: [String], required: true }
+    targetGroups: { type: [String], required: true },
+    plannedTime: { type: Date, required: false }
 });
 
 module.exports = mongoose.model('info', InfoSchema);

@@ -21,13 +21,14 @@ var create = async (req, res, next) => {
 
     await ping.save();
 
-    var group = await Group.findById(groupId).exec();
-    if(targetGroups){
+    if(targetGroups && !plannedTime){
+        var group = await Group.findById(groupId).exec();
+
         var usersInTarget = group.people.filter(person => { 
-        if(targetGroups.includes(person.subgroup)){
-            return true;
-        }
-        return false;
+            if(targetGroups.includes(person.subgroup)){
+                return true;
+            }
+            return false;
         });
         console.log(usersInTarget);
         var usersIds = usersInTarget.map(person => { if(person.id) return person.id });
