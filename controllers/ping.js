@@ -92,7 +92,7 @@ var list = async (req, res, next) => {
                 ],
                 targetGroups: userStatus,
                 ended: false },
-                { creator: id} ]
+                { groupId, creator: id} ]
         }).exec();
         res.send({pings});
     }
