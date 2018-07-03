@@ -20,7 +20,7 @@ var create = async (req, res, next) => {
         plannedTime
     });
 
-    if(targetGroups && !plannedTime){
+    if(targetGroups){
         var group = await Group.findById(groupId).exec();
 
         var usersInTarget = group.people.filter(person => { 

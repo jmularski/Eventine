@@ -1,8 +1,11 @@
 var express = require('express');
 var app = express();
 
-//setup cors
+//helmet
+const helmet = require('helmet');
+app.use(helmet());
 
+//setup cors
 var cors = require('cors');
 var corsOptions = {
     origin: "https://kalejdoskop-e9e20.firebaseapp.com",
@@ -10,6 +13,7 @@ var corsOptions = {
     optionsSuccessStatus: 200
 };
 app.use(cors(corsOptions));
+
 //setup nconf
 const nconf = require('nconf');
 nconf
