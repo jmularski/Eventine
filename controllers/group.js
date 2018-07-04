@@ -22,6 +22,7 @@ var create = async (req, res, next) => {
     
     //update User invitations field and create a new Group object - I should get rid of foreach, replace it with map (done)
     var newGroup = new Group();
+    
     var normalData = await User.find({
         '_id':{
             $in: normalIds
