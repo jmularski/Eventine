@@ -27,5 +27,5 @@ spec:
   spec:
     containers:
       - name: nodejs
-        image: Dockerfile
+        image: eventine
         ports: containerPort: 8080
