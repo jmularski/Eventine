@@ -3,10 +3,10 @@ FROM node:latest
 MAINTAINER Jakub Mularski <jakubmularski723@gmail.com>
 
 ENV NODE_ENV=production
-ENV port=3000
+ENV PORT=3000
 
-COPY . /KalejdoskopApp/main
-WORKDIR /KalejdoskopApp/main
+COPY . /var/www
+WORKDIR /var/www
 
 RUN npm install
 
