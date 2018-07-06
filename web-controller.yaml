@@ -1,0 +1,20 @@
+# web-controller.yml
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  labels:
+    name: web
+  name: web-controller
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: web
+    spec:
+      containers:
+      - image: gcr.io/findme4-209120/eventine
+        name: web
+        ports:
+        - containerPort: 3000
+          name: http-server

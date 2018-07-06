@@ -32,7 +32,7 @@ let dbPassword = nconf.get('DB_PASSWORD');
 
 var mongoose = require('mongoose');
 //${dbUsername}:${dbPassword}@35.205.131.216:27017/kalejdoskop
-mongoose.connect(`mongodb://localhost:27017/kalejdoskop`, (err) => {
+mongoose.connect(`mongodb://10.55.241.117:27017/kalejdoskop`, (err) => {
     if(err) console.log(err);
 });
 
