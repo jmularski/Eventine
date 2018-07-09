@@ -143,6 +143,7 @@ var subgroups = async (req, res, next) => {
     res.send(groupMembers);
 };
 
+// is it even used?
 var allSubgroups = async ( req, res, next ) => {
     var { groupId } = req.params;
     var groupMembers = await Group.findById(groupId).select("-_id people").exec();
@@ -157,12 +158,11 @@ var changeSubgroup = async (req, res, next) => {
     var { id } = req.token;
 
     var group = await Group.findById(groupId).exec();
-    var userSubgroup = group.people.filter(person => { if (person.id === id) return person});
-    var userSubgroup = userSubgroup[0].subgroup;
-    console.log(userSubgroup);
-    if(userSubgroup != 'admin') res.sendStatus(403);
+    var user = group.people.find(person => { if (person.id === id) return person});
+    var userSubgroup = user.subgroup;
+    if(userSubgroup !== 'admin') res.sendStatus(403);
     else{
-        group.people.filter(person => { if(person.id == changingId) return person})[0].subgroup = changedSubgroup;
+        group.people.find(person => { if(person.id == changingId) return person}).subgroup = changedSubgroup;
         group.markModified('people');
         await group.save();
 
