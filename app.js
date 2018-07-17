@@ -1,88 +1,80 @@
-var express = require('express');
-var app = express();
+const express = require('express');
+const app = express();
 
-//helmet
+// helmet
 const helmet = require('helmet');
 app.use(helmet());
 
-//setup cors
-var cors = require('cors');
-var corsOptions = {
-    origin: "https://kalejdoskop-e9e20.firebaseapp.com",
+// setup cors
+const cors = require('cors');
+const corsOptions = {
+    origin: 'https://kalejdoskop-e9e20.firebaseapp.com',
     credentials: true,
-    optionsSuccessStatus: 200
+    optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
 
-//setup nconf
+// setup nconf
 const nconf = require('nconf');
 nconf
     .argv()
     .env()
     .file('./keys.json');
 
-//bodyParser
-var bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({ extended: false }));
+// bodyParser
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-//setup database
-let dbUsername = nconf.get('DB_USERNAME');
-let dbPassword = nconf.get('DB_PASSWORD');
+// setup DB
+const mongoose = require('mongoose');
+let dbUrl = nconf.get('NODE_ENV') == 'production' ? 'mongodb://10.55.241.117:27017/kalejdoskop' : 'mongodb://10.55.241.117:27017/kalejdoskop';
 
-var mongoose = require('mongoose');
-
-if(nconf.get('NODE_ENV') == 'production'){
-    mongoose.connect(`mongodb://10.55.241.117:27017/kalejdoskop`, (err) => {
-        if(err) console.error(err);
-    });
-} else {
-    mongoose.connect(`mongodb://10.55.241.117:27017/kalejdoskop`, (err) => {
-        if(err) console.error(err);
-    })
-}
+mongoose.connect(dbUrl, (err) => {
+    if(err) console.error(err);
+});
 
 
-//setup firebase
-var admin = require('firebase-admin');
-var serviceAccount = require('./kalejdoskopapp-privatekey.json');
+// setup firebase
+const admin = require('firebase-admin');
+const serviceAccount = require('./kalejdoskopapp-privatekey.json');
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    databaseURL: "https://kalejdoskopapp.firebaseio.com"
+    databaseURL: 'https://kalejdoskopapp.firebaseio.com',
 });
 
-//express-validator
-var validator = require('express-validator');
+// express-validator
+const validator = require('express-validator');
 app.use(validator());
 
-//morgan
-var morgan = require('morgan');
+// morgan
+const morgan = require('morgan');
 app.use(morgan('dev'));
 
-//routes
-var auth = require('./routes/auth');
+// routes
+const auth = require('./routes/auth');
 app.use('/auth', auth);
 
-var groups = require('./routes/groups');
+const groups = require('./routes/groups');
 app.use('/group', groups);
 
-var notifications = require('./routes/notifications');
+const notifications = require('./routes/notifications');
 app.use('/notif', notifications);
 
-var user = require('./routes/user');
+const user = require('./routes/user');
 app.use('/user', user);
 
-var ping = require('./routes/ping');
+const ping = require('./routes/ping');
 app.use('/ping', ping);
 
-var info = require('./routes/info');
+const info = require('./routes/info');
 app.use('/info', info);
 
-//middlewares
-var notFound = require('./middlewares/notFound');
-var errorHandler = require('./middlewares/errorHandler');
-var ignoreFavicon = require('./middlewares/ignoreFavicon');
+// middlewares
+const notFound = require('./middlewares/notFound');
+const errorHandler = require('./middlewares/errorHandler');
+const ignoreFavicon = require('./middlewares/ignoreFavicon');
 
 app.use(notFound);
 app.use(errorHandler);
