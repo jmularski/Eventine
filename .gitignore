@@ -57,3 +57,8 @@ typings/
 # dotenv environment variables file
 .env
 
+# server files
+kalejdoskopapp-privatekey.json
+app.yaml
+keys.json
+
