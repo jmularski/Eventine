@@ -1,65 +1,61 @@
-const mocha = require('mocha');
 const chai = require('chai');
 chai.should();
 
-var randomString = require('randomstring');
+const randomString = require('randomstring');
 
-var mongoose = require('mongoose');
-var User = require('../../../models/user');
+let requester = require('../../helper/requester');
 
-var requester = require('../../helper/requester');
-
-function generateRandomEmail(){
+function generateRandomEmail() {
     return `${randomString.generate(6)}@michno.pl`;
 };
 
-describe("REGISTER INTEGRATION TESTS", () => {
-    describe("Successful attempt", () => {
-        var response, userData;
+describe('REGISTER INTEGRATION TESTS', () => {
+    describe('Successful attempt', () => {
+        let response; let userData;
         before( async () => {
             userData = {
                 email: generateRandomEmail(),
-                fullName: "Michno Michno",
-                password: "michno"
+                fullName: 'Michno Michno',
+                password: 'michno',
             };
             response = await requester.post('/auth/register', userData);
         });
-        it("Should return 200", () => {
+        it('Should return 200', () => {
             (response.status).should.equal(200);
         });
-        it("Should return jwt", () => {
+        it('Should return jwt', () => {
             (response.data).should.have.property('token');
         });
     });
-    describe("Failed cases", () => {
-        describe("Missing parameter", () => {
-            var response;
+    describe('Failed cases', () => {
+        describe('Missing parameter', () => {
+            let response;
             before( async () => {
                 let userData = {
-                    fullName: "Michno Michno",
-                    password: "Michno"
+                    fullName: 'Michno Michno',
+                    password: 'Michno',
                 };
-                var data = await requester.post('/auth/register', userData);
+                let data = await requester.post('/auth/register', userData);
                 response = data.response;
             });
-            it("Returns 401", () => {
+            it('Returns 401', () => {
                 (response.status).should.equal(401);
             });
         });
-        describe("Email taken", () => {
-            var response;
+        describe('Email taken', () => {
+            let response;
             before( async () => {
                 let userData = {
-                    email: "michno@michno.pl",
-                    fullName: "Michno Michno",
-                    password: "michno"
+                    email: 'michno@michno.pl',
+                    fullName: 'Michno Michno',
+                    password: 'michno',
                 };
-                var data = await requester.post('/auth/register', userData);
+                let data = await requester.post('/auth/register', userData);
                 response = data.response;
             });
-            it("Should return 401", () => {
+            it('Should return 401', () => {
                 (response.status).should.equal(401);
-            })
+            });
         });
     });
 });

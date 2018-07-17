@@ -1,6 +1,6 @@
-var request = require('axios');
+const request = require('axios');
 
-var post = async (endpoint, data) => {
+let post = async (endpoint, data) => {
     try {
         let response = await request.post(`http://localhost:3000${endpoint}`, data);
         return response;
@@ -9,7 +9,7 @@ var post = async (endpoint, data) => {
     }
 };
 
-var get = async (endpoint, data) => {
+let get = async (endpoint, data) => {
     try {
         let response = await request.get(endpoint, {params: data});
         return response;
@@ -20,5 +20,5 @@ var get = async (endpoint, data) => {
 
 module.exports = {
     post,
-    get
+    get,
 };

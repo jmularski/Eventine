@@ -1,80 +1,79 @@
-const mocha = require('mocha');
 const chai = require('chai');
 chai.should();
 
-var requester = require('../../helper/requester');
+let requester = require('../../helper/requester');
 
-describe("LOGIN INTEGRATION TESTS", () => {
-    describe("Successful attempt", () => {
-        var response;
+describe('LOGIN INTEGRATION TESTS', () => {
+    describe('Successful attempt', () => {
+        let response;
         before( async () => {
             let userData = {
-                email: "michno@michno.pl",
-                password: "michno"
+                email: 'michno@michno.pl',
+                password: 'michno',
             };
             response = await requester.post('/auth/login', userData);
         });
-        it("Should return 200", () => {
+        it('Should return 200', () => {
             (response.status).should.equal(200);
         });
-        it("Should return jwt", () => {
+        it('Should return jwt', () => {
             (response.data).should.have.property('token');
         });
     });
-    describe("Failed cases", () => {
-        describe("No email sent", async () => {
-            var response;
+    describe('Failed cases', () => {
+        describe('No email sent', async () => {
+            let response;
             before( async () => {
                 let userData = {
-                    password: "michno"
+                    password: 'michno',
                 };
-                var data = await requester.post('/auth/login', userData); 
-                response = data.response;   
+                let data = await requester.post('/auth/login', userData);
+                response = data.response;
             });
-            it("Should return 401", () => {
+            it('Should return 401', () => {
                 (response.status).should.equal(401);
             });
         });
-        describe("No password sent", async () => {
-            var response;
+        describe('No password sent', async () => {
+            let response;
             before( async () => {
                 let userData = {
-                    email: "marcin@michno.pl"
+                    email: 'marcin@michno.pl',
                 };
-                var data = await requester.post('/auth/login', userData); 
+                let data = await requester.post('/auth/login', userData);
                 response = data.response;
             });
-            it("Should return 401", () => {
+            it('Should return 401', () => {
                 (response.status).should.equal(401);
             });
         });
-        describe("No user with that email", async () => {
-            var response;
+        describe('No user with that email', async () => {
+            let response;
             before( async () => {
                 let userData = {
-                    email: "marcin@michnov2.pl",
-                    password: "michno123"
+                    email: 'marcin@michnov2.pl',
+                    password: 'michno123',
                 };
-                var data = await requester.post('/auth/login', userData); 
+                let data = await requester.post('/auth/login', userData);
                 response = data.response;
             });
-            it("Should return 401", () => {
+            it('Should return 401', () => {
                 (response.status).should.equal(401);
             });
         });
-        describe("Wrong password", async () => {
-            var response;
+        describe('Wrong password', async () => {
+            let response;
             before( async () => {
                 let userData = {
-                    email: "marcin@michno.pl",
-                    password: "michno123"
+                    email: 'marcin@michno.pl',
+                    password: 'michno123',
                 };
-                var data = await requester.post('/auth/login', userData); 
+                let data = await requester.post('/auth/login', userData);
                 response = data.response;
             });
-            it("Should return 401", () => {
+            it('Should return 401', () => {
                 (response.status).should.equal(401);
             });
-        })
+        });
     });
 });

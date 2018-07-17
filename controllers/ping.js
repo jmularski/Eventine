@@ -1,15 +1,15 @@
-var admin = require('firebase-admin');
-var Ping = require('../models/ping');
-var Group = require('../models/group');
-var User = require('../models/user');
-var sendDelayedNotif = require('../lib/sendDelayedNotif');
-var _ = require('lodash');
+const admin = require('firebase-admin');
+const Ping = require('../models/ping');
+const Group = require('../models/group');
+const User = require('../models/user');
+const sendDelayedNotif = require('../lib/sendDelayedNotif');
+const _ = require('lodash');
 
-var create = async (req, res, next) => {
-    var { groupId, title, desc, targetGroups, howManyPeople, plannedTime, geo } = req.body;
-    var { id, fullName } = req.token;
+let create = async (req, res, next) => {
+    let { groupId, title, desc, targetGroups, howManyPeople, plannedTime, geo } = req.body;
+    let { id, fullName } = req.token;
     if(plannedTime) plannedTime = new Date(plannedTime);
-    var ping = new Ping({
+    let ping = new Ping({
         groupId,
         creator: id,
         creatorName: fullName,
@@ -18,103 +18,109 @@ var create = async (req, res, next) => {
         targetGroups,
         howManyPeople,
         plannedTime,
-        geo
+        geo,
     });
 
     await ping.save();
 
-    if(targetGroups){
-        var group = await Group.findById(groupId).exec();
+    if(targetGroups) {
+        let group = await Group.findById(groupId).exec();
 
-        var usersInTarget = group.people.filter(person => { 
-            if(targetGroups.includes(person.subgroup)){
+        let usersInTarget = group.people.filter(person => {
+            if(targetGroups.includes(person.subgroup)) {
                 return true;
             }
             return false;
         });
-        console.log(usersInTarget);
-        var usersIds = usersInTarget.map(person => { if(person.id) return person.id });
-        var userNotifs = await User.find({
-            _id: {
-                $in: usersIds
-            }
-        }).select("-_id notifToken").exec();
 
-        var payload = {
-            notification: {
+        let usersIds = usersInTarget.map(person => {
+            if(person.id) return person.id;
+        });
+
+        let userNotifs = await User.find({
+            _id: {
+                $in: usersIds,
+            },
+        }).select('-_id notifToken').exec();
+
+        let payload = {
+            /* notification: {
                 title: `W twojej grupie powstał ping o nazwie ${title}`,
                 body: `Opis: ${desc}`,
                 sound: 'default'
-            },
+            },*/
             data: {
                 title,
                 desc,
-                action: "pingCreate"
-            }
+                action: 'create',
+                type: 'ping',
+            },
         };
-        console.log(userNotifs);
-        var notifIds = userNotifs.map(person => { if(person.notifToken) return person.notifToken});
+        let notifIds = userNotifs.map(person => {
+            if(person.notifToken) return person.notifToken;
+        });
         notifIds = notifIds.filter(id => {
-            if(_.isEmpty(id)) return false
-            else return true
+            if(_.isEmpty(id)) return false;
+            else return true;
         });
         try {
-            if(!plannedTime && plannedTime>Date.now()) await admin.messaging().sendToDevice(notifIds, payload);
+            if(!plannedTime && plannedTime>Date.now() && notifIds.length !== 0) await admin.messaging().sendToDevice(notifIds, payload);
             else sendDelayedNotif(payload, notifIds, plannedTime);
-        } catch(e){
+        } catch(e) {
             console.log(e);
         }
-        
     }
- 
+
     res.sendStatus(200);
 };
 
-var list = async (req, res, next) => {
-    var { groupId } = req.params;
-    var { id } = req.token;
-    var group = await Group.findById(groupId).exec();
+let list = async (req, res, next) => {
+    let { groupId } = req.params;
+    let { id } = req.token;
+    let group = await Group.findById(groupId).exec();
     if( !group ) res.sendStatus(403);
-    var user = group.people.filter( person => { return person.id == id });
-    var userStatus = user[0].subgroup;
+    let user = group.people.filter( person => {
+        return person.id == id;
+    });
+    let userStatus = user[0].subgroup;
     console.log(userStatus);
     if( !userStatus ) res.sendStatus(403);
-    else if(userStatus === 'admin'){
-        var pings = await Ping.find({ groupId, ended: false }).exec();
+    else if(userStatus === 'admin') {
+        let pings = await Ping.find({ groupId, ended: false }).exec();
         res.send({pings});
     } else {
-        var currentDate = new Date();
-        var pings = await Ping.find({$or: [
-                { groupId, 
+        let currentDate = new Date();
+        let pings = await Ping.find({$or: [
+                { groupId,
                 $or: [
-                    {'plannedTime': { "$gte": currentDate}},
-                    {'plannedTime': null}
+                    {'plannedTime': { '$gte': currentDate}},
+                    {'plannedTime': null},
                 ],
                 targetGroups: userStatus,
                 ended: false },
-                { groupId, creator: id} ]
+                { groupId, creator: id}],
         }).exec();
         res.send({pings});
     }
 };
 
-var inProgress = async (req, res, next) => {
-    var { pingId } = req.body;
-    var { id, fullName } = req.token;
+let inProgress = async (req, res, next) => {
+    let { pingId } = req.body;
+    let { id, fullName } = req.token;
     await Ping.findByIdAndUpdate(pingId, { progressor: id, progressorName: fullName, inProgress: true }).exec();
     res.sendStatus(200);
 };
 
-var end = async (req, res, next) => {
-    var { pingId } = req.body;
-    var { id, fullName } = req.token;
+let end = async (req, res, next) => {
+    let { pingId } = req.body;
+    let { id, fullName } = req.token;
     await Ping.findByIdAndUpdate(pingId, { executor: id, executorName: fullName, ended: true });
     res.sendStatus(200);
-}
+};
 
 module.exports = {
     create,
     list,
     inProgress,
-    end
+    end,
 };

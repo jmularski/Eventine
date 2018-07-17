@@ -1,13 +1,13 @@
-var User = require('../models/user');
+const User = require('../models/user');
 
-var updateToken = async (req, res) => {
-    var { id, fullName } = req.token;
-    var { notifToken } = req.body;
+let updateToken = async (req, res) => {
+    let { id } = req.token;
+    let { notifToken } = req.body;
 
-    await User.findByIdAndUpdate(id, {notifToken}).exec();
+    await User.findByIdAndUpdate(id, { notifToken }).exec();
     res.sendStatus(200);
-}
+};
 
 module.exports = {
-    updateToken
+    updateToken,
 };

@@ -1,177 +1,232 @@
 require('express-validator');
-var admin = require('firebase-admin');
-var Group = require('../models/group');
-var User = require('../models/user');
-var GroupError = require('../lib/errors/GroupError');
-var _ = require('lodash');
+const admin = require('firebase-admin');
+const Group = require('../models/group');
+const User = require('../models/user');
+const GroupError = require('../lib/errors/GroupError');
 
-var create = async (req, res, next) => {
+/** @api { post } /group/create
+ *  @apiDescription Create group with given groupName that also serves as groupCode later, supports inviting people from facebook and app users
+ *  @apiName groupCreate
+ *  @apiGroup group
+ *  
+ *  @apiParam (Body) {String} groupName - name of group, required parameter
+ *  @apiParam (Body) {String} facebookIds - list of ids of facebook friends invited - available only when logged through social media, not required
+ *  @apiParam (Body) {String} normalIds - list of ids of normal users invited - you can get ids from /user/friends
+ *  @apiParam (Header) {String} X-Token - token received from /auth routes
+ *  
+ *  @apiSuccess {String} string containing id of new created group
+ */
 
+let create = async (req, res, next) => {
     req.checkBody({
         groupName: {
-            notEmpty: { errorMessage: "Missing groupName" }
-        }
+            notEmpty: { errorMessage: 'Missing groupName' },
+        },
     });
     let validationErrors = req.validationErrors();
     if(validationErrors) return next(new GroupError(validationErrors[0]));
 
-    var { groupName, facebookIds, normalIds } = req.body;
-    var { id, fullName } = req.token;
-    var groupCode = groupName;
+    let { groupName, facebookIds, normalIds } = req.body;
+    let { id, fullName } = req.token;
+    let groupCode = groupName;
 
-    
-    //update User invitations field and create a new Group object - I should get rid of foreach, replace it with map (done)
-    var newGroup = new Group();
-    
-    var normalData = await User.find({
-        '_id':{
-            $in: normalIds
-        }
+
+    // update User invitations field and create a new Group object - I should get rid of foreach, replace it with map (done)
+    let newGroup = new Group();
+
+    let normalData = await User.find({
+        '_id': {
+            $in: normalIds,
+        },
     }).select('_id fullName notifToken').exec();
 
-    var facebookData = await User.find({
+    let facebookData = await User.find({
         'facebookId': {
-            $in: facebookIds
-        }
+            $in: facebookIds,
+        },
     }).select('_id fullName notifToken').exec();
-    
-    var peopleData = normalData.concat(facebookData);
 
-    var peopleIds = peopleData.map(person => person.id);
+    let peopleData = normalData.concat(facebookData);
+
+    let peopleIds = peopleData.map(person => person.id);
     await User.updateMany({'_id': { $in: peopleIds }}, {$push: {invitations: {id: newGroup.id, name: groupName, invitedBy: fullName}}}).exec();
-    
-    //adding admin to groups
+
+    // adding admin to groups
     await User.update({'_id': id}, {$push: {groups: {id: newGroup.id, name: groupName}}}).exec();
 
-    var peopleSchema = [];
+    let peopleSchema = [];
     peopleSchema = peopleData.map( person => {
         return {
             id: person.id,
             name: person.fullName,
-            subgroup: 'invited'
-        }
+            subgroup: 'invited',
+        };
     });
     peopleSchema.push({
         id: id,
         name: fullName,
-        subgroup: 'admin'
+        subgroup: 'admin',
     });
 
-    //adding normal people to group
-    
+    // adding normal people to group
+
 
     newGroup.groupCode = groupCode;
     newGroup.people = peopleSchema;
     newGroup.groupName = groupName;
     await newGroup.save();
 
-    //send notification
-    if(peopleData){
-        var notifIds = peopleData.map(person => person.notifToken);
-        if(notifIds.length != 0){
-            try{
-                var payload = {
-                    notification:{
-                        title: "Zaproszenie do grupy!",
+    // send notification
+    if(peopleData) {
+        let notifIds = peopleData.map(person => person.notifToken);
+        if(notifIds.length != 0) {
+            try {
+                let payload = {
+                    notification: {
+                        title: 'Zaproszenie do grupy!',
                         body: `Zostałeś zaproszony do grupy ${groupName}`,
-                        sound: 'default'
+                        sound: 'default',
                     },
                     data: {
                         groupName: groupName,
-                        action: 'invitation'
-                    }
+                        action: 'invitation',
+                    },
                 };
-        
+
                 await admin.messaging().sendToDevice(notifIds, payload);
             } catch(e) {
                 console.log(e);
             }
         }
     }
-    
+
     res.status(200).send(newGroup.id);
 };
-var join = async (req, res, next) => {
-    var { groupName } = req.body;
-    var { id, fullName } = req.token;
 
-    var data = {
+/** @api { post } /group/join
+ *  @apiDescription Join group with a given groupName
+ *  @apiName groupJoin
+ *  @apiGroup group
+ *  
+ *  @apiParam (Body) {String} groupName - name of group, required parameter
+ *  @apiParam (Header) {String} X-Token - token received from /auth routes
+ *  
+ *  
+ *  @apiSuccess {String} string containing id of joined group
+ */
+
+let join = async (req, res, next) => {
+    let { groupName } = req.body;
+    let { id, fullName } = req.token;
+
+    let data = {
         id: id,
         name: fullName,
-        subgroup: 'user'
+        subgroup: 'user',
     };
 
     if(!groupName) res.sendStatus(403);
-    var groupUpdated = await Group.findOneAndUpdate({groupName}, { $push: { people: data }}).exec();
-    var userUpdated = await User.findOneAndUpdate({'_id': id}, { $push: { groups: { id: groupUpdated.id, name: groupUpdated.groupName }}});
-    
-    res.status(200).send(groupUpdated.id);
+    let groupUpdated = await Group.findOneAndUpdate({groupName}, { $push: { people: data }}).exec();
+    await User.findOneAndUpdate({'_id': id}, { $push: { groups: { id: groupUpdated.id, name: groupUpdated.groupName }}});
+    res.send(groupUpdated.id);
 };
-var acceptInvitation = async (req, res, next) => {
-    var { id, fullName } = req.token;
-    var { groupId } = req.body;
 
-    var group = await Group.findById(groupId).exec();
-    var user = await User.findById(id).exec();
+/** @api { post } /group/join
+ *  @apiDescription Accept invitation of a group with given id
+ *  @apiName groupJoin
+ *  @apiGroup group
+ *  
+ *  @apiParam (Body) {String} groupId - id of group, you can get it from /user/invitations
+ *  @apiParam (Header) {String} X-Token - token received from /auth routes
+ *  
+ *  @apiSuccess {String} string containing id of joined group
+ */
+
+let acceptInvitation = async (req, res, next) => {
+    let { id, fullName } = req.token;
+    let { groupId } = req.body;
+
+    let group = await Group.findById(groupId).exec();
+    let user = await User.findById(id).exec();
 
     if(!group || !user) res.status(401).send();
-    group.people = group.people.filter(person => { return person.id !== id})
+    group.people = group.people.filter(person => {
+        return person.id !== id;
+    });
     group.people.push({
         id: id,
         name: fullName,
-        subgroup: 'user'
+        subgroup: 'user',
     });
-    
 
-    user.invitations = user.invitations.filter(group => { return group.id !== groupId})
+
+    user.invitations = user.invitations.filter(group => {
+        return group.id !== groupId;
+    });
 
     user.groups.push({
-        id: group.id, 
-        name: group.groupName
+        id: group.id,
+        name: group.groupName,
     });
 
     await group.save();
     await user.save();
 
     res.send(groupId);
-}
+};
 
-var subgroups = async (req, res, next) => {
-    var { groupId } = req.params;
-    var groupMembers = await Group.findById(groupId).select("-_id people").exec();
+/** @api { get } /group/subgroups/:groupId
+ *  @apiDescription Get members of group with given groupId
+ *  @apiName groupJoin
+ *  @apiGroup group
+ *  
+ *  @apiParam (Body) {String} groupId - id of group, you can get it from /user/invitations
+ *  @apiParam (Header) {String} X-Token - token received from /auth routes
+ *  
+ *  @apiSuccess {String} string containing id of joined group
+ */
+
+// concerned about this route, why is it even named subgroups
+// TODO: rename this route to members!
+let subgroups = async (req, res, next) => {
+    let { groupId } = req.params;
+    let groupMembers = await Group.findById(groupId).select('-_id people').exec();
 
     res.send(groupMembers);
 };
 
-// is it even used?
-var allSubgroups = async ( req, res, next ) => {
-    var { groupId } = req.params;
-    var groupMembers = await Group.findById(groupId).select("-_id people").exec();
+// is it even used? ASK PROGRAMMERS, THEN DELETE
+let allSubgroups = async ( req, res, next ) => {
+    let { groupId } = req.params;
+    let groupMembers = await Group.findById(groupId).select('-_id people').exec();
     console.log(groupMembers);
     const unique = [...new Set(groupMembers.people.map(item => item.subgroup))];
 
     res.send(unique);
-}
+};
 
-var changeSubgroup = async (req, res, next) => {
-    var { changingId, groupId, changedSubgroup } = req.body
-    var { id } = req.token;
+let changeSubgroup = async (req, res, next) => {
+    let { changingId, groupId, changedSubgroup } = req.body;
+    let { id } = req.token;
 
-    var group = await Group.findById(groupId).exec();
-    var user = group.people.find(person => { if (person.id === id) return person});
-    var userSubgroup = user.subgroup;
+    let group = await Group.findById(groupId).exec();
+    let user = group.people.find(person => {
+        if(person.id === id) return person;
+    });
+    let userSubgroup = user.subgroup;
     if(userSubgroup !== 'admin') res.sendStatus(403);
-    else{
-        group.people.find(person => { if(person.id == changingId) return person}).subgroup = changedSubgroup;
+    else {
+        group.people.find(person => {
+            if(person.id == changingId) return person;
+        }).subgroup = changedSubgroup;
         group.markModified('people');
         await group.save();
 
         res.sendStatus(200);
     }
-    
 };
 
-var latestPing = (req, res, next) => {
+let latestPing = (req, res, next) => {
 
 };
 
@@ -182,5 +237,5 @@ module.exports = {
     subgroups,
     allSubgroups,
     changeSubgroup,
-    latestPing
+    latestPing,
 };

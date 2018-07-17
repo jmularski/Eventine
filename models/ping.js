@@ -1,7 +1,7 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-var PingSchema = new Schema({
+let PingSchema = new Schema({
     groupId: { type: String, required: true },
     createdAt: {type: Date, default: Date.now},
     creator: { type: String, required: true },
@@ -18,7 +18,7 @@ var PingSchema = new Schema({
     currentPeopleNumber: { type: Number, default: 0 },
     inProgress: { type: Boolean, default: false },
     progressor: { type: String, required: false },
-    progressorName: { type: String, required: false }
+    progressorName: { type: String, required: false },
 });
 
 module.exports = mongoose.model('ping', PingSchema);
