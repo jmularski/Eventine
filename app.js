@@ -31,10 +31,17 @@ let dbUsername = nconf.get('DB_USERNAME');
 let dbPassword = nconf.get('DB_PASSWORD');
 
 var mongoose = require('mongoose');
-//${dbUsername}:${dbPassword}@35.205.131.216:27017/kalejdoskop
-mongoose.connect(`mongodb://10.55.241.117:27017/kalejdoskop`, (err) => {
-    if(err) console.log(err);
-});
+
+if(nconf.get('NODE_ENV') == 'production'){
+    mongoose.connect(`mongodb://10.55.241.117:27017/kalejdoskop`, (err) => {
+        if(err) console.error(err);
+    });
+} else {
+    mongoose.connect(`mongodb://10.55.241.117:27017/kalejdoskop`, (err) => {
+        if(err) console.error(err);
+    })
+}
+
 
 //setup firebase
 var admin = require('firebase-admin');

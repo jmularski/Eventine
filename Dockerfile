@@ -1,6 +1,6 @@
 FROM node:latest
 
-MAINTAINER Jakub Mularski <jakubmularski723@gmail.com>
+LABEL author Jakub Mularski <jakubmularski723@gmail.com>
 
 ENV NODE_ENV=production
 ENV PORT=3000

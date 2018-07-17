@@ -2,16 +2,21 @@ var User = require('../models/user');
 var Group = require('../models/group');
 var Ping = require('../models/ping');
 
+async function getUserData(field){
+    let result = await User.findById(id).select(field);
+    return result;
+};
 var groupList = async (req, res, next) => {
     var { id } = req.token;
-    var groups = await User.findById(id).select('groups');
+    var groups = await getGroupData('groups');
     res.send({groups: groups.groups});
 };
 var invitations = async (req, res, next) => {
     var { id } = req.token;
-    var invitations = await User.findById(id).select('invitations');
+    var invitations = await getUserData('invitations');
     res.send({invitations: invitations.invitations});
 };
+
 var getTasks = async (req, res, next) => {
     var { id } = req.token;
     var user = await User.findById(id).exec();
