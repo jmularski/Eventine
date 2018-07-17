@@ -12,7 +12,7 @@ var corsOptions = {
     credentials: true,
     optionsSuccessStatus: 200
 };
-app.use(cors(corsOptions));
+//app.use(cors(corsOptions));
 
 //setup nconf
 const nconf = require('nconf');
