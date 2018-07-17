@@ -1,3 +1,4 @@
+minikube docker-env | Invoke-Expression
 docker build -t eventine -f Dockerfile-Dev .
 kubectl apply -f .\kubernetes\development\db-volume.yaml
 kubectl apply -f .\kubernetes\development\db-volume-claim.yaml
