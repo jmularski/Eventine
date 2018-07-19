@@ -5,6 +5,20 @@ const User = require('../models/user');
 const sendDelayedNotif = require('../lib/sendDelayedNotif');
 const _ = require('lodash');
 
+/** @api { post } /info/create
+ *  @apiDescription Create info for given group
+ *  @apiName infoCreate
+ *  @apiGroup info
+ *  
+ *  @apiParam (Body) {String} groupId - id of group, you can get it from /user/invitations
+ *  @apiParam (Body) {String} content - content of info
+ *  @apiParam (Body) {Array} targetGroups - array of subgroups you target info to
+ *  @apiParam (Body) {Time} plannedTime - time you want info to fire up
+ *  @apiParam (Header) {String} X-Token - token received from /auth routes
+ *  
+ *  @apiSuccess {Int} Only 200 
+ */
+
 let create = async (req, res, next) => {
     let { groupId, content, targetGroups, plannedTime } = req.body;
     let { id, fullName } = req.token;
@@ -69,6 +83,26 @@ let create = async (req, res, next) => {
 
     res.sendStatus(200);
 };
+
+/** @api { get } /info/list/:groupId
+ *  @apiDescription List info for given group
+ *  @apiName infoList
+ *  @apiGroup info
+ *  
+ *  @apiParam (Params) {String} groupId - id of group, you can get it from /user/invitations
+ *  @apiParam (Header) {String} X-Token - token received from /auth routes
+ *  
+ *  @apiSuccess {Object} Object that probably look like this {'info': [{
+ *  id,
+ *  groupId,
+ *  createdAt,
+ *  creator,
+ *  creatorName,
+ *  content,
+ *  targetGroups,
+ *  plannedTime
+ *  }]}  
+ */
 
 let list = async (req, res, next) => {
     let { groupId } = req.params;

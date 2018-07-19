@@ -4,10 +4,10 @@ const router = express.Router();
 const jwtReader = require('../middlewares/jwtReader');
 router.use(jwtReader);
 
-const groupController = require('../controllers/user');
-router.get('/groupList', groupController.groupList);
-router.get('/invitations', groupController.invitations);
-router.get('/tasks', groupController.getTasks);
-router.get('/friends', groupController.returnFriends);
+const userController = require('../controllers/user');
+router.get('/groupList', userController.groupList);
+router.get('/invitations', userController.invitations);
+router.get('/tasks', userController.getTasks);
+router.get('/friends', userController.returnFriends);
 
 module.exports = router;

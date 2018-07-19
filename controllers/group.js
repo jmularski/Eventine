@@ -69,8 +69,6 @@ let create = async (req, res, next) => {
     });
 
     // adding normal people to group
-
-
     newGroup.groupCode = groupCode;
     newGroup.people = peopleSchema;
     newGroup.groupName = groupName;
@@ -131,9 +129,9 @@ let join = async (req, res, next) => {
     res.send(groupUpdated.id);
 };
 
-/** @api { post } /group/join
+/** @api { post } /group/acceptInvitation
  *  @apiDescription Accept invitation of a group with given id
- *  @apiName groupJoin
+ *  @apiName groupAcceptInvitation
  *  @apiGroup group
  *  
  *  @apiParam (Body) {String} groupId - id of group, you can get it from /user/invitations
@@ -183,7 +181,9 @@ let acceptInvitation = async (req, res, next) => {
  *  @apiParam (Body) {String} groupId - id of group, you can get it from /user/invitations
  *  @apiParam (Header) {String} X-Token - token received from /auth routes
  *  
- *  @apiSuccess {String} string containing id of joined group
+ *  @apiSuccess {Object} Some weird JSON object, structured (I guess) like this - {"people": [{id: id,
+        name: fullName,
+        subgroup: subgroup}]}
  */
 
 // concerned about this route, why is it even named subgroups
@@ -204,6 +204,20 @@ let allSubgroups = async ( req, res, next ) => {
 
     res.send(unique);
 };
+
+
+/** @api { post } /group/changeSubgroup
+ *  @apiDescription Change subgroup of given member of given group.
+ *  @apiName groupChangeSubgroup
+ *  @apiGroup group
+ *  
+ *  @apiParam (Body) {String} groupId - id of group, you can get it from /user/invitations
+ *  @apiParam (Body) {String} changingId - id of person, that you want to change groups
+ *  @apiParam (Body) {String} changedSubgroup - name of subgroup you want to move person to
+ *  @apiParam (Header) {String} X-Token - token received from /auth routes
+ *  
+ *  @apiSuccess {Int} Only 200 
+ */
 
 let changeSubgroup = async (req, res, next) => {
     let { changingId, groupId, changedSubgroup } = req.body;
