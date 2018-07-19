@@ -5,6 +5,23 @@ const User = require('../models/user');
 const sendDelayedNotif = require('../lib/sendDelayedNotif');
 const _ = require('lodash');
 
+/** @api { post } /ping/create
+ *  @apiDescription Create ping for given group
+ *  @apiName pingCreate
+ *  @apiGroup ping
+ *  
+ *  @apiParam (Body) {String} groupId - id of group, you can get it from /user/invitations
+ *  @apiParam (Body) {String} title - title of ping
+ *  @apiParam (Body) {String} desc - description of ping
+ *  @apiParam (Body) {Array} targetGroups - array of subgroups you target info to
+ *  @apiParam (Body) {Time} plannedTime - time you want info to fire up
+ *  @apiParam (Body) {Int} howManyPeople - number of people that should be assigned to the task
+ *  @apiParam (Body) {Array} geo - array consisting of lat and lng 
+ *  @apiParam (Header) {String} X-Token - token received from /auth routes
+ *  
+ *  @apiSuccess {Int} Only 200 
+ */
+
 let create = async (req, res, next) => {
     let { groupId, title, desc, targetGroups, howManyPeople, plannedTime, geo } = req.body;
     let { id, fullName } = req.token;
@@ -74,6 +91,36 @@ let create = async (req, res, next) => {
     res.sendStatus(200);
 };
 
+/** @api { get } /ping/list/:groupId
+ *  @apiDescription get pings for given group
+ *  @apiName pingList
+ *  @apiGroup ping
+ *  
+ *  @apiParam (Params) {String} groupId - id of group, you can get it from /user/invitations
+ *  @apiParam (Header) {String} X-Token - token received from /auth routes
+ *  
+ *  @apiSuccess {Object} Object that probably look like this {'pings': [{
+ *  id,
+ *  groupId,
+ *  createdAt,
+ *  creator,
+ *  creatorName,
+ *  title,
+ *  desc,
+ *  targetGroups,
+ *  howManyPeople,
+ *  plannedTime,
+ *  geo,
+ *  ended,
+ *  executor,
+ *  executorName,
+ *  currentPeopleNumber,
+ *  inProgress,
+ *  progressor,
+ *  progressorName
+ *  }]}  
+ */
+
 let list = async (req, res, next) => {
     let { groupId } = req.params;
     let { id } = req.token;
@@ -104,12 +151,34 @@ let list = async (req, res, next) => {
     }
 };
 
+/** @api { post } /ping/inProgress
+ *  @apiDescription set status in progress for given ping
+ *  @apiName pingInProgress
+ *  @apiGroup ping
+ *  
+ *  @apiParam (Params) {String} pingId - id of ping, you can get it from /ping/list
+ *  @apiParam (Header) {String} X-Token - token received from /auth routes
+ *  
+ *  @apiSuccess {Int} Returns 200   
+ */
+
 let inProgress = async (req, res, next) => {
     let { pingId } = req.body;
     let { id, fullName } = req.token;
     await Ping.findByIdAndUpdate(pingId, { progressor: id, progressorName: fullName, inProgress: true }).exec();
     res.sendStatus(200);
 };
+
+/** @api { post } /ping/end
+ *  @apiDescription set status in progress for given ping
+ *  @apiName pingEnd
+ *  @apiGroup ping
+ *  
+ *  @apiParam (Params) {String} pingId - id of ping, you can get it from /ping/list
+ *  @apiParam (Header) {String} X-Token - token received from /auth routes
+ *  
+ *  @apiSuccess {Int} Returns 200   
+ */
 
 let end = async (req, res, next) => {
     let { pingId } = req.body;
