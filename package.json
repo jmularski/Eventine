@@ -4,8 +4,10 @@
   "description": "Application made for purposes of Kalejdoskop 2018 theatrical event",
   "main": "index.js",
   "scripts": {
-    "test": "mocha ./tests --recursive",
-    "start": "node ./src/config/www.js"
+    "test": "set NODE_ENV=test && mocha ./tests --recursive",
+    "start": "node ./src/config/www.js",
+    "linter": "./node_modules/.bin/eslint ./src",
+    "linter:fix": "./node_modules/.bin/eslint ./src --fix"
   },
   "repository": {
     "type": "git",
@@ -42,7 +44,8 @@
     "eslint": "5.1.0",
     "eslint-config-google": "0.9.1",
     "mocha": "5.2.0",
-    "nodemon": "1.17.5"
+    "nodemon": "1.17.5",
+    "supertest": "3.3.0"
   },
   "engines": {
     "node": ">=7.6.0"

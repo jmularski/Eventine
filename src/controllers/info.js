@@ -9,14 +9,14 @@ const _ = require('lodash');
  *  @apiDescription Create info for given group
  *  @apiName infoCreate
  *  @apiGroup info
- *  
+ *
  *  @apiParam (Body) {String} groupId - id of group, you can get it from /user/invitations
  *  @apiParam (Body) {String} content - content of info
  *  @apiParam (Body) {Array} targetGroups - array of subgroups you target info to
  *  @apiParam (Body) {Time} plannedTime - time you want info to fire up
  *  @apiParam (Header) {String} X-Token - token received from /auth routes
- *  
- *  @apiSuccess {Int} Only 200 
+ *
+ *  @apiSuccess {Int} Only 200
  */
 
 let create = async (req, res, next) => {
@@ -88,10 +88,10 @@ let create = async (req, res, next) => {
  *  @apiDescription List info for given group
  *  @apiName infoList
  *  @apiGroup info
- *  
+ *
  *  @apiParam (Params) {String} groupId - id of group, you can get it from /user/invitations
  *  @apiParam (Header) {String} X-Token - token received from /auth routes
- *  
+ *
  *  @apiSuccess {Object} Object that probably look like this {'info': [{
  *  id,
  *  groupId,
@@ -101,7 +101,7 @@ let create = async (req, res, next) => {
  *  content,
  *  targetGroups,
  *  plannedTime
- *  }]}  
+ *  }]}
  */
 
 let list = async (req, res, next) => {

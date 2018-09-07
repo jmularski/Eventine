@@ -11,10 +11,10 @@ const encryptUtils = require('../lib/encryptUtils');
  *  @apiDescription Login user with given email and password
  *  @apiName authLocalLogin
  *  @apiGroup auth
- *  
+ *
  *  @apiParam (Body) {String} email - must be in email format (xxx@xxx.xx)
  *  @apiParam (Body) {String} password - must be at least 4 characters long
- *  
+ *
  *  @apiSuccess {Object} object with two fields success: true (why?) and token, which is used in future server actions
  */
 
@@ -49,12 +49,12 @@ let login = async (req, res, next) => {
  *  @apiDescription Register user with given email and password and full name
  *  @apiName authLocalRegister
  *  @apiGroup auth
- *  
+ *
  *  @apiParam (Body) {String} email - must be in email format (xxx@xxx.xx)
  *  @apiParam (Body) {String} password - must be at least 4 characters long
  *  @apiParam (Body) {String} fullName - must be at least 6 characters long up to 60 characters, full name of the user, serves as username later
- *  
- *  
+ *
+ *
  *  @apiSuccess {Object} object with two fields success: true (why?) and token, which is used in future server actions
  */
 
@@ -100,10 +100,10 @@ let register = async (req, res, next) => {
  *  @apiDescription Register user with given facebookId and full name
  *  @apiName authLocalRegister
  *  @apiGroup auth
- *  
+ *
  *  @apiParam (Body) {String} facebookId - facebook profile id (verify this with devs!), get it after logging in with facebook through facebooks Graph API
  *  @apiParam (Body) {String} fullName - must be at least 6 characters long up to 60 characters, full name of the user, serves as username later, get it after logging in with facebook through facebooks Graph API
- *  
+ *
  *  @apiSuccess {Object} object with two fields success: true (why?) and token, which is used in future server actions
  */
 

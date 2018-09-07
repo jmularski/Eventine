@@ -2,6 +2,14 @@ const User = require('../models/user');
 const Group = require('../models/group');
 const Ping = require('../models/ping');
 
+
+/**
+ * Get user data from specific field
+ * @param {String} id
+ * @param {String} field
+ * @return {Array} result
+ */
+
 async function getUserData(id, field) {
     let result = await User.findById(id).select(field).exec();
     return result;
@@ -11,13 +19,13 @@ async function getUserData(id, field) {
  *  @apiDescription give groups that user is in
  *  @apiName userGroupList
  *  @apiGroup user
- *  
+ *
  *  @apiParam (Header) {String} X-Token - token received from /auth routes
- *  
+ *
  *  @apiSuccess {Object} Returns JSON object: {groups: [{
  *  id,
  *  name
- *  }]}   
+ *  }]}
  */
 
 let groupList = async (req, res, next) => {
@@ -30,14 +38,14 @@ let groupList = async (req, res, next) => {
  *  @apiDescription give invitations that user has
  *  @apiName userInvitations
  *  @apiGroup user
- *  
+ *
  *  @apiParam (Header) {String} X-Token - token received from /auth routes
- *  
+ *
  *  @apiSuccess {Object} Returns JSON object: {invitations: [{
  *  id,
  *  name,
  *  invitedBy
- *  }]}   
+ *  }]}
  */
 
 let invitations = async (req, res, next) => {
@@ -47,7 +55,7 @@ let invitations = async (req, res, next) => {
 };
 
 
-//this is bad, rewrite this, maybe rewrite whole system?
+// this is bad, rewrite this, maybe rewrite whole system?
 let getTasks = async (req, res, next) => {
     let { id } = req.token;
     let user = await User.findById(id).exec();
@@ -79,23 +87,25 @@ let getTasks = async (req, res, next) => {
  *  @apiDescription give friends that user has
  *  @apiName userFriends
  *  @apiGroup user
- *  
+ *
  *  @apiParam (Header) {String} X-Token - token received from /auth routes
- *  
+ *
  *  @apiSuccess {Object} Returns JSON object: {users: [{
  *  id,
  *  fullName,
- *  }]}   
+ *  }]}
  */
 
-//this has too much data, remove unnecessary data!
+// this has too much data, remove unnecessary data!
 let returnFriends = async (req, res, next) => {
     let { id } = req.token;
     let user = User.findById(id).exec();
+    let users;
     if(user.facebookId) {
-        let users = await User.find({'facebookId': { '$exists': false } }).select('fullName').exec();
+        users = await User.find({'facebookId': { '$exists': false } })
+                          .select('fullName').exec();
     } else {
-        let users = await User.find({'_id': { $ne: id }}).exec();
+        users = await User.find({'_id': { $ne: id }}).exec();
     }
     res.send({users});
 };

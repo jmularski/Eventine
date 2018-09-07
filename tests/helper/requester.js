@@ -1,21 +1,17 @@
-const request = require('axios');
-
+const request = require('supertest');
+const server = require('../../src/config/www');
 let post = async (endpoint, data) => {
-    try {
-        let response = await request.post(`http://localhost:3000${endpoint}`, data);
-        return response;
-    } catch(err) {
-        return err;
-    }
+    return request(server)
+            .post(endpoint)
+            .send(data)
+            .set('Accept', 'application/json')
 };
 
 let get = async (endpoint, data) => {
-    try {
-        let response = await request.get(endpoint, {params: data});
-        return response;
-    } catch(err) {
-        return err;
-    }
+    return request(server)
+            .get(endpoint)
+            .send(data)
+            .set('Accept', 'application/json')
 };
 
 module.exports = {

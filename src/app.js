@@ -7,11 +7,11 @@ app.use(helmet());
 
 // setup cors
 const cors = require('cors');
-const corsOptions = {
+/* const corsOptions = {
     origin: 'https://kalejdoskop-e9e20.firebaseapp.com',
     credentials: true,
     optionsSuccessStatus: 200,
-};
+};*/
 app.use(cors());
 
 // setup nconf
@@ -28,8 +28,12 @@ app.use(bodyParser.json());
 
 // setup DB
 const mongoose = require('mongoose');
-let dbUrl = nconf.get('NODE_ENV') == 'production' ? 'mongodb://10.55.241.117:27017/kalejdoskop' : `mongodb://mongo:27017/kalejdoskop`;
-
+console.log(nconf.get('NODE_ENV'));
+let dbUrl;
+if(nconf.get('NODE_ENV') == 'production') dbUrl = 'mongodb://10.55.241.117:27017/kalejdoskop';
+else if(nconf.get('NODE_ENV') == 'development') dbUrl = 'mongodb://mongo:27017/kalejdoskop';
+else dbUrl = 'mongodb://localhost:27017/kalejdoskop';
+console.log(dbUrl);
 mongoose.connect(dbUrl, (err) => {
     if(err) console.error(err);
 });

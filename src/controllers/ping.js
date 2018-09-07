@@ -9,17 +9,17 @@ const _ = require('lodash');
  *  @apiDescription Create ping for given group
  *  @apiName pingCreate
  *  @apiGroup ping
- *  
- *  @apiParam (Body) {String} groupId - id of group, you can get it from /user/invitations
+ *
+ *  @apiParam (Body) {String} groupId - id of group
  *  @apiParam (Body) {String} title - title of ping
  *  @apiParam (Body) {String} desc - description of ping
- *  @apiParam (Body) {Array} targetGroups - array of subgroups you target info to
+ *  @apiParam (Body) {Array} targetGroups - array of subgroups for ping
  *  @apiParam (Body) {Time} plannedTime - time you want info to fire up
- *  @apiParam (Body) {Int} howManyPeople - number of people that should be assigned to the task
- *  @apiParam (Body) {Array} geo - array consisting of lat and lng 
+ *  @apiParam (Body) {Int} howManyPeople - number of people that assign to task
+ *  @apiParam (Body) {Array} geo - array consisting of lat and lng
  *  @apiParam (Header) {String} X-Token - token received from /auth routes
- *  
- *  @apiSuccess {Int} Only 200 
+ *
+ *  @apiSuccess {Int} Only 200
  */
 
 let create = async (req, res, next) => {
@@ -81,8 +81,9 @@ let create = async (req, res, next) => {
             else return true;
         });
         try {
-            if(!plannedTime && plannedTime>Date.now() && notifIds.length !== 0) await admin.messaging().sendToDevice(notifIds, payload);
-            else sendDelayedNotif(payload, notifIds, plannedTime);
+            if(!plannedTime && plannedTime>Date.now() && notifIds.length !== 0) {
+                await admin.messaging().sendToDevice(notifIds, payload);
+            } else sendDelayedNotif(payload, notifIds, plannedTime);
         } catch(e) {
             console.log(e);
         }
@@ -95,10 +96,10 @@ let create = async (req, res, next) => {
  *  @apiDescription get pings for given group
  *  @apiName pingList
  *  @apiGroup ping
- *  
- *  @apiParam (Params) {String} groupId - id of group, you can get it from /user/invitations
+ *
+ *  @apiParam (Params) {String} groupId - id of group
  *  @apiParam (Header) {String} X-Token - token received from /auth routes
- *  
+ *
  *  @apiSuccess {Object} Object that probably look like this {'pings': [{
  *  id,
  *  groupId,
@@ -118,7 +119,7 @@ let create = async (req, res, next) => {
  *  inProgress,
  *  progressor,
  *  progressorName
- *  }]}  
+ *  }]}
  */
 
 let list = async (req, res, next) => {
@@ -155,17 +156,18 @@ let list = async (req, res, next) => {
  *  @apiDescription set status in progress for given ping
  *  @apiName pingInProgress
  *  @apiGroup ping
- *  
- *  @apiParam (Params) {String} pingId - id of ping, you can get it from /ping/list
+ *
+ *  @apiParam (Params) {String} pingId - id of ping, /ping/list
  *  @apiParam (Header) {String} X-Token - token received from /auth routes
- *  
- *  @apiSuccess {Int} Returns 200   
+ *
+ *  @apiSuccess {Int} Returns 200
  */
 
 let inProgress = async (req, res, next) => {
     let { pingId } = req.body;
     let { id, fullName } = req.token;
-    await Ping.findByIdAndUpdate(pingId, { progressor: id, progressorName: fullName, inProgress: true }).exec();
+    // fix me pls
+    await Ping.findByIdAndUpdate(pingId, { progressor: id, progressorName: fullName, inProgress: true });
     res.sendStatus(200);
 };
 
@@ -173,16 +175,17 @@ let inProgress = async (req, res, next) => {
  *  @apiDescription set status ended for given ping
  *  @apiName pingEnd
  *  @apiGroup ping
- *  
- *  @apiParam (Params) {String} pingId - id of ping, you can get it from /ping/list
+ *
+ *  @apiParam (Params) {String} pingId - id of ping, /ping/list
  *  @apiParam (Header) {String} X-Token - token received from /auth routes
- *  
- *  @apiSuccess {Int} Returns 200   
+ *
+ *  @apiSuccess {Int} Returns 200
  */
 
 let end = async (req, res, next) => {
     let { pingId } = req.body;
     let { id, fullName } = req.token;
+    // fix me pls
     await Ping.findByIdAndUpdate(pingId, { executor: id, executorName: fullName, ended: true });
     res.sendStatus(200);
 };

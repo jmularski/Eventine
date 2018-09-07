@@ -1,78 +1,86 @@
-const chai = require('chai');
-chai.should();
+const expect = require('chai').expect;
 
-let requester = require('../../helper/requester');
+const request = require('supertest');
+const server = require('../../../src/config/www');
 
 describe('LOGIN INTEGRATION TESTS', () => {
     describe('Successful attempt', () => {
-        let response;
+        let userData;
         before( async () => {
-            let userData = {
-                email: 'michno@michno.pl',
-                password: 'michno',
+            userData = {
+              email: 'michno@michno.pl',
+              password: 'michno',
             };
-            response = await requester.post('/auth/login', userData);
         });
-        it('Should return 200', () => {
-            (response.status).should.equal(200);
-        });
-        it('Should return jwt', () => {
-            (response.data).should.have.property('token');
+        it('Should return 200 and token', () => {
+            return request(server)
+            .post('/auth/login')
+            .send(userData)
+            .set('Accept', 'application/json')
+            .expect(200);
         });
     });
     describe('Failed cases', () => {
         describe('No email sent', async () => {
-            let response;
+            let userData;
             before( async () => {
-                let userData = {
-                    password: 'michno',
+                userData = {
+                  password: 'michno',
                 };
-                let data = await requester.post('/auth/login', userData);
-                response = data.response;
             });
             it('Should return 401', () => {
-                (response.status).should.equal(401);
+                return request(server)
+                .post('/auth/login')
+                .send(userData)
+                .set('Accept', 'application/json')
+                .expect(401);
             });
         });
         describe('No password sent', async () => {
-            let response;
+            let userData;
             before( async () => {
-                let userData = {
+                userData = {
                     email: 'marcin@michno.pl',
                 };
-                let data = await requester.post('/auth/login', userData);
-                response = data.response;
             });
             it('Should return 401', () => {
-                (response.status).should.equal(401);
+                return request(server)
+                .post('/auth/login')
+                .send(userData)
+                .set('Accept', 'application/json')
+                .expect(401);
             });
         });
         describe('No user with that email', async () => {
-            let response;
+            let userData;
             before( async () => {
-                let userData = {
+                userData = {
                     email: 'marcin@michnov2.pl',
                     password: 'michno123',
                 };
-                let data = await requester.post('/auth/login', userData);
-                response = data.response;
             });
             it('Should return 401', () => {
-                (response.status).should.equal(401);
+                return request(server)
+                .post('/auth/login')
+                .send(userData)
+                .set('Accept', 'application/json')
+                .expect(401);
             });
         });
         describe('Wrong password', async () => {
-            let response;
+            let userData;
             before( async () => {
-                let userData = {
+                userData = {
                     email: 'marcin@michno.pl',
                     password: 'michno123',
                 };
-                let data = await requester.post('/auth/login', userData);
-                response = data.response;
             });
             it('Should return 401', () => {
-                (response.status).should.equal(401);
+                return request(server)
+                .post('/auth/login')
+                .send(userData)
+                .set('Accept', 'application/json')
+                .expect(401);
             });
         });
     });

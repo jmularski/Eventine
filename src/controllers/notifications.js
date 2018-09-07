@@ -4,11 +4,11 @@ const User = require('../models/user');
  *  @apiDescription Update notification token of given user
  *  @apiName notifUpdateToken
  *  @apiGroup notif
- *  
- *  @apiParam (Body) {String} notifToken - notification token that I will use to send you notifs later 
+ *
+ *  @apiParam (Body) {String} notifToken - notification token that I will use to send you notifs later
  *  @apiParam (Header) {String} X-Token - token received from /auth routes
- *  
- *  @apiSuccess {Int} Only 200 
+ *
+ *  @apiSuccess {Int} Only 200
  */
 
 let updateToken = async (req, res) => {

@@ -8,12 +8,12 @@ const GroupError = require('../lib/errors/GroupError');
  *  @apiDescription Create group with given groupName that also serves as groupCode later, supports inviting people from facebook and app users
  *  @apiName groupCreate
  *  @apiGroup group
- *  
+ *
  *  @apiParam (Body) {String} groupName - name of group, required parameter
  *  @apiParam (Body) {String} facebookIds - list of ids of facebook friends invited - available only when logged through social media, not required
  *  @apiParam (Body) {String} normalIds - list of ids of normal users invited - you can get ids from /user/friends
  *  @apiParam (Header) {String} X-Token - token received from /auth routes
- *  
+ *
  *  @apiSuccess {String} string containing id of new created group
  */
 
@@ -105,11 +105,11 @@ let create = async (req, res, next) => {
  *  @apiDescription Join group with a given groupName
  *  @apiName groupJoin
  *  @apiGroup group
- *  
+ *
  *  @apiParam (Body) {String} groupName - name of group, required parameter
  *  @apiParam (Header) {String} X-Token - token received from /auth routes
- *  
- *  
+ *
+ *
  *  @apiSuccess {String} string containing id of joined group
  */
 
@@ -133,10 +133,10 @@ let join = async (req, res, next) => {
  *  @apiDescription Accept invitation of a group with given id
  *  @apiName groupAcceptInvitation
  *  @apiGroup group
- *  
+ *
  *  @apiParam (Body) {String} groupId - id of group, you can get it from /user/invitations
  *  @apiParam (Header) {String} X-Token - token received from /auth routes
- *  
+ *
  *  @apiSuccess {String} string containing id of joined group
  */
 
@@ -177,10 +177,10 @@ let acceptInvitation = async (req, res, next) => {
  *  @apiDescription Get members of group with given groupId
  *  @apiName groupJoin
  *  @apiGroup group
- *  
+ *
  *  @apiParam (Body) {String} groupId - id of group, you can get it from /user/invitations
  *  @apiParam (Header) {String} X-Token - token received from /auth routes
- *  
+ *
  *  @apiSuccess {Object} Some weird JSON object, structured (I guess) like this - {"people": [{id: id,
         name: fullName,
         subgroup: subgroup}]}
@@ -210,13 +210,13 @@ let allSubgroups = async ( req, res, next ) => {
  *  @apiDescription Change subgroup of given member of given group.
  *  @apiName groupChangeSubgroup
  *  @apiGroup group
- *  
+ *
  *  @apiParam (Body) {String} groupId - id of group, you can get it from /user/invitations
  *  @apiParam (Body) {String} changingId - id of person, that you want to change groups
  *  @apiParam (Body) {String} changedSubgroup - name of subgroup you want to move person to
  *  @apiParam (Header) {String} X-Token - token received from /auth routes
- *  
- *  @apiSuccess {Int} Only 200 
+ *
+ *  @apiSuccess {Int} Only 200
  */
 
 let changeSubgroup = async (req, res, next) => {
