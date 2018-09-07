@@ -4,13 +4,13 @@ const request = require('supertest');
 const server = require('../../../src/config/www');
 
 describe('LOGIN INTEGRATION TESTS', () =>{
-    before( () => {
+    before( async () => {
         let userData = {
             email: 'michno@michno.pl',
             fullName: 'Michno Michno',
             password: 'michno',
         };
-        request(server).post('/auth/register').send(userData).set('Accept', 'application/json');
+        await request(server).post('/auth/register').send(userData).set('Accept', 'application/json');
     })
     describe('Successful attempt', () => {
         let userData;
