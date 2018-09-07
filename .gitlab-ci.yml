@@ -1,7 +1,7 @@
 image: node:latest
 
 variables:
-  NODE_ENV: test
+  NODE_ENV: development
 
 services:
   - mongo:latest
