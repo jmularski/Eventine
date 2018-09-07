@@ -11,11 +11,12 @@ function generateRandomEmail() {
 };
 
 describe('REGISTER INTEGRATION TESTS', () => {
+    let userEmail = generateRandomEmail();
     describe('Successful attempt', () => {
         let userData;
         before( async () => {
             userData = {
-                email: generateRandomEmail(),
+                email: userEmail,
                 fullName: 'Michno Michno',
                 password: 'michno',
             };
@@ -49,7 +50,7 @@ describe('REGISTER INTEGRATION TESTS', () => {
             let userData;
             before( async () => {
                 userData = {
-                    email: 'michno@michno.pl',
+                    email: userEmail,
                     fullName: 'Michno Michno',
                     password: 'michno',
                 };

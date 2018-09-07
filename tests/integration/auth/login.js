@@ -3,7 +3,15 @@ const expect = require('chai').expect;
 const request = require('supertest');
 const server = require('../../../src/config/www');
 
-describe('LOGIN INTEGRATION TESTS', () => {
+describe('LOGIN INTEGRATION TESTS', () =>{
+    before( () => {
+        let userData = {
+            email: 'michno@michno.pl',
+            fullName: 'Michno Michno',
+            password: 'michno',
+        };
+        request(server).post('/auth/register').send(userData).set('Accept', 'application/json');
+    })
     describe('Successful attempt', () => {
         let userData;
         before( async () => {
