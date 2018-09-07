@@ -3,19 +3,15 @@ image: node:latest
 variables:
   NODE_ENV: test
 
+services:
+  - mongo:latest
+
 stages:
   - test
   - deploy
 
 test:
   stage: test
-  services:
-  - mongo:latest
   script:
     - npm install
     - npm test
-
-all_tests:
-  script:
-    - npm install
-    - npm start
