@@ -4,6 +4,7 @@ LABEL author Jakub Mularski <jakubmularski723@gmail.com>
 
 ENV NODE_ENV=development
 ENV PORT=3000
+ENV MONGO_SERVICE_HOST=localhost
 
 COPY . /var/www
 WORKDIR /var/www
@@ -13,4 +14,4 @@ RUN npm install
 
 EXPOSE 3000
 
-ENTRYPOINT [ "./node_modules/nodemon/bin/nodemon.js", "--exec", "npm", "start" ]
+ENTRYPOINT [ "npm", "start" ]

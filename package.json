@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha ./tests --recursive",
-    "start": "node ./config/www.js"
+    "start": "node ./src/config/www.js"
   },
   "repository": {
     "type": "git",

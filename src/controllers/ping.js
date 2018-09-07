@@ -170,7 +170,7 @@ let inProgress = async (req, res, next) => {
 };
 
 /** @api { post } /ping/end
- *  @apiDescription set status in progress for given ping
+ *  @apiDescription set status ended for given ping
  *  @apiName pingEnd
  *  @apiGroup ping
  *  

@@ -19,7 +19,7 @@ const nconf = require('nconf');
 nconf
     .argv()
     .env()
-    .file('./keys.json');
+    .file('../keys.json');
 
 // bodyParser
 const bodyParser = require('body-parser');
@@ -28,7 +28,7 @@ app.use(bodyParser.json());
 
 // setup DB
 const mongoose = require('mongoose');
-let dbUrl = nconf.get('NODE_ENV') == 'production' ? 'mongodb://10.55.241.117:27017/kalejdoskop' : `mongodb://${nconf.get('MONGO_SERVICE_HOST')}:27017/kalejdoskop`;
+let dbUrl = nconf.get('NODE_ENV') == 'production' ? 'mongodb://10.55.241.117:27017/kalejdoskop' : `mongodb://mongo:27017/kalejdoskop`;
 
 mongoose.connect(dbUrl, (err) => {
     if(err) console.error(err);
@@ -37,7 +37,7 @@ mongoose.connect(dbUrl, (err) => {
 
 // setup firebase
 const admin = require('firebase-admin');
-const serviceAccount = require('./kalejdoskopapp-privatekey.json');
+const serviceAccount = require('../kalejdoskopapp-privatekey.json');
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),

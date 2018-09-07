@@ -1,0 +1,26 @@
+version: "2"
+services: 
+  eventine:
+    container_name: eventine
+    restart: always
+    build: 
+      context: ../../
+      dockerfile: ./docker/dev/Dockerfile
+    ports: 
+      - "3000:3000"
+    links: 
+      - mongo
+    networks: 
+      - main_network
+  mongo:
+    container_name: mongo
+    image: mongo
+    volumes: 
+      - ./data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - main_network
+networks:
+  main_network:
+    driver: bridge
