@@ -4,7 +4,7 @@
   "description": "Application made for purposes of Kalejdoskop 2018 theatrical event",
   "main": "index.js",
   "scripts": {
-    "test": "set NODE_ENV=test && mocha ./tests --recursive",
+    "test": "set NODE_ENV=test && mocha ./tests --recursive --exit",
     "start": "node ./src/config/www.js",
     "linter": "./node_modules/.bin/eslint ./src",
     "linter:fix": "./node_modules/.bin/eslint ./src --fix"
