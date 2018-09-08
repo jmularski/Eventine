@@ -15,6 +15,8 @@ install_dependencies:
 
 test:
   stage: test
+  variables:
+    NODE_ENV: test
   services:
     - mongo:latest
   script: npm test
