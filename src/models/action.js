@@ -25,4 +25,4 @@ let ActionSchema = new Schema({
     }
 });
 
-module.exports = mongoose.model('ping', PingSchema);
+module.exports = mongoose.model('action', ActionSchema);
