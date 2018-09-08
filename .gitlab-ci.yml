@@ -48,7 +48,6 @@ docker:
   variables:
     CONTAINER_TEST_IMAGE: gcr.io/findme4-209120/eventine
   script:
-    - echo "$GOOGLE_KEY_SECRET" > findme4-209120-6cfa6ca86363.json # Google Cloud service accounts
     - gcloud auth activate-service-account --key-file findme4-209120-6cfa6ca86363.json
     - gcloud config set project findme4-209120
     - gcloud container builds submit -t $CONTAINER_TEST_IMAGE .
