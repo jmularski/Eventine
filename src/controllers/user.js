@@ -70,7 +70,7 @@ let getTasks = async (req, res, next) => {
 
         // getting pings of group
         let currentDate = new Date();
-        let foundPings = await Ping.find({ groupId,
+        let foundPings = await Action.find({ groupId, type: 'ping',
             $or: [
                 {'plannedTime': { '$gte': currentDate}},
                 {'plannedTime': null},

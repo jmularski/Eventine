@@ -69,7 +69,7 @@ app.use('/notif', notifications);
 const user = require('./routes/user');
 app.use('/user', user);
 
-const actions = require('./controllers/actions');
+const actions = require('./routes/actions');
 app.use('/actions', actions);
 
 // middlewares
