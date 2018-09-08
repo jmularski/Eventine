@@ -1,0 +1,20 @@
+image: node:4.2.2
+
+cache:
+  paths:
+  - node_modules/
+
+stages:
+  - build
+  - test
+
+install_dependencies:
+  stage: build
+  script:
+   - npm install
+
+test:
+  stage: test
+  services:
+    - mongo:latest
+  script: npm test
