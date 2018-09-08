@@ -1,6 +1,6 @@
 const User = require('../models/user');
 const Group = require('../models/group');
-const Ping = require('../models/ping');
+const Action = require('../models/action');
 
 
 /**

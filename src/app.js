@@ -72,12 +72,6 @@ app.use('/user', user);
 const actions = require('./controllers/actions');
 app.use('/actions', actions);
 
-//const ping = require('./routes/ping');
-//app.use('/ping', ping);
-
-//const info = require('./routes/info');
-//app.use('/info', info);
-
 // middlewares
 const notFound = require('./middlewares/notFound');
 const errorHandler = require('./middlewares/errorHandler');
