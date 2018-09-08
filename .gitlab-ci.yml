@@ -5,11 +5,12 @@ cache:
   - node_modules/
 
 stages:
-  - build
+  - install
   - test
+  - build
 
 install_dependencies:
-  stage: build
+  stage: install
   script:
    - npm install
 
@@ -38,3 +39,17 @@ code_quality:
         "registry.gitlab.com/gitlab-org/security-products/codequality:$SP_VERSION" /code
   artifacts:
     paths: [gl-code-quality-report.json]
+
+docker:
+  stage: build
+  image: google/cloud-sdk
+  services:
+    - docker:dind
+  variables:
+    CONTAINER_TEST_IMAGE: gcr.io/findme4-209120/eventine
+  script:
+    - echo "$GOOGLE_KEY_SECRET" > key.json # Google Cloud service accounts
+    - gcloud auth activate-service-account --key-file key.json
+    - gcloud config set project findme4-209120
+    - gcloud container builds submit -t $CONTAINER_TEST_IMAGE .
+
