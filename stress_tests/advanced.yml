@@ -1,0 +1,20 @@
+config:
+  target: http://35.234.124.12/
+  phases:
+    - duration: 60
+      arrivalRate: 20
+    - duration: 600
+      arrivalRate: 50
+  processor: "./randomizer.js"
+
+scenarios:
+  - name: "Register a user"
+    flow:
+    - function: "generateRandomData"
+    - post:
+        url: "/auth/register"
+        json:
+          fullName: "{{ name }}"
+          email: "{{ email }}"
+          password: "michno"
+    - log: "Sent a request to /users with {{ name }}, {{ email }}, {{ password }}"
