@@ -13,15 +13,12 @@ describe('LOGIN INTEGRATION TESTS', () =>{
         await request(server).post('/auth/register').send(userData).set('Accept', 'application/json');
     })
     describe('Successful attempt', () => {
-        let userData;
-        before( async () => {
-            userData = {
-              email: 'michno@michno.pl',
-              password: 'michno',
-            };
-        });
+        let userData = {
+            email: 'michno@michno.pl',
+            password: 'michno',
+        };
         it('Should return 200 and token', () => {
-            return request(server)
+            request(server)
             .post('/auth/login')
             .send(userData)
             .set('Accept', 'application/json')
@@ -30,14 +27,11 @@ describe('LOGIN INTEGRATION TESTS', () =>{
     });
     describe('Failed cases', () => {
         describe('No email sent', async () => {
-            let userData;
-            before( async () => {
-                userData = {
-                  password: 'michno',
-                };
-            });
+            let userData = {
+                password: 'michno',
+            };
             it('Should return 401', () => {
-                return request(server)
+                request(server)
                 .post('/auth/login')
                 .send(userData)
                 .set('Accept', 'application/json')
@@ -45,14 +39,11 @@ describe('LOGIN INTEGRATION TESTS', () =>{
             });
         });
         describe('No password sent', async () => {
-            let userData;
-            before( async () => {
-                userData = {
-                    email: 'marcin@michno.pl',
-                };
-            });
+            let userData = {
+                email: 'marcin@michno.pl',
+            };
             it('Should return 401', () => {
-                return request(server)
+                request(server)
                 .post('/auth/login')
                 .send(userData)
                 .set('Accept', 'application/json')
@@ -60,15 +51,12 @@ describe('LOGIN INTEGRATION TESTS', () =>{
             });
         });
         describe('No user with that email', async () => {
-            let userData;
-            before( async () => {
-                userData = {
-                    email: 'marcin@michnov2.pl',
-                    password: 'michno123',
-                };
-            });
+            let userData = {
+                email: 'marcin@michnov2.pl',
+                password: 'michno123',
+            };
             it('Should return 401', () => {
-                return request(server)
+                request(server)
                 .post('/auth/login')
                 .send(userData)
                 .set('Accept', 'application/json')
@@ -76,15 +64,13 @@ describe('LOGIN INTEGRATION TESTS', () =>{
             });
         });
         describe('Wrong password', async () => {
-            let userData;
-            before( async () => {
-                userData = {
-                    email: 'marcin@michno.pl',
-                    password: 'michno123',
-                };
-            });
+            let userData = {
+                email: 'marcin@michno.pl',
+                password: 'michno123',
+            };
+            
             it('Should return 401', () => {
-                return request(server)
+                request(server)
                 .post('/auth/login')
                 .send(userData)
                 .set('Accept', 'application/json')

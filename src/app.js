@@ -60,8 +60,8 @@ app.use(morgan('dev'));
 const auth = require('./routes/auth');
 app.use('/auth', auth);
 
-const groups = require('./routes/groups');
-app.use('/group', groups);
+//const groups = require('./routes/groups');
+//app.use('/group', groups);
 
 const notifications = require('./routes/notifications');
 app.use('/notif', notifications);
@@ -69,11 +69,14 @@ app.use('/notif', notifications);
 const user = require('./routes/user');
 app.use('/user', user);
 
-const ping = require('./routes/ping');
-app.use('/ping', ping);
+const actions = require('./controllers/actions');
+app.use('/actions', actions);
 
-const info = require('./routes/info');
-app.use('/info', info);
+//const ping = require('./routes/ping');
+//app.use('/ping', ping);
+
+//const info = require('./routes/info');
+//app.use('/info', info);
 
 // middlewares
 const notFound = require('./middlewares/notFound');
