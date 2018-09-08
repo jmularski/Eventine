@@ -7,7 +7,6 @@ cache:
 stages:
   - build
   - test
-  - deploy
 
 install_dependencies:
   stage: build
@@ -39,6 +38,3 @@ code_quality:
         "registry.gitlab.com/gitlab-org/security-products/codequality:$SP_VERSION" /code
   artifacts:
     paths: [gl-code-quality-report.json]
-
-docker:
-  stage: deploy
