@@ -31,7 +31,7 @@ const mongoose = require('mongoose');
 console.log(nconf.get('NODE_ENV'));
 let dbUrl;
 if(nconf.get('NODE_ENV') == 'production') dbUrl = 'mongodb://10.55.241.117:27017/kalejdoskop';
-else if(nconf.get('NODE_ENV') == 'development') dbUrl = 'mongodb://mongo:27017/kalejdoskop';
+else if(nconf.get('NODE_ENV') == 'dev' || nconf.get('NODE_ENV') == 'CI' ) dbUrl = 'mongodb://mongo:27017/kalejdoskop';
 else dbUrl = 'mongodb://localhost:27017/kalejdoskop';
 console.log(dbUrl);
 mongoose.connect(dbUrl, (err) => {
