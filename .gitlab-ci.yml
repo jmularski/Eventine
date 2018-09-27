@@ -48,7 +48,8 @@ docker:
   variables:
     CONTAINER_TEST_IMAGE: gcr.io/findme4-209120/eventine
   script:
-    - gcloud auth activate-service-account --key-file findme4-209120-6cfa6ca86363.json
-    - gcloud config set project findme4-209120
-    - gcloud container builds submit -t $CONTAINER_TEST_IMAGE .
+    - docker build -t eventine:latest -f ./docker/Dockerfile .
+    - docker tag eventine:latest ${CONTAINER_TEST_IMAGE}
+    - docker login -u _json_key --password-stdin https://eu.gcr.io < findme4-209120-f13531932f36.json
+    - docker push ${CONTAINER_TEST_IMAGE}
 
