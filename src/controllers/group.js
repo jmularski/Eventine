@@ -235,9 +235,8 @@ let latestPing = (req, res, next) => {
 module.exports = {
     create,
     join,
-    acceptInvitation,
-    subgroups,
-    allSubgroups,
+    //acceptInvitation,
+    members,
     changeSubgroup,
     latestPing,
 };

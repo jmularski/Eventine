@@ -7,10 +7,8 @@ router.use(jwtReader);
 const groupController = require('../controllers/group');
 router.post('/join', groupController.join);
 router.post('/create', groupController.create);
-router.post('/acceptInvitation', groupController.acceptInvitation);
 router.post('/changeSubgroup', groupController.changeSubgroup);
 router.get('/members/:groupId', groupController.members);
-router.get('/allSubgroups/:groupId', groupController.allSubgroups);
 router.get('/latestPings', groupController.latestPing);
 
 
