@@ -47,7 +47,7 @@ docker:
     - docker:dind
   variables:
     DOCKER_DRIVER: overlay
-    DOCKER_HOST: tcp://localhost:2375
+    DOCKER_HOST: tcp://127.0.0.1:2375
     CONTAINER_TEST_IMAGE: gcr.io/findme4-209120/eventine
   script:
     - docker build -t eventine:latest -f ./docker/Dockerfile .
