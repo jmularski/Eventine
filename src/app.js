@@ -60,8 +60,8 @@ app.use(morgan('dev'));
 const auth = require('./routes/auth');
 app.use('/auth', auth);
 
-//const groups = require('./routes/groups');
-//app.use('/group', groups);
+const groups = require('./routes/groups');
+app.use('/group', groups);
 
 const notifications = require('./routes/notifications');
 app.use('/notif', notifications);
