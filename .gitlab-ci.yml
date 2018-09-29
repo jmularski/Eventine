@@ -51,5 +51,5 @@ docker:
   script:
     - docker build -t eventine:latest -f ./docker/Dockerfile .
     - docker tag eventine:latest ${CONTAINER_TEST_IMAGE}
-    - docker login -u _json_key -p “$(cat findme4-209120-f13531932f36.json)” https://gcr.io
+    - docker login -u _json_key -p "$(cat findme4-209120-f13531932f36.json)" https://gcr.io
     - docker push ${CONTAINER_TEST_IMAGE}
