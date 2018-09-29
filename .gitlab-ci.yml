@@ -42,14 +42,18 @@ test:
 
 docker:
   stage: build
-  image: docker:stable
+  image: alpine:stable
   services:
     - docker:stable-dind
-    - google/cloud-sdk:latest
+    - google/cloud-sdk:alpine
   variables:
     CONTAINER_TEST_IMAGE: gcr.io/findme4-209120/eventine
     DOCKER_DRIVER: overlay2
   script:
+    - apk add docker
+    - apk update
+    - service docker start
+    - RUN curl -sSL https://sdk.cloud.google.com > /tmp/gcl && bash /tmp/gcl --install-dir=~/gcloud --disable-prompts`
     - docker build -t eventine:latest -f ./docker/Dockerfile .
     - docker tag eventine:latest ${CONTAINER_TEST_IMAGE}
     - gcloud auth activate-service-account --key-file findme4-209120-f13531932f36.json
