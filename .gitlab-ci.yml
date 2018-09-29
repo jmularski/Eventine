@@ -52,6 +52,6 @@ docker:
     - docker build -t eventine:latest -f ./docker/Dockerfile .
     - docker tag eventine:latest ${CONTAINER_TEST_IMAGE}
     - docker pull google/cloud-sdk:alpine
-    - docker run -ti --name gcloud-config google/cloud-sdk gcloud auth activate-service-account --key-file findme4-209120-f13531932f36.json
-    - docker run -ti --volumes-from gcloud-config google/cloud-sdk gcloud docker -- push ${CONTAINER_TEST_IMAGE}
+    - docker run -i --name gcloud-config google/cloud-sdk gcloud auth activate-service-account --key-file findme4-209120-f13531932f36.json
+    - docker run -i --volumes-from gcloud-config google/cloud-sdk gcloud docker -- push ${CONTAINER_TEST_IMAGE}
 
