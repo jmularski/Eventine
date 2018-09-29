@@ -42,10 +42,11 @@ test:
 
 docker:
   stage: build
-  image: docker:dind
+  image: docker:stable
+  services:
+    - docker:stable-dind
   variables:
     CONTAINER_TEST_IMAGE: gcr.io/findme4-209120/eventine
-    DOCKER_HOST: tcp://localhost:2375
     DOCKER_DRIVER: overlay2
   script:
     - docker build -t eventine:latest -f ./docker/Dockerfile .
