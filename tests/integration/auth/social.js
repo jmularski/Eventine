@@ -1,0 +1,46 @@
+const expect = require('chai').expect;
+
+const request = require('supertest');
+const server = require('../../../src/config/www');
+
+describe("SOCIAL INTEGRATION TESTS", () => {
+    describe("Successful attempt", () => {
+        const userData = {
+            facebookId: "fake_token",
+            fullName: "Marcin Michno"
+        };
+        it("Returns 200.", () => {
+            request(server)
+            .post('/auth/social')
+            .send(userData)
+            .set('Accept', 'application/json')
+            .expect(200);
+        });
+    })
+    describe("Unsuccessful attempts", () => {
+        describe("Has no token", () => {
+            const userData = {
+                fullName: "Marcin Michno"
+            };
+            it("Should return 401", () => {
+                request(server)
+                .post('/auth/social')
+                .send(userData)
+                .set('Accept', 'application/json')
+                .expect(401);
+            })
+        });
+        describe("Has no fullName", () => {
+            const userData = {
+                facebookId: "fake_token",
+            }
+            it("Should return 401", () => {
+                request(server)
+                .post('/auth/social')
+                .send(userData)
+                .set('Accept', 'application/json')
+                .expect(401);
+            });
+        });
+    })
+});
