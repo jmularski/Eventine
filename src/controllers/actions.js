@@ -129,7 +129,7 @@ let list = async (req, res, next) => {
     });
     let userStatus = user[0].subgroup;
     if(userStatus === 'admin') {
-        let pings = await Ping.find({ groupId, ended: false }).exec();
+        let pings = await Action.find({ groupId, ended: false }).exec();
         res.send({pings});
     } else {
         let pings = await Action.find({$or: [

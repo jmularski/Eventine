@@ -4,7 +4,7 @@ const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 
 const encryptUtils = require('../lib/encryptUtils');
-
+const createToken = require('../lib/createToken');
 // TODO: unit testing, integration tests
 
 /** @api { post } /auth/login Login
@@ -41,7 +41,7 @@ let login = async (req, res, next) => {
     let passComparison = await encryptUtils.compare(password, user.password);
     if(!passComparison) return next(new NotAuthenticated('Bad password'));
 
-    let token = jwt.sign({'fullName': user.fullName, 'id': user.id}, 'kalejdoskop', {expiresIn: '7d'});
+    let token = createToken(user.fullName, user.id);
     res.status(200).send({success: true, token});
 };
 
@@ -92,7 +92,7 @@ let register = async (req, res, next) => {
         password,
     });
     await newUser.save();
-    let token = jwt.sign({'fullName': newUser.fullName, 'id': newUser.id}, 'kalejdoskop', {expiresIn: '7d'});
+    let token = createToken(newUser.fullName, newUser.id);
     res.status(200).send({success: true, token});
 };
 
@@ -125,15 +125,15 @@ let social = async (req, res, next) => {
     let { facebookId, fullName } = req.body;
 
     let user = await User.findOne({facebookId}).exec();
+    let newUser = new User({
+        facebookId,
+        fullName,
+    });
     if(!user) {
-        let user = new User({
-            facebookId,
-            fullName,
-        });
-        await user.save();
+        await newUser.save();
     }
 
-    let token = jwt.sign({'fullName': user.fullName, 'id': user.id}, 'kalejdoskop', {expiresIn: '7d'});
+    let token = createToken(newUser.fullName, newUser.id);
     res.status(200).send({success: true, token});
 };
 
