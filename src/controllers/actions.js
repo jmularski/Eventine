@@ -25,8 +25,11 @@ const _ = require('lodash');
 let create = async (req, res, next) => {
     let { groupId, type, title, desc, targetGroups, plannedTime, geo } = req.body;
     let { id, fullName } = req.token;
-    if(plannedTime) plannedTime = new Date(plannedTime);
-    
+    let status = 'sent';
+    if(plannedTime) {
+        plannedTime = new Date(plannedTime);
+        status = 'planned'
+    }
     let action = new Action({
         groupId,
         type,
@@ -36,12 +39,13 @@ let create = async (req, res, next) => {
         },
         title,
         desc,
+        status,
         targetGroups,
         plannedTime,
         geo,
     });
 
-    await ping.save();
+    await action.save();
 
     if(targetGroups) {
         let group = await Group.findById(groupId).exec();
@@ -64,11 +68,6 @@ let create = async (req, res, next) => {
         }).select('-_id notifToken').exec();
 
         let payload = {
-            /* notification: {
-                title: `W twojej grupie powstał ping o nazwie ${title}`,
-                body: `Opis: ${desc}`,
-                sound: 'default'
-            },*/
             data: {
                 title,
                 desc,
@@ -129,23 +128,23 @@ let list = async (req, res, next) => {
         return person.id == id;
     });
     let userStatus = user[0].subgroup;
-    console.log(userStatus);
-    if( !userStatus ) res.sendStatus(403);
-    else if(userStatus === 'admin') {
+    if(userStatus === 'admin') {
         let pings = await Ping.find({ groupId, ended: false }).exec();
         res.send({pings});
     } else {
-        let currentDate = new Date();
         let pings = await Action.find({$or: [
                 { groupId,
                 type: 'ping',
                 $or: [
-                    {'plannedTime': { '$gte': currentDate}},
+                    {'plannedTime': { '$gte': new Date()}},
                     {'plannedTime': null},
                 ],
                 targetGroups: userStatus,
-                ended: false },
-                { groupId, creator: id}],
+                $or: [
+                    {status: 'sent'},
+                    {status: 'inProgress'}
+                ]},
+                { groupId, 'creator.id': id}],
         }).exec();
         res.send({pings});
     }
@@ -165,7 +164,6 @@ let list = async (req, res, next) => {
 let inProgress = async (req, res, next) => {
     let { pingId } = req.body;
     let { id, fullName } = req.token;
-    // fix me pls
     await Action.findByIdAndUpdate(pingId, { progressor: {id, name: fullName}, status: 'inProgress' });
     res.sendStatus(200);
 };
