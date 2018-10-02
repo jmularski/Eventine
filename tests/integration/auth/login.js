@@ -10,7 +10,7 @@ describe('LOGIN INTEGRATION TESTS', () =>{
             fullName: 'Michno Michno',
             password: 'michno',
         };
-        await request(server).post('/auth/register').send(userData).set('Accept', 'application/json').end(done);
+        await request(server).post('/auth/register').send(userData).set('Accept', 'application/json');
     })
     describe('Successful attempt', () => {
         let userData = {
