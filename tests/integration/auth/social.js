@@ -3,10 +3,12 @@ const expect = require('chai').expect;
 const request = require('supertest');
 const server = require('../../../src/config/www');
 
+const { generateFakeSocialToken } = require('../../helper/object-generator');
+
 describe("SOCIAL INTEGRATION TESTS", () => {
     describe("Successful attempt", () => {
         const userData = {
-            facebookId: "fake_token",
+            facebookId: generateFakeSocialToken(),
             fullName: "Marcin Michno"
         };
         it("Returns 200.", () => {
@@ -32,7 +34,7 @@ describe("SOCIAL INTEGRATION TESTS", () => {
         });
         describe("Has no fullName", () => {
             const userData = {
-                facebookId: "fake_token",
+                facebookId: generateFakeSocialToken(),
             }
             it("Should return 401", () => {
                 request(server)

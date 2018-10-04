@@ -6,10 +6,10 @@ const randomString = require('randomstring');
 const request = require('supertest');
 const server = require('../../../src/config/www');
 
-let generateRandomEmail = require('../../helper/generateRandomEmail');
+let { generateRandomEmail } = require('../../helper/object-generator.js');
 
 describe('REGISTER INTEGRATION TESTS', () => {
-    let userEmail = generateRandomEmail;
+    let userEmail = generateRandomEmail();
     describe('Successful attempt', () => {
         let userData = {
             email: userEmail,

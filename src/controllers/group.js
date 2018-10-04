@@ -20,7 +20,7 @@ const GroupError = require('../lib/errors/GroupError');
 let create = async (req, res, next) => {
     req.checkBody({
         groupName: {
-            notEmpty: { errorMessage: 'Missing groupName' },
+            notEmpty: { errorMessage: 'Missing group name' },
         },
     });
     let validationErrors = req.validationErrors();
@@ -28,7 +28,6 @@ let create = async (req, res, next) => {
 
     let { groupName, facebookIds, normalIds } = req.body;
     let { id, fullName } = req.token;
-    let groupCode = groupName;
 
 
     // update User invitations field and create a new Group object - I should get rid of foreach, replace it with map (done)
@@ -69,13 +68,13 @@ let create = async (req, res, next) => {
     });
 
     // adding normal people to group
-    newGroup.groupCode = groupCode;
+    newGroup.groupCode = groupName;
     newGroup.people = peopleSchema;
     newGroup.groupName = groupName;
     await newGroup.save();
 
     // send notification
-    if(peopleData) {
+    if(peopleData.length > 0) {
         let notifIds = peopleData.map(person => person.notifToken);
         if(notifIds.length != 0) {
             try {
