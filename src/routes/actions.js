@@ -8,6 +8,6 @@ const actionsController = require('../controllers/actions');
 router.post('/create', actionsController.create);
 router.post('/inProgress', actionsController.inProgress);
 router.post('/end', actionsController.end);
-router.get('/list/:groupId', actionsController.list);
+router.get('/list/:groupId/:type', actionsController.list);
 
 module.exports = router;

@@ -94,15 +94,15 @@ let create = async (req, res, next) => {
     res.sendStatus(200);
 };
 
-/** @api { get } /ping/list/:groupId
- *  @apiDescription get pings for given group
- *  @apiName pingList
- *  @apiGroup ping
+/** @api { get } /action/list/:groupId
+ *  @apiDescription get actions for given group
+ *  @apiName actionsList
+ *  @apiGroup action
  *
  *  @apiParam (Params) {String} groupId - id of group
  *  @apiParam (Header) {String} X-Token - token received from /auth routes
  *
- *  @apiSuccess {Object} Object that probably look like this {'pings': [{
+ *  @apiSuccess {Object} Object that probably look like this {'actions': [{
  *  id,
  *  groupId,
  *  type
@@ -120,7 +120,7 @@ let create = async (req, res, next) => {
  */
 
 let list = async (req, res, next) => {
-    let { groupId } = req.params;
+    let { groupId, type } = req.params;
     let { id } = req.token;
     let group = await Group.findById(groupId).exec();
     if( !group ) res.sendStatus(403);
@@ -129,24 +129,21 @@ let list = async (req, res, next) => {
     });
     let userStatus = user[0].subgroup;
     if(userStatus === 'admin') {
-        let pings = await Action.find({ groupId, ended: false }).exec();
-        res.send({pings});
+        let actions = await Action.find({ groupId, type }).exec();
+        res.send({actions});
     } else {
-        let pings = await Action.find({$or: [
+        let actions = await Action.find({$or: [
                 { groupId,
-                type: 'ping',
+                type,
                 $or: [
                     {'plannedTime': { '$gte': new Date()}},
                     {'plannedTime': null},
                 ],
                 targetGroups: userStatus,
-                $or: [
-                    {status: 'sent'},
-                    {status: 'inProgress'}
-                ]},
+                status: {$ne: 'ended'}},
                 { groupId, 'creator.id': id}],
         }).exec();
-        res.send({pings});
+        res.send({actions});
     }
 };
 
