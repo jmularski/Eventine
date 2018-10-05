@@ -73,12 +73,14 @@ const actions = require('./routes/actions');
 app.use('/actions', actions);
 
 // middlewares
+const botFucker = require('./middlewares/botFucker');
 const notFound = require('./middlewares/notFound');
 const errorHandler = require('./middlewares/errorHandler');
 const ignoreFavicon = require('./middlewares/ignoreFavicon');
 
+app.use(ignoreFavicon);
+app.use(botFucker);
 app.use(notFound);
 app.use(errorHandler);
-app.use(ignoreFavicon);
 
 module.exports = app;
