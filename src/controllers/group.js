@@ -256,5 +256,5 @@ module.exports = {
     members,
     changeSubgroup,
     updateLocation,
-    nearest
+    //nearest
 };
