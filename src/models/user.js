@@ -9,6 +9,7 @@ let UserSchema = new Schema({
     notifToken: {type: String, required: false},
     invitations: {type: Array, default: []},
     groups: {type: Array, default: []},
+    isPartner: { type: Boolean, default: false}
 });
 
 module.exports = mongoose.model('user', UserSchema);

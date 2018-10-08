@@ -8,18 +8,24 @@ let generateRandomEmail = () => {
 let generateFakeSocialToken = () => {
     return randomString.generate(30);
 };
-let generateToken = async () => {
+let generateUser = async () => {
     let user = new User({
         email: generateRandomEmail(),
         password: 'michno',
         fullName: 'Marcin Michno'
     });
     await user.save();
-    return createToken(user.fullName, user.id);
+    return user;
+};
+let generateToken = async () => {
+    let user = await generateUser();
+    let token = createToken(user.fullName, user.id);
+    return token;
 };
 
 module.exports = {
     generateRandomEmail,
     generateFakeSocialToken,
+    generateUser,
     generateToken
 };

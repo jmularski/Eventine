@@ -42,8 +42,8 @@ let login = async (req, res, next) => {
     if(!passComparison) return next(new NotAuthenticated('Bad password'));
 
     let token = createToken(user.fullName, user.id);
-    let fullName = user.fullName;
-    res.status(200).send({success: true, token, fullName});
+    let isPartner = user.isPartner;
+    res.status(200).send({success: true, token, fullName, isPartner});
 };
 
 /** @api { post } /auth/register Register
@@ -80,21 +80,23 @@ let register = async (req, res, next) => {
 
     // registration
 
-    let { email, fullName, password } = req.body;
+    let { email, fullName, password, isPartner } = req.body;
 
     let user = await User.findOne({email}).exec();
     if(user) return next(new NotAuthenticated('User with this email already exists!'));
 
     password = await encryptUtils.encrypt(password);
     if(password === null) return next(new NotAuthenticated('Sorry, backend fucked up!'));
+    if(!isPartner) isPartner = false;
     let newUser = new User({
         email,
         fullName,
         password,
+        isPartner
     });
     await newUser.save();
     let token = createToken(newUser.fullName, newUser.id);
-    res.status(200).send({success: true, token, fullName});
+    res.status(200).send({success: true, token, fullName, isPartner});
 };
 
 /** @api { post } /auth/social Social
@@ -135,7 +137,8 @@ let social = async (req, res, next) => {
     }
 
     let token = createToken(newUser.fullName, newUser.id);
-    res.status(200).send({success: true, token, fullName});
+    let isPartner = user.isPartner;
+    res.status(200).send({success: true, token, fullName, isPartner});
 };
 
 module.exports = {
