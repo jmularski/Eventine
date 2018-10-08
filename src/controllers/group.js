@@ -59,12 +59,14 @@ let create = async (req, res, next) => {
             id: person.id,
             name: person.fullName,
             subgroup: 'invited',
+            location: ''
         };
     });
     peopleSchema.push({
         id: id,
         name: fullName,
         subgroup: 'admin',
+        location: ''
     });
 
     // adding normal people to group
@@ -120,6 +122,7 @@ let join = async (req, res, next) => {
         id: id,
         name: fullName,
         subgroup: 'user',
+        location: ''
     };
 
     if(!groupName) res.sendStatus(403);
@@ -227,9 +230,24 @@ let changeSubgroup = async (req, res, next) => {
     }
 };
 
-let latestPing = (req, res, next) => {
-
+let updateLocation = (req, res) => {
+    let { groupId, locationTag } = req.body
+    let { id } = req.token;
+    let group = await Group.findById(groupId).exec();
+    group.people.find(person => person.id === id).location = locationTag;
+    group.markModified('people');
+    await group.save();
+    res.sendStatus(200);
 };
+
+/*let nearest = (req, res) => {
+    let { groupId } = req.body;
+    let { id } = req.token;
+    let group = await Group.findById(groupId).exec();
+    let userLocation = group.people.find( person => person.id === id).location;
+    let otherUsers = group.people.find( person => person.location === userLocation );
+    let otherUsersToken = otherUsers.map( person => p)
+}*/
 
 module.exports = {
     create,
@@ -237,5 +255,6 @@ module.exports = {
     //acceptInvitation,
     members,
     changeSubgroup,
-    latestPing,
+    updateLocation,
+    nearest
 };

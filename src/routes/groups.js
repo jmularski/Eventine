@@ -8,8 +8,7 @@ const groupController = require('../controllers/group');
 router.post('/join', groupController.join);
 router.post('/create', groupController.create);
 router.post('/changeSubgroup', groupController.changeSubgroup);
+router.post('/location', groupController.updateLocation);
 router.get('/members/:groupId', groupController.members);
-router.get('/latestPings', groupController.latestPing);
-
 
 module.exports = router;

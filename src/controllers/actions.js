@@ -134,7 +134,6 @@ let list = async (req, res, next) => {
     } else {
         let actions = await Action.find({$or: [
                 { groupId,
-                type,
                 $or: [
                     {'plannedTime': { '$gte': new Date()}},
                     {'plannedTime': null},
@@ -143,6 +142,7 @@ let list = async (req, res, next) => {
                 status: {$ne: 'ended'}},
                 { groupId, 'creator.id': id}],
         }).exec();
+        if(type !== 'all') actions = actions.filter((action) => action.type === type)
         res.send({actions});
     }
 };
