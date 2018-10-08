@@ -43,6 +43,7 @@ let login = async (req, res, next) => {
 
     let token = createToken(user.fullName, user.id);
     let isPartner = user.isPartner;
+    let fullName = user.fullName;
     res.status(200).send({success: true, token, fullName, isPartner});
 };
 
