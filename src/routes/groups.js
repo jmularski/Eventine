@@ -9,6 +9,7 @@ router.post('/join', groupController.join);
 router.post('/create', groupController.create);
 router.post('/changeSubgroup', groupController.changeSubgroup);
 router.post('/location', groupController.updateLocation);
+router.post('/pingOrganizer', groupController.pingOrganizer);
 router.get('/members/:groupId', groupController.members);
 
 module.exports = router;

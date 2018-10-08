@@ -240,14 +240,31 @@ let updateLocation = async (req, res) => {
     res.sendStatus(200);
 };
 
-/*let nearest = (req, res) => {
+let nearest = (req, res) => {
     let { groupId } = req.body;
     let { id } = req.token;
     let group = await Group.findById(groupId).exec();
     let userLocation = group.people.find( person => person.id === id).location;
     let otherUsers = group.people.find( person => person.location === userLocation );
-    let otherUsersToken = otherUsers.map( person => p)
-}*/
+
+};
+
+let pingOrganizer = (req, res) => {
+    let { organizerId } = req.body;
+    let { id } = req.token;
+    let notifToken = await User.findById(organizerId).select('-_id notifToken');
+    if(notifToken) {
+        let payload = {
+            data: {
+                title,
+                desc,
+                action: 'create',
+                type: 'ping',
+            },
+        };
+        await admin.messaging.sendToDevice(notifToken, payload);
+    };
+};
 
 module.exports = {
     create,
@@ -256,5 +273,6 @@ module.exports = {
     members,
     changeSubgroup,
     updateLocation,
-    //nearest
+    nearest,
+    pingOrganizer
 };

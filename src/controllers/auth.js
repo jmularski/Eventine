@@ -42,7 +42,8 @@ let login = async (req, res, next) => {
     if(!passComparison) return next(new NotAuthenticated('Bad password'));
 
     let token = createToken(user.fullName, user.id);
-    res.status(200).send({success: true, token});
+    let fullName = user.fullName;
+    res.status(200).send({success: true, token, fullName});
 };
 
 /** @api { post } /auth/register Register
@@ -93,7 +94,8 @@ let register = async (req, res, next) => {
     });
     await newUser.save();
     let token = createToken(newUser.fullName, newUser.id);
-    res.status(200).send({success: true, token});
+    let fullName = user.fullName;
+    res.status(200).send({success: true, token, fullName});
 };
 
 /** @api { post } /auth/social Social
@@ -134,7 +136,8 @@ let social = async (req, res, next) => {
     }
 
     let token = createToken(newUser.fullName, newUser.id);
-    res.status(200).send({success: true, token});
+    let fullName = user.fullName;
+    res.status(200).send({success: true, token, fullName});
 };
 
 module.exports = {
