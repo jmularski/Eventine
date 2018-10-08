@@ -230,7 +230,7 @@ let changeSubgroup = async (req, res, next) => {
     }
 };
 
-let updateLocation = (req, res) => {
+let updateLocation = async (req, res) => {
     let { groupId, locationTag } = req.body
     let { id } = req.token;
     let group = await Group.findById(groupId).exec();
