@@ -240,7 +240,7 @@ let updateLocation = async (req, res) => {
     res.sendStatus(200);
 };
 
-let nearest = (req, res) => {
+let nearest = async (req, res) => {
     let { groupId } = req.body;
     let { id } = req.token;
     let group = await Group.findById(groupId).exec();
