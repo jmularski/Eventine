@@ -249,7 +249,7 @@ let nearest = (req, res) => {
 
 };
 
-let pingOrganizer = (req, res) => {
+let pingOrganizer = async (req, res) => {
     let { organizerId } = req.body;
     let { id } = req.token;
     let notifToken = await User.findById(organizerId).select('-_id notifToken');
