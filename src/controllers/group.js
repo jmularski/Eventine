@@ -242,30 +242,62 @@ let updateLocation = async (req, res) => {
 
 let nearest = async (req, res) => {
     let { groupId } = req.body;
-    let { id } = req.token;
+    let { id, fullName} = req.token;
     let group = await Group.findById(groupId).exec();
     let userLocation = group.people.find( person => person.id === id).location;
-    let otherUsers = group.people.find( person => person.location === userLocation );
-
+    let otherUsers = group.people.filter( person => person.location === userLocation );
+    let otherUsersId = otherUsers.map(user => user.id);
+    let users = await User.find({id: {$in: otherUsersId}}).exec();
+    let usersNotifTokens = users.map(user => user.notifToken);
+    if(notifToken) {
+        let payload = {
+            data: {
+                title: `${fullName} is calling for help!`,
+                desc: `Click this notification to find his location!`,
+                location: userLocation,
+                callerId: id,
+                action: 'help',
+            },
+        };
+        await admin.messaging.sendToDevice(usersNotifTokens, payload);
+    };
+    res.sendStatus(200);
 };
 
 let pingOrganizer = async (req, res) => {
-    let { organizerId } = req.body;
-    let { id } = req.token;
+    let { organizerId, callLocation } = req.body;
+    let { id, fullName } = req.token;
     let notifToken = await User.findById(organizerId).select('-_id notifToken');
     if(notifToken) {
         let payload = {
             data: {
-                title,
-                desc,
-                action: 'create',
-                type: 'ping',
+                title: `${fullName} is searching for you!`,
+                desc: `Click this notification to find his location!`,
+                location: callLocation,
+                callerId: id,
+                action: 'findOrganizer',
             },
         };
         await admin.messaging.sendToDevice(notifToken, payload);
     };
 };
 
+let response = async(req, res) => {
+    let { callerId, response } = req.body;
+    let { id, fullName } = req.token;
+    let notifToken = await User.findById(callerId).select('-_id notifToken');
+    response = response ? 'accepted' : 'declined'
+    if(notifToken) {
+        let payload = {
+            data: {
+                title: `${fullName} has ${response} your request!`,
+                desc: 'Hooray!',
+                action: 'acceptRequest',
+            },
+        };
+        await admin.messaging.sendToDevice(notifToken, payload);
+    };
+}
 module.exports = {
     create,
     join,
@@ -274,5 +306,6 @@ module.exports = {
     changeSubgroup,
     updateLocation,
     nearest,
-    pingOrganizer
+    pingOrganizer,
+    response
 };

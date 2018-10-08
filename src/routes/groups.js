@@ -10,6 +10,8 @@ router.post('/create', groupController.create);
 router.post('/changeSubgroup', groupController.changeSubgroup);
 router.post('/location', groupController.updateLocation);
 router.post('/pingOrganizer', groupController.pingOrganizer);
+router.post('/nearest', groupController.nearest);
+router.post('/response', groupController.response);
 router.get('/members/:groupId', groupController.members);
 
 module.exports = router;
