@@ -94,7 +94,6 @@ let register = async (req, res, next) => {
     });
     await newUser.save();
     let token = createToken(newUser.fullName, newUser.id);
-    let fullName = user.fullName;
     res.status(200).send({success: true, token, fullName});
 };
 
@@ -136,7 +135,6 @@ let social = async (req, res, next) => {
     }
 
     let token = createToken(newUser.fullName, newUser.id);
-    let fullName = user.fullName;
     res.status(200).send({success: true, token, fullName});
 };
 
