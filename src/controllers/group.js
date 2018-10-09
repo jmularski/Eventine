@@ -267,7 +267,7 @@ let nearest = async (req, res) => {
 let pingOrganizer = async (req, res) => {
     let { organizerId, callLocation } = req.body;
     let { id, fullName } = req.token;
-    let notifToken = await User.findById(organizerId).select('-_id notifToken');
+    let notifToken = await User.findById(organizerId).select('-_id notifToken').exec();
     if(notifToken) {
         let payload = {
             data: {
@@ -285,7 +285,7 @@ let pingOrganizer = async (req, res) => {
 let response = async(req, res) => {
     let { callerId, response } = req.body;
     let { id, fullName } = req.token;
-    let notifToken = await User.findById(callerId).select('-_id notifToken');
+    let notifToken = await User.findById(callerId).select('-_id notifToken').exec();
     response = response ? 'accepted' : 'declined'
     if(notifToken) {
         let payload = {
