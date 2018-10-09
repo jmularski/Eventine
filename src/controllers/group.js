@@ -280,6 +280,7 @@ let pingOrganizer = async (req, res) => {
         };
         await admin.messaging().sendToDevice(notifToken.notifToken, payload);
     };
+    res.sendStatus(200);
 };
 
 let response = async(req, res) => {
