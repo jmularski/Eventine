@@ -298,6 +298,7 @@ let response = async(req, res) => {
         };
         await admin.messaging().sendToDevice(notifToken.notifToken, payload);
     };
+    res.sendStatus(200);
 }
 module.exports = {
     create,
