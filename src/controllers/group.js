@@ -259,7 +259,7 @@ let nearest = async (req, res) => {
                 action: 'help',
             },
         };
-        await admin.messaging.sendToDevice(usersNotifTokens, payload);
+        await admin.messaging().sendToDevice(usersNotifTokens, payload);
     };
     res.sendStatus(200);
 };
@@ -278,7 +278,7 @@ let pingOrganizer = async (req, res) => {
                 action: 'findOrganizer',
             },
         };
-        await admin.messaging.sendToDevice(notifToken, payload);
+        await admin.messaging().sendToDevice(notifToken, payload);
     };
 };
 
@@ -295,7 +295,7 @@ let response = async(req, res) => {
                 action: 'acceptRequest',
             },
         };
-        await admin.messaging.sendToDevice(notifToken, payload);
+        await admin.messaging().sendToDevice(notifToken, payload);
     };
 }
 module.exports = {
