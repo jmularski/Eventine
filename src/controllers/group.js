@@ -288,16 +288,14 @@ let response = async(req, res) => {
     let { id, fullName } = req.token;
     let notifToken = await User.findById(callerId).select('-_id notifToken').exec();
     response = response ? 'accepted' : 'declined'
-    if(notifToken) {
-        let payload = {
-            data: {
-                title: `${fullName} has ${response} your request!`,
-                desc: 'Hooray!',
-                action: 'acceptRequest',
-            },
-        };
-        await admin.messaging().sendToDevice(notifToken.notifToken, payload);
+    let payload = {
+        data: {
+            title: `${fullName} has ${response} your request!`,
+            desc: 'Hooray!',
+            action: 'acceptRequest',
+        },
     };
+    await admin.messaging().sendToDevice(notifToken.notifToken, payload);
     res.sendStatus(200);
 }
 module.exports = {
