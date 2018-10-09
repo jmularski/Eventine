@@ -278,7 +278,7 @@ let pingOrganizer = async (req, res) => {
                 action: 'findOrganizer',
             },
         };
-        await admin.messaging().sendToDevice(notifToken, payload);
+        await admin.messaging().sendToDevice(notifToken.notifToken, payload);
     };
 };
 
@@ -295,7 +295,7 @@ let response = async(req, res) => {
                 action: 'acceptRequest',
             },
         };
-        await admin.messaging().sendToDevice(notifToken, payload);
+        await admin.messaging().sendToDevice(notifToken.notifToken, payload);
     };
 }
 module.exports = {
