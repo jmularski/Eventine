@@ -249,7 +249,7 @@ let nearest = async (req, res) => {
     let otherUsersId = otherUsers.map(user => user.id);
     let users = await User.find({id: {$in: otherUsersId}}).exec();
     let usersNotifTokens = users.map(user => user.notifToken);
-    if(notifToken) {
+    if(usersNotifTokens) {
         let payload = {
             data: {
                 title: `${fullName} is calling for help!`,
