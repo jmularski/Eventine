@@ -30,7 +30,7 @@ async function getUserData(id, field) {
 
 let groupList = async (req, res, next) => {
     let { id } = req.token;
-    let groups = await getGroupData(id, 'groups');
+    let groups = await getUserData(id, 'groups');
     res.send({groups: groups.groups});
 };
 
