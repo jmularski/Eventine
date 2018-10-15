@@ -137,17 +137,17 @@ let social = async (req, res, next) => {
     let { facebookId, fullName } = req.body;
 
     let user = await User.findOne({facebookId}).exec();
-    
+    let token;
     if(!user) {
         let newUser = new User({
             facebookId,
             fullName,
         });
         await newUser.save();
-        let token = createToken(newUser.fullName, newUser.id);
+        token = createToken(newUser.fullName, newUser.id);
         await joinDefaultGroup(token);
     } else {
-        let token = createToken(user.fullName, user.id);
+        token = createToken(user.fullName, user.id);
     }
     
     res.status(200).send({success: true, token, fullName, isPartner});
