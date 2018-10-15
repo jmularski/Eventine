@@ -134,7 +134,7 @@ let social = async (req, res, next) => {
     if(validationErrors) return next(new NotAuthenticated(validationErrors[0]));
 
     // facebook register
-    let { facebookId, fullName } = req.body;
+    let { facebookId, fullName, isPartner } = req.body;
 
     let user = await User.findOne({facebookId}).exec();
     let token;
@@ -149,7 +149,8 @@ let social = async (req, res, next) => {
     } else {
         token = createToken(user.fullName, user.id);
     }
-    
+    if(!isPartner) isPartner = false;
+
     res.status(200).send({success: true, token, fullName, isPartner});
 };
 
