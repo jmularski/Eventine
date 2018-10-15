@@ -9,7 +9,7 @@ const createToken = require('../lib/createToken');
 // TODO: unit testing, integration tests
 
 async function joinDefaultGroup(token) {
-    await axios.post('/group/join', {groupName: 'Grupa domyślna2'}, {
+    await axios.post('https://35.234.124.12:3000/group/join', {groupName: 'Grupa domyślna3'}, {
         headers: {'X-Token': token}
     });
 };
