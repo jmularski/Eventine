@@ -149,9 +149,8 @@ let social = async (req, res, next) => {
     } else {
         token = createToken(user.fullName, user.id);
     }
-    if(!isPartner) isPartner = false;
-
-    res.status(200).send({success: true, token, fullName, isPartner});
+    
+    res.status(200).send({success: true, token, fullName});
 };
 
 module.exports = {
