@@ -2,10 +2,17 @@ require('express-validator');
 const NotAuthenticated = require('../lib/errors/NotAuthenticated');
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
+const axios = require('axios');
 
 const encryptUtils = require('../lib/encryptUtils');
 const createToken = require('../lib/createToken');
 // TODO: unit testing, integration tests
+
+async function joinDefaultGroup(token) {
+    await axios.post('/group/join', {groupName: 'Grupa domyślna2'}, {
+        headers: {'X-Token': token}
+    });
+};
 
 /** @api { post } /auth/login Login
  *  @apiDescription Login user with given email and password
@@ -97,6 +104,7 @@ let register = async (req, res, next) => {
     });
     await newUser.save();
     let token = createToken(newUser.fullName, newUser.id);
+    await joinDefaultGroup(token);
     res.status(200).send({success: true, token, fullName, isPartner});
 };
 
@@ -129,16 +137,19 @@ let social = async (req, res, next) => {
     let { facebookId, fullName } = req.body;
 
     let user = await User.findOne({facebookId}).exec();
-    let newUser = new User({
-        facebookId,
-        fullName,
-    });
+    
     if(!user) {
+        let newUser = new User({
+            facebookId,
+            fullName,
+        });
         await newUser.save();
+        let token = createToken(newUser.fullName, newUser.id);
+        await joinDefaultGroup(token);
+    } else {
+        let token = createToken(user.fullName, user.id);
     }
-
-    let token = createToken(newUser.fullName, newUser.id);
-    let isPartner = user.isPartner;
+    
     res.status(200).send({success: true, token, fullName, isPartner});
 };
 
