@@ -23,7 +23,7 @@ const _ = require('lodash');
  */
 
 let create = async (req, res, next) => {
-    let { groupId, type, title, desc, targetGroups, plannedTime, geo } = req.body;
+    let { groupId, type, title, desc, targetGroups, plannedTime, geo, floor } = req.body;
     let { id, fullName } = req.token;
     let status = 'sent';
     if(plannedTime) {
@@ -43,6 +43,7 @@ let create = async (req, res, next) => {
         targetGroups,
         plannedTime,
         geo,
+        floor
     });
 
     await action.save();

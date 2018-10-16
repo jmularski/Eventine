@@ -14,6 +14,7 @@ let ActionSchema = new Schema({
     targetGroups: { type: [String], default: [] },
     plannedTime: { type: Date, required: false },
     geo: { type: [Number], index: '2d', required: false },
+    floor: { type: Number, required: false },
     status: { type: String, required: true, enum: ["planned", "sent", "inProgress", "done"]},
     progressor: {
         id: { type: String, required: false},

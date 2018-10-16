@@ -12,6 +12,7 @@ router.post('/location', groupController.updateLocation);
 router.post('/pingOrganizer', groupController.pingOrganizer);
 router.post('/nearest', groupController.nearest);
 router.post('/response', groupController.response);
+router.get('/listHelps', groupController.listHelp);
 router.get('/members/:groupId', groupController.members);
 
 module.exports = router;

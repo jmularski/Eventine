@@ -2,6 +2,7 @@ require('express-validator');
 const admin = require('firebase-admin');
 const Group = require('../models/group');
 const User = require('../models/user');
+const Group = require('../models/help');
 const GroupError = require('../lib/errors/GroupError');
 
 /** @api { post } /group/create
@@ -240,30 +241,6 @@ let updateLocation = async (req, res) => {
     res.sendStatus(200);
 };
 
-let nearest = async (req, res) => {
-    let { groupId } = req.body;
-    let { id, fullName} = req.token;
-    let group = await Group.findById(groupId).exec();
-    let userLocation = group.people.find( person => person.id === id).location;
-    let otherUsers = group.people.filter( person => person.location === userLocation );
-    let otherUsersId = otherUsers.map(user => user.id);
-    let users = await User.find({id: {$in: otherUsersId}}).exec();
-    let usersNotifTokens = users.map(user => user.notifToken);
-    if(usersNotifTokens) {
-        let payload = {
-            data: {
-                title: `${fullName} is calling for help!`,
-                desc: `Click this notification to find his location!`,
-                location: userLocation,
-                callerId: id,
-                action: 'help',
-            },
-        };
-        await admin.messaging().sendToDevice(usersNotifTokens, payload);
-    };
-    res.sendStatus(200);
-};
-
 let pingOrganizer = async (req, res) => {
     let { organizerId, callLocation } = req.body;
     let { id, fullName } = req.token;
@@ -283,10 +260,46 @@ let pingOrganizer = async (req, res) => {
     res.sendStatus(200);
 };
 
-let response = async(req, res) => {
+let nearest = async (req, res) => {
+    let { groupId } = req.body;
+    let { id, fullName} = req.token;
+    let group = await Group.findById(groupId).exec();
+    let userLocation = group.people.find( person => person.id === id).location;
+    let otherUsers = group.people.filter( person => person.location === userLocation );
+    let otherUsersId = otherUsers.map(user => user.id);
+    let users = await User.find({id: {$in: otherUsersId}}).exec();
+    let usersNotifTokens = users.map(user => user.notifToken);
+    let newHelp = new Help({
+        caller: {
+            id,
+            fullName
+        },
+        called: otherUsersId
+    });
+    if(usersNotifTokens) {
+        let payload = {
+            data: {
+                title: `${fullName} is calling for help!`,
+                desc: `Click this notification to find his location!`,
+                location: userLocation,
+                callerId: newHelp.id,
+                action: 'help',
+            },
+        };
+        await admin.messaging().sendToDevice(usersNotifTokens, payload);
+    };
+    await newHelp.save();
+    res.sendStatus(200);
+};
+
+let response = async (req, res) => {
     let { callerId, response } = req.body;
     let { id, fullName } = req.token;
-    let notifToken = await User.findById(callerId).select('-_id notifToken').exec();
+    let helpSchema = await Help.findById(callerId)
+    let notifToken = await User.findById(helpSchema.caller.id).select('-_id notifToken').exec();
+    if(response) helpSchema.accepted.push(id);
+    else helpSchema.declined.push(id);
+    await helpSchema.save();
     response = response ? 'accepted' : 'declined'
     let payload = {
         data: {
@@ -297,7 +310,13 @@ let response = async(req, res) => {
     };
     await admin.messaging().sendToDevice(notifToken.notifToken, payload);
     res.sendStatus(200);
-}
+};
+
+let listHelp = async (req, res) => {
+    let helps = await Help.find();
+    res.send(helps);
+};
+
 module.exports = {
     create,
     join,
@@ -307,5 +326,6 @@ module.exports = {
     updateLocation,
     nearest,
     pingOrganizer,
-    response
+    response,
+    listHelp
 };
