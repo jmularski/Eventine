@@ -276,20 +276,22 @@ let nearest = async (req, res) => {
         },
         called: otherUsersId
     });
-    await newHelp.save();
-    if(usersNotifTokens) {
-        let payload = {
-            data: {
-                title: `${fullName} is calling for help!`,
-                desc: `Click this notification to find his location!`,
-                location: userLocation,
-                callerId: newHelp.id,
-                action: 'help',
-            },
+    newHelp.save(err => {
+        if(err) console.log(err);
+        if(usersNotifTokens) {
+            let payload = {
+                data: {
+                    title: `${fullName} is calling for help!`,
+                    desc: `Click this notification to find his location!`,
+                    location: userLocation,
+                    callerId: newHelp.id,
+                    action: 'help',
+                },
+            };
+            await admin.messaging().sendToDevice(usersNotifTokens, payload);
         };
-        await admin.messaging().sendToDevice(usersNotifTokens, payload);
-    };
-    res.sendStatus(200);
+        res.sendStatus(200);
+    });
 };
 
 let response = async (req, res) => {
