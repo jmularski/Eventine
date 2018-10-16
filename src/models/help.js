@@ -6,9 +6,9 @@ let HelpSchema = new Schema({
         id: { type: String, required: true },
         fullName: { type: String, required: true }
     },
-    called: { type: [String], required: true },
-    accepted: { type: [String], default: [] },
-    declined: { type: [String], default: [] }
+    called: { type: Array, required: true },
+    accepted: { type: Array, default: [] },
+    declined: { type: Array, default: [] }
 });
 
 module.exports = mongoose.model('help', HelpSchema);
