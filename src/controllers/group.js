@@ -276,6 +276,7 @@ let nearest = async (req, res) => {
         },
         called: otherUsersId
     });
+    newHelp = await newHelp.save();
     if(usersNotifTokens) {
         let payload = {
             data: {
@@ -288,14 +289,13 @@ let nearest = async (req, res) => {
         };
         await admin.messaging().sendToDevice(usersNotifTokens, payload);
     };
-    await newHelp.save();
     res.sendStatus(200);
 };
 
 let response = async (req, res) => {
     let { callerId, response } = req.body;
     let { id, fullName } = req.token;
-    let helpSchema = await Help.findById(callerId)
+    let helpSchema = await Help.findById(callerId);
     let notifToken = await User.findById(helpSchema.caller.id).select('-_id notifToken').exec();
     if(response) helpSchema.accepted.push(id);
     else helpSchema.declined.push(id);
