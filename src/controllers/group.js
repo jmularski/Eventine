@@ -2,7 +2,7 @@ require('express-validator');
 const admin = require('firebase-admin');
 const Group = require('../models/group');
 const User = require('../models/user');
-const Group = require('../models/help');
+const Help = require('../models/help');
 const GroupError = require('../lib/errors/GroupError');
 
 /** @api { post } /group/create
