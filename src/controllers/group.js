@@ -276,7 +276,7 @@ let nearest = async (req, res) => {
         },
         called: otherUsersId
     });
-    newHelp = await newHelp.save();
+    await newHelp.save();
     if(usersNotifTokens) {
         let payload = {
             data: {
