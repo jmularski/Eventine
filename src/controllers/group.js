@@ -245,13 +245,21 @@ let pingOrganizer = async (req, res) => {
     let { organizerId, callLocation } = req.body;
     let { id, fullName } = req.token;
     let notifToken = await User.findById(organizerId).select('-_id notifToken').exec();
+    let newHelp = new Help({
+        caller: {
+            id,
+            fullName
+        },
+        called: organizerId
+    });
+    newHelp.save();
     if(notifToken) {
         let payload = {
             data: {
                 title: `${fullName} is searching for you!`,
                 desc: `Click this notification to find his location!`,
                 location: callLocation,
-                callerId: id,
+                callerId: newHelp.id,
                 action: 'findOrganizer',
             },
         };
@@ -276,22 +284,20 @@ let nearest = async (req, res) => {
         },
         called: otherUsersId
     });
-    newHelp.save(err => {
-        if(err) console.log(err);
-        if(usersNotifTokens) {
-            let payload = {
-                data: {
-                    title: `${fullName} is calling for help!`,
-                    desc: `Click this notification to find his location!`,
-                    location: userLocation,
-                    callerId: newHelp.id,
-                    action: 'help',
-                },
-            };
-            await admin.messaging().sendToDevice(usersNotifTokens, payload);
+    await newHelp.save();
+    if(usersNotifTokens) {
+        let payload = {
+            data: {
+                title: `${fullName} is calling for help!`,
+                desc: `Click this notification to find his location!`,
+                location: userLocation,
+                callerId: newHelp.id,
+                action: 'help',
+            },
         };
-        res.sendStatus(200);
-    });
+        await admin.messaging().sendToDevice(usersNotifTokens, payload);
+    };
+    res.sendStatus(200);
 };
 
 let response = async (req, res) => {
