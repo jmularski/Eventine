@@ -129,10 +129,11 @@ let list = async (req, res, next) => {
         return person.id == id;
     });
     let userStatus = user[0].subgroup;
+    let actions;
     if(userStatus === 'admin') {
-        let actions = await Action.find({ groupId }).exec();
+        actions = await Action.find({ groupId }).exec();
     } else {
-        let actions = await Action.find({$or: [
+        actions = await Action.find({$or: [
                 { groupId,
                 $or: [
                     {'plannedTime': { '$gte': new Date()}},
