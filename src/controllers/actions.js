@@ -130,8 +130,7 @@ let list = async (req, res, next) => {
     });
     let userStatus = user[0].subgroup;
     if(userStatus === 'admin') {
-        let actions = await Action.find({ groupId, type }).exec();
-        res.send({actions});
+        let actions = await Action.find({ groupId }).exec();
     } else {
         let actions = await Action.find({$or: [
                 { groupId,
@@ -143,9 +142,9 @@ let list = async (req, res, next) => {
                 status: {$ne: 'ended'}},
                 { groupId, 'creator.id': id}],
         }).exec();
-        if(type !== 'all') actions = actions.filter((action) => action.type === type)
-        res.send({actions});
     }
+    if(type !== 'all') actions = actions.filter((action) => action.type === type)
+    res.send({actions});
 };
 
 /** @api { post } /ping/inProgress
