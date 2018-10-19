@@ -23,13 +23,12 @@ const _ = require('lodash');
  */
 
 let create = async (req, res, next) => {
-    let { groupId, type, title, desc, targetGroups, plannedTime, geo, floor } = req.body;
+    let { groupId, type, title, desc, targetGroups, targetUsers, plannedTime, geo, floor } = req.body;
     let { id, fullName } = req.token;
     let status = 'sent';
     plannedTime = new Date();
     if(plannedTime) {
         plannedTime = new Date(plannedTime);
-        status = 'planned'
     }
     let action = new Action({
         groupId,
@@ -42,6 +41,7 @@ let create = async (req, res, next) => {
         desc,
         status,
         targetGroups,
+        targetUsers,
         plannedTime,
         geo,
         floor
@@ -62,7 +62,7 @@ let create = async (req, res, next) => {
         let usersIds = usersInTarget.map(person => {
             if(person.id) return person.id;
         });
-
+        usersIds += targetUsers;
         let userNotifs = await User.find({
             _id: {
                 $in: usersIds,
@@ -140,7 +140,10 @@ let list = async (req, res, next) => {
                     {'plannedTime': { '$gte': new Date()}},
                     {'plannedTime': null},
                 ],
-                targetGroups: userStatus,
+                $or: [
+                    { targetGroups: userStatus },
+                    { targetUsers: id}
+                ],
                 status: {$ne: 'ended'}},
                 { groupId, 'creator.id': id}],
         }).exec();
