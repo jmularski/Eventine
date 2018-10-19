@@ -78,6 +78,7 @@ const notFound = require('./middlewares/notFound');
 const errorHandler = require('./middlewares/errorHandler');
 const ignoreFavicon = require('./middlewares/ignoreFavicon');
 
+app.use(express.static(__dirname + '/public'));
 app.use(ignoreFavicon);
 app.use(botFucker);
 app.use(notFound);
