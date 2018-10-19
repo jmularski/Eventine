@@ -8,7 +8,7 @@ let UserSchema = new Schema({
     fullName: {type: String, required: true},
     notifToken: {type: String, required: false},
     invitations: {type: Array, default: []},
-    groups: {type: Array, default: [{id: '5bc4f824b6e0ec0010fa3e03', name: 'Grupa domyślna3'}]},
+    groups: {type: Array, default: []},
     isPartner: { type: Boolean, default: false}
 });
 

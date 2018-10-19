@@ -26,6 +26,7 @@ let create = async (req, res, next) => {
     let { groupId, type, title, desc, targetGroups, plannedTime, geo, floor } = req.body;
     let { id, fullName } = req.token;
     let status = 'sent';
+    plannedTime = new Date();
     if(plannedTime) {
         plannedTime = new Date(plannedTime);
         status = 'planned'
