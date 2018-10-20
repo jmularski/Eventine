@@ -73,7 +73,7 @@ let create = async (req, res, next) => {
     });
     console.log(notifIds);
     try {
-        if(!plannedTime && plannedTime>Date.now() && notifIds.length !== 0) {
+        if(!plannedTime || plannedTime < Date.now()) {
             await admin.messaging().sendToDevice(notifIds, payload);
         } else sendDelayedNotif(payload, notifIds, plannedTime);
     } catch(e) {
