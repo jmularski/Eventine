@@ -9,5 +9,7 @@ router.get('/groupList', userController.groupList);
 router.get('/invitations', userController.invitations);
 router.get('/tasks', userController.getTasks);
 router.get('/friends', userController.returnFriends);
+router.post('/setCaretaker', userController.setCaretaker);
+router.post('/callCaretaker', userController.callCaretaker);
 
 module.exports = router;

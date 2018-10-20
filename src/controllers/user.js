@@ -97,7 +97,7 @@ let getTasks = async (req, res, next) => {
  */
 
 // this has too much data, remove unnecessary data!
-let returnFriends = async (req, res, next) => {
+let returnFriends = async (req, res) => {
     let { id } = req.token;
     let user = User.findById(id).exec();
     let users;
@@ -110,9 +110,24 @@ let returnFriends = async (req, res, next) => {
     res.send({users});
 };
 
+let setCaretaker = async (req, res) => {
+    let { caretakerId } = req.body;
+    let { id } = req.token;
+    await User.update({id}, {careTaker: caretakerId});
+    res.sendStatus(200);
+}
+
+let callCaretaker = async (req, res) => {
+    let { id } = req.token;
+    let caretakerId = await User.find({id}).careTaker;
+    let caretakerNotifToken = await User.find({caretakerId}).notifToken;
+}
+
 module.exports = {
     groupList,
     invitations,
     getTasks,
     returnFriends,
+    setCaretaker,
+    callCaretaker
 };

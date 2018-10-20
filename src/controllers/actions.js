@@ -49,49 +49,36 @@ let create = async (req, res, next) => {
 
     await action.save();
 
-    if(targetGroups) {
-        let group = await Group.findById(groupId).exec();
+    let usersIds = targetUsers;
+    let userNotifs = await User.find({
+        _id: {
+            $in: usersIds,
+        },
+    }).select('-_id notifToken').exec();
 
-        let usersInTarget = group.people.filter(person => {
-            if(targetGroups.includes(person.subgroup)) {
-                return true;
-            }
-            return false;
-        });
-
-        let usersIds = usersInTarget.map(person => {
-            if(person.id) return person.id;
-        });
-        usersIds += targetUsers;
-        let userNotifs = await User.find({
-            _id: {
-                $in: usersIds,
-            },
-        }).select('-_id notifToken').exec();
-
-        let payload = {
-            data: {
-                title,
-                desc,
-                action: 'create',
-                type: 'ping',
-            },
-        };
-        let notifIds = userNotifs.map(person => {
-            if(person.notifToken) return person.notifToken;
-        });
-        notifIds = notifIds.filter(id => {
-            if(_.isEmpty(id)) return false;
-            else return true;
-        });
-        try {
-            if(!plannedTime && plannedTime>Date.now() && notifIds.length !== 0) {
-                await admin.messaging().sendToDevice(notifIds, payload);
-            } else sendDelayedNotif(payload, notifIds, plannedTime);
-        } catch(e) {
-            console.log(e);
-        }
+    let payload = {
+        data: {
+            title,
+            desc,
+            action: 'create',
+            type: 'ping',
+        },
+    };
+    let notifIds = userNotifs.map(person => {
+        if(person.notifToken) return person.notifToken;
+    });
+    notifIds = notifIds.filter(id => {
+        if(_.isEmpty(id)) return false;
+        else return true;
+    });
+    try {
+        if(!plannedTime && plannedTime>Date.now() && notifIds.length !== 0) {
+            await admin.messaging().sendToDevice(notifIds, payload);
+        } else sendDelayedNotif(payload, notifIds, plannedTime);
+    } catch(e) {
+        console.log(e);
     }
+}
 
     res.sendStatus(200);
 };
