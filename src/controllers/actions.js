@@ -71,6 +71,7 @@ let create = async (req, res, next) => {
         if(_.isEmpty(id)) return false;
         else return true;
     });
+    console.log(notifIds);
     try {
         if(!plannedTime && plannedTime>Date.now() && notifIds.length !== 0) {
             await admin.messaging().sendToDevice(notifIds, payload);
