@@ -257,7 +257,7 @@ let pingOrganizer = async (req, res) => {
         let payload = {
             data: {
                 title: `${fullName} is searching for you!`,
-                desc: `Click this notification to find his location!`,
+                desc: `Find him at ${callLocation}`,
                 location: callLocation,
                 callerId: newHelp.id,
                 action: 'findOrganizer',
@@ -289,7 +289,7 @@ let nearest = async (req, res) => {
         let payload = {
             data: {
                 title: `${fullName} is calling for help!`,
-                desc: `Click this notification to find his location!`,
+                desc: `Find him at ${userLocation}`,
                 location: userLocation,
                 callerId: newHelp.id,
                 action: 'help',
