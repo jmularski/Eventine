@@ -51,7 +51,7 @@ let create = async (req, res, next) => {
 
     let usersIds = targetUsers;
     let userNotifs = await User.find({
-        _id: {
+        id: {
             $in: usersIds,
         },
     }).select('-_id notifToken').exec();
