@@ -78,10 +78,8 @@ let create = async (req, res, next) => {
     } catch(e) {
         console.log(e);
     }
-}
-
     res.sendStatus(200);
-};
+}
 
 /** @api { get } /action/list/:groupId
  *  @apiDescription get actions for given group
