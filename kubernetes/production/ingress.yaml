@@ -1,8 +1,15 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: basic-ingress
+  name: "ingress-service"
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: "web-static-ip"
 spec:
-  backend:
-    serviceName: web
-    servicePort: 3000
+  rules:
+    http:
+      paths:
+      # The * is needed so that all traffic gets redirected to nginx
+      - path: /*
+        backend:
+          serviceName: web
+          servicePort: 3000
