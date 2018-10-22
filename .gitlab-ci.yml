@@ -20,7 +20,9 @@ test:
     NODE_ENV: CI
   services:
     - mongo:latest
-  script: npm test
+  script: 
+    - npm install mocha -g
+    - npm test
 
 # code_quality:
 #   stage: test
