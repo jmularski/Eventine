@@ -74,6 +74,10 @@ app.use('/actions', actions);
 
 app.get('/', (req, res) => {
     res.sendStatus(200);
+});
+
+app.get('/.well-known/acme-challenge/:ping', (req, res) => {
+    res.send(req.params.ping);
 })
 
 // middlewares
