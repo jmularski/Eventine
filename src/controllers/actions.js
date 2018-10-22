@@ -57,6 +57,10 @@ let create = async (req, res, next) => {
     }).select('-_id notifToken').exec();
 
     let payload = {
+        notification: {
+            title,
+            body: desc
+        },
         data: {
             title,
             desc,

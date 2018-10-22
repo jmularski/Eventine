@@ -7,10 +7,4 @@ metadata:
 spec:
   rules:
   - host: hello.back-eventine.pl # CHANGE ME!
-    http:
-      paths:
-      # The * is needed so that all traffic gets redirected to nginx
-      - path: /*
-        backend:
-          serviceName: web
-          servicePort: 3000
+  #to fix backend

@@ -255,6 +255,10 @@ let pingOrganizer = async (req, res) => {
     newHelp.save();
     if(notifToken) {
         let payload = {
+            notification: {
+                title: `${fullName} is searching for you!`,
+                body: `Find him at ${callLocation}`,
+            },
             data: {
                 title: `${fullName} is searching for you!`,
                 desc: `Find him at ${callLocation}`,
@@ -287,6 +291,10 @@ let nearest = async (req, res) => {
     await newHelp.save();
     if(usersNotifTokens) {
         let payload = {
+            notification: {
+                title: `${fullName} is calling for help!`,
+                body: `Find him at ${userLocation}`,
+            },
             data: {
                 title: `${fullName} is calling for help!`,
                 desc: `Find him at ${userLocation}`,
@@ -310,6 +318,10 @@ let response = async (req, res) => {
     await helpSchema.save();
     response = response ? 'accepted' : 'declined'
     let payload = {
+        notification: {
+            title: `${fullName} has ${response} your request!`,
+            body: 'Hooray!',
+        },
         data: {
             title: `${fullName} has ${response} your request!`,
             desc: 'Hooray!',
