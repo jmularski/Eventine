@@ -21,7 +21,7 @@ test:
   services:
     - mongo:latest
   script: 
-    - npm install mocha -g
+    - npm install
     - npm test
 
 # code_quality:
