@@ -44,7 +44,7 @@ test:
 
 docker:
   stage: build
-  image: docker:stable
+  image: docker:git
   services:
     - docker:dind
   variables:
