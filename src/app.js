@@ -72,6 +72,10 @@ app.use('/user', user);
 const actions = require('./routes/actions');
 app.use('/actions', actions);
 
+app.get('/', (req, res) => {
+    res.sendStatus(200);
+})
+
 // middlewares
 const botFucker = require('./middlewares/botFucker');
 const notFound = require('./middlewares/notFound');
