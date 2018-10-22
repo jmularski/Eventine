@@ -1,10 +1,10 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: "ingress-service"
+  name: basic-ingress
   annotations:
     kubernetes.io/ingress.global-static-ip-name: "web-static-ip"
 spec:
-  rules:
-  - host: hello.back-eventine.pl # CHANGE ME!
-  #to fix backend
+  backend:
+    serviceName: web
+    servicePort: 3000
