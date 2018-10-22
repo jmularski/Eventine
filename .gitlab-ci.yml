@@ -46,7 +46,7 @@ docker:
   stage: build
   image: docker:stable
   services:
-    - docker:stable-dind
+    - docker:dind
   variables:
     CONTAINER_TEST_IMAGE: gcr.io/findme4-209120/eventine
     DOCKER_DRIVER: overlay2
