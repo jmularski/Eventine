@@ -77,7 +77,8 @@ app.get('/', (req, res) => {
 });
 
 app.get('/.well-known/acme-challenge/:ping', (req, res) => {
-    res.send(req.params.ping);
+
+    res.send(req.params.ping + 'TOzwmPscKGMCrpuOkfiqdvhIxqwL8_BIzDeUFoou47Y');
 })
 
 // middlewares
