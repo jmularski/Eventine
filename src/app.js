@@ -21,6 +21,21 @@ nconf
     .env()
     .file('../keys.json');
 
+// setup loggly
+var winston = require('winston');
+require('winston-loggly-bulk');
+ 
+winston.add(winston.transports.Loggly, {
+    token: "7b198698-583b-4a1e-97fd-e478945561cb",
+    subdomain: "geteventine",
+    tags: ["Winston-NodeJS"],
+    json: true,
+    handleExceptions: true,
+});
+winston.exitOnError = false;
+
+winston.log('info', "Started server/Rolled new update!",  { tags: 'server' });
+
 // bodyParser
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: false}));

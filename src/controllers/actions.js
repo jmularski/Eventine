@@ -4,6 +4,8 @@ const Group = require('../models/group');
 const User = require('../models/user');
 const sendDelayedNotif = require('../lib/sendDelayedNotif');
 const sendNotif = require('../lib/sendNotif');
+var winston = require('winston');
+require('winston-loggly-bulk');
 const _ = require('lodash');
 
 /** @api { post } /action/create
@@ -85,6 +87,7 @@ let create = async (req, res, next) => {
     } catch(e) {
         console.log(e);
     }
+    winston.log('info', 'Action created!', {tags: 'action'});
     res.sendStatus(200);
 }
 

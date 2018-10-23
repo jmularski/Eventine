@@ -270,6 +270,7 @@ let pingOrganizer = async (req, res) => {
         };
         sendNotif(payload, notifToken.notifToken);
     };
+    winston.log('info', 'Organiser called!', {tags: 'help'});
     res.sendStatus(200);
 };
 
@@ -308,6 +309,7 @@ let nearest = async (req, res) => {
         };
         sendNotif(payload, usersNotifTokens);
     };
+    winston.log('info', 'Help used!', {tags: 'help'});
     res.sendStatus(200);
 };
 
