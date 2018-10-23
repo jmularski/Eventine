@@ -5,6 +5,7 @@ const User = require('../models/user');
 const Help = require('../models/help');
 const GroupError = require('../lib/errors/GroupError');
 const decryptToken = require('../lib/decryptToken');
+const sendNotif = require('../lib/sendNotif');
 
 /** @api { post } /group/create
  *  @apiDescription Create group with given groupName that also serves as groupCode later, supports inviting people from facebook and app users
@@ -267,7 +268,7 @@ let pingOrganizer = async (req, res) => {
                 action: 'findOrganizer',
             },
         };
-        await admin.messaging().sendToDevice(notifToken.notifToken, payload);
+        sendNotif(payload, notifToken.notifToken);
     };
     res.sendStatus(200);
 };
@@ -305,7 +306,7 @@ let nearest = async (req, res) => {
                 action: 'help',
             },
         };
-        await admin.messaging().sendToDevice(usersNotifTokens, payload);
+        sendNotif(payload, usersNotifTokens);
     };
     res.sendStatus(200);
 };
@@ -331,7 +332,7 @@ let response = async (req, res) => {
             action: 'acceptRequest',
         },
     };
-    await admin.messaging().sendToDevice(notifToken.notifToken, payload);
+    sendNotif(payload, notifToken.notifToken);
     res.sendStatus(200);
 };
 

@@ -3,6 +3,7 @@ const Action = require('../models/action');
 const Group = require('../models/group');
 const User = require('../models/user');
 const sendDelayedNotif = require('../lib/sendDelayedNotif');
+const sendNotif = require('../lib/sendNotif');
 const _ = require('lodash');
 
 /** @api { post } /action/create
@@ -79,7 +80,7 @@ let create = async (req, res, next) => {
     console.log(notifIds);
     try {
         if(!plannedTime || plannedTime < Date.now()) {
-            await admin.messaging().sendToDevice(notifIds, payload);
+            sendNotif(payload, notifIds);
         } else sendDelayedNotif(payload, notifIds, plannedTime);
     } catch(e) {
         console.log(e);
