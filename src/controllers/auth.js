@@ -1,6 +1,7 @@
 require('express-validator');
 const NotAuthenticated = require('../lib/errors/NotAuthenticated');
-const User = require('../models/user');
+const User = require('../models/user')
+const Groupcontroller = require('./group.js');
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
 
