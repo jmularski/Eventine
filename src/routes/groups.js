@@ -5,7 +5,7 @@ const jwtReader = require('../middlewares/jwtReader');
 router.use(jwtReader);
 
 const groupController = require('../controllers/group');
-router.post('/join', groupController.join);
+//router.post('/join', groupController.join);
 router.post('/create', groupController.create);
 router.post('/changeSubgroup', groupController.changeSubgroup);
 router.post('/location', groupController.updateLocation);
