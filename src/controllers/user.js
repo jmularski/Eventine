@@ -1,7 +1,7 @@
 const User = require('../models/user');
 const Group = require('../models/group');
 const Action = require('../models/action');
-
+const sendNotif = require('../lib/sendNotif');
 
 /**
  * Get user data from specific field
@@ -121,7 +121,20 @@ let callCaretaker = async (req, res) => {
     let { id } = req.token;
     let caretakerId = await User.find({id}).careTaker;
     let caretakerNotifToken = await User.find({caretakerId}).notifToken;
-
+    let payload = {
+        notification: {
+            title: "Zawołanie opiekuna",
+            body: "Opiekun do ktorego jestes przypisany cię woła",
+            sound: 'default'
+        },
+        body: {
+            title: "Zawołanie opiekuna",
+            body: "Opiekun do ktorego jestes przypisany cię woła",
+            action: 'callCaretaker'
+        }
+    }
+    sendNotif(payload, caretakerNotifToken);
+    res.sendStatus(200);
 }
 
 module.exports = {
