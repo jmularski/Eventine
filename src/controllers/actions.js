@@ -59,7 +59,8 @@ let create = async (req, res, next) => {
     let payload = {
         notification: {
             title,
-            body: desc
+            body: desc,
+            sound: 'default'
         },
         data: {
             title,

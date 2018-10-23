@@ -257,6 +257,7 @@ let pingOrganizer = async (req, res) => {
             notification: {
                 title: `${fullName} is searching for you!`,
                 body: `Find him at ${callLocation}`,
+                sound: 'default'
             },
             data: {
                 title: `${fullName} is searching for you!`,
@@ -293,6 +294,7 @@ let nearest = async (req, res) => {
             notification: {
                 title: `${fullName} is calling for help!`,
                 body: `Find him at ${userLocation}`,
+                sound: 'default'
             },
             data: {
                 title: `${fullName} is calling for help!`,
@@ -320,6 +322,7 @@ let response = async (req, res) => {
         notification: {
             title: `${fullName} has ${response} your request!`,
             body: 'Hooray!',
+            sound: 'default'
         },
         data: {
             title: `${fullName} has ${response} your request!`,
