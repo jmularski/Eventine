@@ -72,13 +72,8 @@ let create = async (req, res, next) => {
             type: 'ping',
         },
     };
-    let notifIds = userNotifs.map(person => {
-        if(person.notifToken) return person.notifToken;
-    });
-    notifIds = notifIds.filter(id => {
-        if(_.isEmpty(id)) return false;
-        else return true;
-    });
+    let notifIds = userNotifs.map(person => person.notifToken);
+    
     console.log(notifIds);
     try {
         if(!plannedTime || plannedTime < Date.now()) {
