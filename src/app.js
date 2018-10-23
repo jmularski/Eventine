@@ -7,12 +7,12 @@ app.use(helmet());
 
 // setup cors
 const cors = require('cors')
-const corsoptions = {
+/*const corsoptions = {
     origin: 'https://findme-186320.firebaseapp.com',
     credentials: true,
     optionsSuccessStatus: 200,
-};
-app.use(cors(corsoptions));
+};*/
+app.use(cors());
 
 // setup nconf
 const nconf = require('nconf');
