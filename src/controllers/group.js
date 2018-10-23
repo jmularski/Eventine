@@ -278,7 +278,7 @@ let nearest = async (req, res) => {
     let group = await Group.findById(groupId).exec();
     let userLocation = group.people.find( person => person.id === id).location;
     let otherUsers = group.people.filter( person => person.location === userLocation );
-    let otherUsers = otherUsers.filter( person => person.subgroup !== 'partner');
+    otherUsers = otherUsers.filter( person => person.subgroup !== 'partner');
     let otherUsersId = otherUsers.map(user => user.id);
     let users = await User.find({id: {$in: otherUsersId}}).exec();
     let usersNotifTokens = users.map(user => user.notifToken);
