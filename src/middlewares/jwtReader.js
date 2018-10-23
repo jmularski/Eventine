@@ -1,11 +1,8 @@
 const jwt = require('jsonwebtoken');
+const decryptToken = require('../lib/decryptToken');
 module.exports = (req, res, next) => {
     const token = req.headers['x-token'];
-    jwt.verify(token, 'kalejdoskop', (err, decoded) => {
-        if(err) res.status(401).send({success: false, message: 'Your token is bad.'});
-        else {
-            req.token = decoded;
-            next();
-        }
-    });
+    let result = decryptToken(token);
+    if (!result.success) res.status(401).send(result);
+    req.token = result.token;
 };

@@ -1,7 +1,7 @@
 require('express-validator');
 const NotAuthenticated = require('../lib/errors/NotAuthenticated');
 const User = require('../models/user')
-const Groupcontroller = require('./group.js');
+const GroupController = require('./group.js');
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
 
@@ -10,10 +10,7 @@ const createToken = require('../lib/createToken');
 // TODO: unit testing, integration tests
 
 async function joinDefaultGroup(token) {
-    console.log(token);
-    await axios.post('http://backend.geteventine.pl/group/join', {groupName: 'GrupaTest1', }, {
-        headers: {'X-Token': token}
-    });
+    await GroupController.join(token, 'GrupaTest1');
 };
 
 /** @api { post } /auth/login Login

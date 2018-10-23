@@ -4,6 +4,7 @@ const Group = require('../models/group');
 const User = require('../models/user');
 const Help = require('../models/help');
 const GroupError = require('../lib/errors/GroupError');
+const decryptToken = require('../lib/decryptToken');
 
 /** @api { post } /group/create
  *  @apiDescription Create group with given groupName that also serves as groupCode later, supports inviting people from facebook and app users
@@ -115,9 +116,8 @@ let create = async (req, res, next) => {
  *  @apiSuccess {String} string containing id of joined group
  */
 
-let join = async (req, res, next) => {
-    let { groupName } = req.body;
-    let { id, fullName } = req.token;
+let join = async (token, groupName) => {
+    let { id, fullName } = decryptToken(token).token;
 
     let data = {
         id: id,
@@ -129,7 +129,7 @@ let join = async (req, res, next) => {
     if(!groupName) res.sendStatus(403);
     let groupUpdated = await Group.findOneAndUpdate({groupName}, { $push: { people: data }}).exec();
     await User.findOneAndUpdate({'_id': id}, { $push: { groups: { id: groupUpdated.id, name: groupUpdated.groupName }}});
-    res.send(groupUpdated.id);
+    return true;
 };
 
 // DEPRECATED!!!
