@@ -35,6 +35,7 @@ else if(nconf.get('NODE_ENV') == 'dev' || nconf.get('NODE_ENV') == 'CI' ) dbUrl 
 else dbUrl = 'mongodb://localhost:27017/kalejdoskop';
 console.log(dbUrl);
 mongoose.connect(dbUrl, (err) => {
+    console.log("Hi!");
     if(err) console.error(err);
 });
 

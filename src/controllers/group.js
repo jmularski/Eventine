@@ -117,7 +117,8 @@ let create = async (req, res, next) => {
  */
 
 let join = async (token, groupName) => {
-    let { id, fullName } = decryptToken(token).token;
+    console.log(token, decryptToken(token));
+    let { id, fullName } = decryptToken(token);
 
     let data = {
         id: id,
@@ -125,7 +126,6 @@ let join = async (token, groupName) => {
         subgroup: 'user',
         location: ''
     };
-
     if(!groupName) res.sendStatus(403);
     let groupUpdated = await Group.findOneAndUpdate({groupName}, { $push: { people: data }}).exec();
     await User.findOneAndUpdate({'_id': id}, { $push: { groups: { id: groupUpdated.id, name: groupUpdated.groupName }}});
