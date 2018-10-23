@@ -9,7 +9,8 @@ const createToken = require('../lib/createToken');
 // TODO: unit testing, integration tests
 
 async function joinDefaultGroup(token) {
-    await axios.post('http://130.211.43.244/group/join', {groupName: 'GrupaTest1', }, {
+    console.log(token);
+    await axios.post('http://backend.geteventine.pl/group/join', {groupName: 'GrupaTest1', }, {
         headers: {'X-Token': token}
     });
 };
