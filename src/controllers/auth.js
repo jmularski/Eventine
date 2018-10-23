@@ -9,8 +9,8 @@ const encryptUtils = require('../lib/encryptUtils');
 const createToken = require('../lib/createToken');
 // TODO: unit testing, integration tests
 
-async function joinDefaultGroup(token) {
-    await GroupController.join(token, 'GrupaTest1');
+async function joinDefaultGroup(token, isPartner) {
+    await GroupController.join(token, 'GrupaTest1', isPartner);
 };
 
 /** @api { post } /auth/login Login
@@ -103,7 +103,7 @@ let register = async (req, res, next) => {
     });
     await newUser.save();
     let token = createToken(newUser.fullName, newUser.id);
-    await joinDefaultGroup(token);
+    await joinDefaultGroup(token, isPartner);
     res.status(200).send({success: true, token, fullName, isPartner});
 };
 
@@ -144,7 +144,7 @@ let social = async (req, res, next) => {
         });
         await newUser.save();
         token = createToken(newUser.fullName, newUser.id);
-        await joinDefaultGroup(token);
+        await joinDefaultGroup(token, false);
     } else {
         token = createToken(user.fullName, user.id);
     }

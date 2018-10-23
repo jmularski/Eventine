@@ -116,13 +116,13 @@ let create = async (req, res, next) => {
  *  @apiSuccess {String} string containing id of joined group
  */
 
-let join = async (token, groupName) => {
+let join = async (token, groupName, isPartner) => {
     let { id, fullName } = decryptToken(token);
-
+    let subgroup = isPartner ? 'partner' : 'user';
     let data = {
         id: id,
         name: fullName,
-        subgroup: 'user',
+        subgroup: subgroup,
         location: ''
     };
     if(!groupName) res.sendStatus(403);
@@ -278,6 +278,7 @@ let nearest = async (req, res) => {
     let group = await Group.findById(groupId).exec();
     let userLocation = group.people.find( person => person.id === id).location;
     let otherUsers = group.people.filter( person => person.location === userLocation );
+    let otherUsers = otherUsers.filter( person => person.subgroup !== 'partner');
     let otherUsersId = otherUsers.map(user => user.id);
     let users = await User.find({id: {$in: otherUsersId}}).exec();
     let usersNotifTokens = users.map(user => user.notifToken);
