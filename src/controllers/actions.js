@@ -54,11 +54,14 @@ let create = async (req, res, next) => {
 
     let usersIds = targetUsers;
     let userNotifs = await User.find({
-        id: {
+        _id: {
             $in: usersIds,
         },
     }).select('-_id notifToken').exec();
-
+    let notifIds = userNotifs.map(person => person.notifToken);
+    console.log(usersIds);
+    console.log(userNotifs);
+    console.log(notifIds);
     let payload = {
         notification: {
             title,
@@ -72,7 +75,6 @@ let create = async (req, res, next) => {
             type: 'ping',
         },
     };
-    let notifIds = userNotifs.map(person => person.notifToken);
     
     console.log(notifIds);
     try {
