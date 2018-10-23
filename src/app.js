@@ -6,12 +6,12 @@ const helmet = require('helmet');
 app.use(helmet());
 
 // setup cors
-const cors = require('cors');
-/* const corsOptions = {
-    origin: 'https://kalejdoskop-e9e20.firebaseapp.com',
+const cors = require('cors')
+const corsOptions = {
+    origin: 'https://findme-186320.firebaseapp.com',
     credentials: true,
     optionsSuccessStatus: 200,
-};*/
+};
 app.use(cors());
 
 // setup nconf
