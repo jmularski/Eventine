@@ -50,20 +50,20 @@ let create = async (req, res, next) => {
     let peopleData = normalData.concat(facebookData);
 
     let peopleIds = peopleData.map(person => person.id);
-    await User.updateMany({'_id': { $in: peopleIds }}, {$push: {invitations: {id: newGroup.id, name: groupName, invitedBy: fullName}}}).exec();
+    //await User.updateMany({'_id': { $in: peopleIds }}, {$push: {invitations: {id: newGroup.id, name: groupName, invitedBy: fullName}}}).exec();
 
     // adding admin to groups
     await User.update({'_id': id}, {$push: {groups: {id: newGroup.id, name: groupName}}}).exec();
 
     let peopleSchema = [];
-    peopleSchema = peopleData.map( person => {
+    /*peopleSchema = peopleData.map( person => {
         return {
             id: person.id,
             name: person.fullName,
             subgroup: 'invited',
             location: ''
         };
-    });
+    });*/
     peopleSchema.push({
         id: id,
         name: fullName,
@@ -117,7 +117,6 @@ let create = async (req, res, next) => {
  */
 
 let join = async (token, groupName) => {
-    console.log(token, decryptToken(token));
     let { id, fullName } = decryptToken(token);
 
     let data = {
