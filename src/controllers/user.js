@@ -119,7 +119,9 @@ let setCaretaker = async (req, res) => {
 
 let callCaretaker = async (req, res) => {
     let { id } = req.token;
-    let caretakerId = await User.findById(id).careTaker;
+
+    let partnerAcc = await User.findById(id);
+    let caretakerId = partnerAcc.careTaker;
     let caretakerNotifToken = await User.findById(caretakerId).notifToken;
     let payload = {
         notification: {
