@@ -6,6 +6,8 @@ const Help = require('../models/help');
 const GroupError = require('../lib/errors/GroupError');
 const decryptToken = require('../lib/decryptToken');
 const sendNotif = require('../lib/sendNotif');
+var winston = require('winston');
+require('winston-loggly-bulk');
 
 /** @api { post } /group/create
  *  @apiDescription Create group with given groupName that also serves as groupCode later, supports inviting people from facebook and app users
@@ -281,6 +283,7 @@ let nearest = async (req, res) => {
     let userLocation = group.people.find( person => person.id === id).location;
     let otherUsers = group.people.filter( person => person.location === userLocation );
     otherUsers = otherUsers.filter( person => person.subgroup !== 'partner');
+    otherUsers = otherUsers.filter( person => person.id !== id);
     let otherUsersId = otherUsers.map(user => user.id);
     let users = await User.find({id: {$in: otherUsersId}}).exec();
     let usersNotifTokens = users.map(user => user.notifToken);
