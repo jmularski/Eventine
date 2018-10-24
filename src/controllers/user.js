@@ -130,7 +130,7 @@ let callCaretaker = async (req, res) => {
             desc: "Opiekun do ktorego jestes przypisany cię woła",
             sound: 'default'
         },
-        body: {
+        data: {
             title: "Zawołanie opiekuna",
             desc: "Opiekun do ktorego jestes przypisany cię woła",
             action: 'callCaretaker'
