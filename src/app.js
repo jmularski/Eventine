@@ -24,7 +24,7 @@ nconf
 // setup loggly
 var winston = require('winston');
 require('winston-loggly-bulk');
- 
+
 winston.add(winston.transports.Loggly, {
     token: "7b198698-583b-4a1e-97fd-e478945561cb",
     subdomain: "geteventine",

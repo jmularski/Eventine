@@ -124,12 +124,12 @@ let callCaretaker = async (req, res) => {
     let payload = {
         notification: {
             title: "Zawołanie opiekuna",
-            body: "Opiekun do ktorego jestes przypisany cię woła",
+            desc: "Opiekun do ktorego jestes przypisany cię woła",
             sound: 'default'
         },
         body: {
             title: "Zawołanie opiekuna",
-            body: "Opiekun do ktorego jestes przypisany cię woła",
+            desc: "Opiekun do ktorego jestes przypisany cię woła",
             action: 'callCaretaker'
         }
     }
