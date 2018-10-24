@@ -133,6 +133,8 @@ let callCaretaker = async (req, res) => {
             action: 'callCaretaker'
         }
     }
+    console.log(caretakerId)
+    console.log(caretakerNotifToken);
     sendNotif(payload, caretakerNotifToken);
     res.sendStatus(200);
 }
