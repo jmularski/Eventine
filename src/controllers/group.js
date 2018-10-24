@@ -221,7 +221,7 @@ let changeSubgroup = async (req, res, next) => {
         if(person.id === id) return person;
     });
     let userSubgroup = user.subgroup;
-    if(userSubgroup !== 'admin') res.sendStatus(403);
+    if(userSubgroup !== 'Organizator') res.sendStatus(403);
     else {
         group.people.find(person => {
             if(person.id == changingId) return person;

@@ -123,7 +123,7 @@ let list = async (req, res, next) => {
     });
     let userStatus = user[0].subgroup;
     let actions;
-    if(userStatus === 'admin') {
+    if(userStatus === 'Organizator') {
         actions = await Action.find({ groupId }).exec();
     } else {
         actions = await Action.find({$or: [
