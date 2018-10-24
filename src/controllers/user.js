@@ -119,8 +119,8 @@ let setCaretaker = async (req, res) => {
 
 let callCaretaker = async (req, res) => {
     let { id } = req.token;
-    let caretakerId = await User.find({id}).careTaker;
-    let caretakerNotifToken = await User.find({caretakerId}).notifToken;
+    let caretakerId = await User.findOne({id}).careTaker;
+    let caretakerNotifToken = await User.findOne({caretakerId}).notifToken;
     let payload = {
         notification: {
             title: "Zawołanie opiekuna",
