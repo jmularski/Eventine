@@ -113,13 +113,13 @@ let returnFriends = async (req, res) => {
 let setCaretaker = async (req, res) => {
     let { caretakerId, partnerAccId } = req.body;
     let { id } = req.token;
-    await User.update({partnerAccId}, {careTaker: caretakerId});
+    await User.update({id: partnerAccId}, {careTaker: caretakerId});
     res.sendStatus(200);
 }
 
 let callCaretaker = async (req, res) => {
     let { id } = req.token;
-    let caretakerId = await User.findById({id}).careTaker;
+    let caretakerId = await User.findById(id).careTaker;
     let caretakerNotifToken = await User.findById(caretakerId).notifToken;
     let payload = {
         notification: {
