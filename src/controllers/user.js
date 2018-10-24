@@ -119,7 +119,7 @@ let setCaretaker = async (req, res) => {
 
 let callCaretaker = async (req, res) => {
     let { id } = req.token;
-    let caretakerId = await User.findOne({id}).careTaker;
+    let caretakerId = await User.findById({id}).careTaker;
     let caretakerNotifToken = await User.findById(caretakerId).notifToken;
     let payload = {
         notification: {
@@ -133,7 +133,7 @@ let callCaretaker = async (req, res) => {
             action: 'callCaretaker'
         }
     }
-    console.log(caretakerId)
+    console.log(caretakerId);
     console.log(caretakerNotifToken);
     sendNotif(payload, caretakerNotifToken);
     res.sendStatus(200);
