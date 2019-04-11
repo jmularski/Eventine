@@ -24,23 +24,23 @@ test:
     - npm install
     - npm test
 
-# code_quality:
-#   stage: test
-#   image: docker:stable
-#   variables:
-#     DOCKER_DRIVER: overlay2
-#   allow_failure: true
-#   services:
-#     - docker:stable-dind
-#   script:
-#     - export SP_VERSION=$(echo "$CI_SERVER_VERSION" | sed 's/^\([0-9]*\)\.\([0-9]*\).*/\1-\2-stable/')
-#     - docker run
-#         --env SOURCE_CODE="$PWD"
-#         --volume "$PWD":/code
-#         --volume /var/run/docker.sock:/var/run/docker.sock
-#         "registry.gitlab.com/gitlab-org/security-products/codequality:$SP_VERSION" /code
-#   artifacts:
-#     paths: [gl-code-quality-report.json]
+code_quality:
+  stage: test
+  image: docker:stable
+  variables:
+    DOCKER_DRIVER: overlay2
+  allow_failure: true
+  services:
+    - docker:stable-dind
+  script:
+    - export SP_VERSION=$(echo "$CI_SERVER_VERSION" | sed 's/^\([0-9]*\)\.\([0-9]*\).*/\1-\2-stable/')
+    - docker run
+        --env SOURCE_CODE="$PWD"
+        --volume "$PWD":/code
+        --volume /var/run/docker.sock:/var/run/docker.sock
+        "registry.gitlab.com/gitlab-org/security-products/codequality:$SP_VERSION" /code
+  artifacts:
+    paths: [gl-code-quality-report.json]
 
 docker:
   stage: build
@@ -53,7 +53,7 @@ docker:
   script:
     - docker build -t eventine:latest -f ./docker/Dockerfile .
     - docker tag eventine:latest ${CONTAINER_TEST_IMAGE}
-    - docker login -u _json_key -p "$(cat findme4-209120-f13531932f36.json)" https://gcr.io
+    - docker login -u _json_key -p "$GITLAB_PRIVATE_KEY" https://gcr.io
     - docker push ${CONTAINER_TEST_IMAGE}
   only:
     - master

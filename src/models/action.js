@@ -7,7 +7,7 @@ let ActionSchema = new Schema({
     createdAt: {type: Date, default: Date.now},
     creator: {
         id: { type: String, required: true },
-        name: { type: String, required: true }
+        name: { type: String, required: true },
     },
     title: { type: String, required: true },
     desc: { type: String, required: false },
@@ -16,15 +16,15 @@ let ActionSchema = new Schema({
     plannedTime: { type: Date, required: false },
     geo: { type: [Number], index: '2d', required: false },
     floor: { type: Number, required: false },
-    status: { type: String, required: true, enum: ["sent", "inProgress", "done"]},
+    status: { type: String, required: true, enum: ['sent', 'inProgress', 'done']},
     progressor: {
         id: { type: String, required: false},
-        name: { type: String, required: false}
+        name: { type: String, required: false},
     },
     executor: {
         id: { type: String, required: false },
-        name: { type: String, required: false }
-    }
+        name: { type: String, required: false },
+    },
 });
 
 module.exports = mongoose.model('action', ActionSchema);

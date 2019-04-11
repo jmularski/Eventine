@@ -6,11 +6,15 @@ ENV NODE_ENV=development
 ENV PORT=3000
 ENV MONGO_SERVICE_HOST=localhost
 
-COPY . /var/www
-WORKDIR /var/www
+WORKDIR /usr/src/eventine
 
-RUN npm config set registry http://registry.npmjs.org/
-RUN npm install
+RUN npm set strict-ssl false
+RUN npm install -g yarn
+
+COPY package*.json ./
+RUN yarn install
+
+COPY . .
 
 EXPOSE 3000
 

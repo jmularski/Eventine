@@ -10,7 +10,7 @@ let UserSchema = new Schema({
     invitations: {type: Array, default: []},
     groups: {type: Array, default: []},
     isPartner: { type: Boolean, default: false},
-    careTaker: { type: String, required: false } 
+    careTaker: { type: String, required: false },
 });
 
 module.exports = mongoose.model('user', UserSchema);

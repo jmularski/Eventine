@@ -1,6 +1,6 @@
 require('express-validator');
 const NotAuthenticated = require('../lib/errors/NotAuthenticated');
-const User = require('../models/user')
+const User = require('../models/user');
 const GroupController = require('./group.js');
 const jwt = require('jsonwebtoken');
 var winston = require('winston');
@@ -99,12 +99,12 @@ let register = async (req, res, next) => {
         email,
         fullName,
         password,
-        isPartner
+        isPartner,
     });
     await newUser.save();
     let token = createToken(newUser.fullName, newUser.id);
     await joinDefaultGroup(token, isPartner);
-    winston.log('info', 'User registered!', {tags: 'auth'})
+    winston.log('info', 'User registered!', {tags: 'auth'});
     res.status(200).send({success: true, token, fullName, isPartner});
 };
 
@@ -149,7 +149,7 @@ let social = async (req, res, next) => {
     } else {
         token = createToken(user.fullName, user.id);
     }
-    
+
     res.status(200).send({success: true, token, fullName});
 };
 

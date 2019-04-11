@@ -16,5 +16,5 @@ scenarios:
         json:
           fullName: "{{ name }}"
           email: "{{ email }}"
-          password: "michno"
+          password: "test123helloworld"
     - log: "Sent a request to /users with {{ name }}, {{ email }}, {{ password }}"

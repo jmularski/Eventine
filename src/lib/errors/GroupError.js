@@ -1,4 +1,4 @@
-const CustomError = require('./customError');
+const CustomError = require('./CustomError');
 
 module.exports = class GroupError extends CustomError {
     constructor(customMessage) {

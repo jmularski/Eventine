@@ -1,0 +1,15 @@
+#!/bin/bash
+
+docker build --network=host -t eventine -f ../docker/dev/Dockerfile ../
+
+kubectl apply -f ../kubernetes/development/db-volume.yaml
+kubectl apply -f ../kubernetes/development/db-volume-claim.yaml
+kubectl apply -f ../kubernetes/development/db-controller.yaml
+kubectl apply -f ../kubernetes/development/db-service.yaml
+
+sleep 60
+
+kubectl apply -f ../kubernetes/development/web-controller.yaml
+kubectl apply -f ../kubernetes/development/web-service.yaml
+
+minikube service web

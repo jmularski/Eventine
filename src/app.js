@@ -1,17 +1,23 @@
 const express = require('express');
 const app = express();
 
+//setup dotenv
+const dotenv = require('dotenv')
+const result = dotenv.config()
+
+if (result.error) {
+    throw result.error
+}
+
+console.log(result)
+
 // helmet
 const helmet = require('helmet');
 app.use(helmet());
 
 // setup cors
-const cors = require('cors')
-/*const corsoptions = {
-    origin: 'https://findme-186320.firebaseapp.com',
-    credentials: true,
-    optionsSuccessStatus: 200,
-};*/
+const cors = require('cors');
+
 app.use(cors());
 
 // setup nconf
@@ -26,15 +32,15 @@ var winston = require('winston');
 require('winston-loggly-bulk');
 
 winston.add(winston.transports.Loggly, {
-    token: "7b198698-583b-4a1e-97fd-e478945561cb",
-    subdomain: "geteventine",
-    tags: ["Winston-NodeJS"],
+    token: '7b198698-583b-4a1e-97fd-e478945561cb',
+    subdomain: 'geteventine',
+    tags: ['Winston-NodeJS'],
     json: true,
     handleExceptions: true,
 });
 winston.exitOnError = false;
 
-winston.log('info', "Started server/Rolled new update!",  { tags: 'server' });
+winston.log('info', 'Started server/Rolled new update!', { tags: 'server' });
 
 // bodyParser
 const bodyParser = require('body-parser');
@@ -48,17 +54,16 @@ let dbUrl;
 if(nconf.get('NODE_ENV') == 'production') dbUrl = 'mongodb://10.55.241.117:27017/kalejdoskop';
 else if(nconf.get('NODE_ENV') == 'dev' || nconf.get('NODE_ENV') == 'CI' ) dbUrl = 'mongodb://mongo:27017/kalejdoskop';
 else dbUrl = 'mongodb://localhost:27017/kalejdoskop';
-console.log(dbUrl);
 mongoose.connect(dbUrl, (err) => {
-    console.log("Hi!");
+    console.log('Hi!');
     if(err) console.error(err);
 });
 
 
 // setup firebase
 const admin = require('firebase-admin');
-const serviceAccount = require('../kalejdoskopapp-privatekey.json');
-
+const serviceAccount = require(`../${process.env.FIREBASE_PRIVATE_KEY}`);
+console.log(process.env.FIREBASE_PRIVATE_KEY)
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: 'https://kalejdoskopapp.firebaseio.com',
@@ -93,12 +98,11 @@ app.get('/', (req, res) => {
 });
 
 app.get('/.well-known/acme-challenge/:ping', (req, res) => {
-
     res.send(req.params.ping + '.TOzwmPscKGMCrpuOkfiqdvhIxqwL8_BIzDeUFoou47Y');
-})
+});
 
 // middlewares
-const botFucker = require('./middlewares/botFucker');
+const botCatcher = require('./middlewares/botCatcher');
 const notFound = require('./middlewares/notFound');
 const errorHandler = require('./middlewares/errorHandler');
 const ignoreFavicon = require('./middlewares/ignoreFavicon');

@@ -115,32 +115,32 @@ let setCaretaker = async (req, res) => {
     let { id } = req.token;
     await User.findByIdAndUpdate(partnerAccId, {careTaker: caretakerId});
     res.sendStatus(200);
-}
+};
 
 let callCaretaker = async (req, res) => {
     let { id } = req.token;
 
     let partnerAcc = await User.findById(id);
     let caretakerId = partnerAcc.careTaker;
-    let caretakerNotifToken = await User.findById(caretakerId)
+    let caretakerNotifToken = await User.findById(caretakerId);
     caretakerNotifToken = caretakerNotifToken.notifToken;
     let payload = {
         notification: {
-            title: "Zawołanie opiekuna",
-            desc: "Opiekun do ktorego jestes przypisany cię woła",
-            sound: 'default'
+            title: 'Zawołanie opiekuna',
+            desc: 'Opiekun do ktorego jestes przypisany cię woła',
+            sound: 'default',
         },
         data: {
-            title: "Zawołanie opiekuna",
-            desc: "Opiekun do ktorego jestes przypisany cię woła",
-            action: 'callCaretaker'
-        }
-    }
+            title: 'Zawołanie opiekuna',
+            desc: 'Opiekun do ktorego jestes przypisany cię woła',
+            action: 'callCaretaker',
+        },
+    };
     console.log(caretakerId);
     console.log(caretakerNotifToken);
     sendNotif(payload, caretakerNotifToken);
     res.sendStatus(200);
-}
+};
 
 module.exports = {
     groupList,
@@ -148,5 +148,5 @@ module.exports = {
     getTasks,
     returnFriends,
     setCaretaker,
-    callCaretaker
+    callCaretaker,
 };

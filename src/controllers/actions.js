@@ -1,4 +1,3 @@
-const admin = require('firebase-admin');
 const Action = require('../models/action');
 const Group = require('../models/group');
 const User = require('../models/user');
@@ -6,7 +5,6 @@ const sendDelayedNotif = require('../lib/sendDelayedNotif');
 const sendNotif = require('../lib/sendNotif');
 var winston = require('winston');
 require('winston-loggly-bulk');
-const _ = require('lodash');
 
 /** @api { post } /action/create
  *  @apiDescription Create action for given group
@@ -25,7 +23,7 @@ const _ = require('lodash');
  *  @apiSuccess {Int} Only 200
  */
 
-let create = async (req, res, next) => {
+const create = async (req, res) => {
     let { groupId, type, title, desc, targetGroups, targetUsers, plannedTime, geo, floor } = req.body;
     let { id, fullName } = req.token;
     let status = 'sent';
@@ -38,7 +36,7 @@ let create = async (req, res, next) => {
         type,
         creator: {
             id,
-            name: fullName
+            name: fullName,
         },
         title,
         desc,
@@ -47,7 +45,7 @@ let create = async (req, res, next) => {
         targetUsers,
         plannedTime,
         geo,
-        floor
+        floor,
     });
 
     await action.save();
@@ -59,14 +57,11 @@ let create = async (req, res, next) => {
         },
     }).select('-_id notifToken').exec();
     let notifIds = userNotifs.map(person => person.notifToken);
-    console.log(usersIds);
-    console.log(userNotifs);
-    console.log(notifIds);
     let payload = {
         notification: {
             title,
             body: desc,
-            sound: 'default'
+            sound: 'default',
         },
         data: {
             title,
@@ -75,18 +70,13 @@ let create = async (req, res, next) => {
             type: 'ping',
         },
     };
-    
-    console.log(notifIds);
-    try {
-        if(!plannedTime || plannedTime < Date.now()) {
-            sendNotif(payload, notifIds);
-        } else sendDelayedNotif(payload, notifIds, plannedTime);
-    } catch(e) {
-        console.log(e);
-    }
+
+    if(!plannedTime || plannedTime < Date.now()) sendNotif(payload, notifIds);
+    else sendDelayedNotif(payload, notifIds, plannedTime);
+
     winston.log('info', 'Action created!', {tags: 'action'});
     res.sendStatus(200);
-}
+};
 
 /** @api { get } /action/list/:groupId
  *  @apiDescription get actions for given group
@@ -96,7 +86,7 @@ let create = async (req, res, next) => {
  *  @apiParam (Params) {String} groupId - id of group
  *  @apiParam (Header) {String} X-Token - token received from /auth routes
  *
- *  @apiSuccess {Object} Object that probably look like this {'actions': [{
+ *  @apiSuccess {Object} Object that looks like this {'actions': [{
  *  id,
  *  groupId,
  *  type
@@ -113,7 +103,7 @@ let create = async (req, res, next) => {
  *  }]}
  */
 
-let list = async (req, res, next) => {
+const list = async (req, res) => {
     let { groupId, type } = req.params;
     let { id } = req.token;
     let group = await Group.findById(groupId).exec();
@@ -134,13 +124,13 @@ let list = async (req, res, next) => {
                 ],
                 $or: [
                     { targetGroups: userStatus },
-                    { targetUsers: id}
+                    { targetUsers: id},
                 ],
                 status: {$ne: 'ended'}},
                 { groupId, 'creator.id': id}],
         }).exec();
     }
-    if(type !== 'all') actions = actions.filter((action) => action.type === type)
+    if(type !== 'all') actions = actions.filter((action) => action.type === type);
     res.send({actions});
 };
 
@@ -155,7 +145,7 @@ let list = async (req, res, next) => {
  *  @apiSuccess {Int} Returns 200
  */
 
-let inProgress = async (req, res, next) => {
+const inProgress = async (req, res) => {
     let { pingId } = req.body;
     let { id, fullName } = req.token;
     await Action.findByIdAndUpdate(pingId, { progressor: {id, name: fullName}, status: 'inProgress' });
@@ -173,11 +163,11 @@ let inProgress = async (req, res, next) => {
  *  @apiSuccess {Int} Returns 200
  */
 
-let end = async (req, res, next) => {
+const end = async (req, res, next) => {
     let { pingId } = req.body;
     let { id, fullName } = req.token;
     // fix me pls
-    await Action.findByIdAndUpdate(pingId, { executor: { id, name: fullName }, status: "done" });
+    await Action.findByIdAndUpdate(pingId, { executor: { id, name: fullName }, status: 'done' });
     res.sendStatus(200);
 };
 

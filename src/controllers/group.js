@@ -35,7 +35,6 @@ let create = async (req, res, next) => {
     let { id, fullName } = req.token;
 
 
-    // update User invitations field and create a new Group object - I should get rid of foreach, replace it with map (done)
     let newGroup = new Group();
 
     let normalData = await User.find({
@@ -53,25 +52,17 @@ let create = async (req, res, next) => {
     let peopleData = normalData.concat(facebookData);
 
     let peopleIds = peopleData.map(person => person.id);
-    //await User.updateMany({'_id': { $in: peopleIds }}, {$push: {invitations: {id: newGroup.id, name: groupName, invitedBy: fullName}}}).exec();
 
     // adding admin to groups
     await User.update({'_id': id}, {$push: {groups: {id: newGroup.id, name: groupName}}}).exec();
 
     let peopleSchema = [];
-    /*peopleSchema = peopleData.map( person => {
-        return {
-            id: person.id,
-            name: person.fullName,
-            subgroup: 'invited',
-            location: ''
-        };
-    });*/
+
     peopleSchema.push({
         id: id,
         name: fullName,
         subgroup: 'admin',
-        location: ''
+        location: '',
     });
 
     // adding normal people to group
@@ -83,28 +74,22 @@ let create = async (req, res, next) => {
     // send notification
     if(peopleData.length > 0) {
         let notifIds = peopleData.map(person => person.notifToken);
-        if(notifIds.length != 0) {
-            try {
-                let payload = {
-                    notification: {
-                        title: 'Zaproszenie do grupy!',
-                        body: `Zostałeś zaproszony do grupy ${groupName}`,
-                        sound: 'default',
-                    },
-                    data: {
-                        groupName: groupName,
-                        action: 'invitation',
-                    },
-                };
+        let payload = {
+            notification: {
+                title: 'Zaproszenie do grupy!',
+                body: `Zostałeś zaproszony do grupy ${groupName}`,
+                sound: 'default',
+            },
+            data: {
+                groupName: groupName,
+                action: 'invitation',
+            },
+        };
 
-                await admin.messaging().sendToDevice(notifIds, payload);
-            } catch(e) {
-                console.log(e);
-            }
-        }
+        sendNotif(payload, notifIds);
     }
 
-    res.status(200).send(newGroup.id);
+    res.send(newGroup.id);
 };
 
 /** @api { post } /group/join
@@ -126,58 +111,13 @@ let join = async (token, groupName, isPartner) => {
         id: id,
         name: fullName,
         subgroup: subgroup,
-        location: ''
+        location: '',
     };
     if(!groupName) res.sendStatus(403);
     let groupUpdated = await Group.findOneAndUpdate({groupName}, { $push: { people: data }}).exec();
     await User.findOneAndUpdate({'_id': id}, { $push: { groups: { id: groupUpdated.id, name: groupUpdated.groupName }}});
-    return true;
+    res.send(groupUpdated.id);
 };
-
-// DEPRECATED!!!
-// /** @api { post } /group/acceptInvitation
-//  *  @apiDescription Accept invitation of a group with given id
-//  *  @apiName groupAcceptInvitation
-//  *  @apiGroup group
-//  *
-//  *  @apiParam (Body) {String} groupId - id of group, you can get it from /user/invitations
-//  *  @apiParam (Header) {String} X-Token - token received from /auth routes
-//  *
-//  *  @apiSuccess {String} string containing id of joined group
-//  */
-
-// let acceptInvitation = async (req, res, next) => {
-//     let { id, fullName } = req.token;
-//     let { groupId } = req.body;
-
-//     let group = await Group.findById(groupId).exec();
-//     let user = await User.findById(id).exec();
-
-//     if(!group || !user) res.status(401).send();
-//     group.people = group.people.filter(person => {
-//         return person.id !== id;
-//     });
-//     group.people.push({
-//         id: id,
-//         name: fullName,
-//         subgroup: 'user',
-//     });
-
-
-//     user.invitations = user.invitations.filter(group => {
-//         return group.id !== groupId;
-//     });
-
-//     user.groups.push({
-//         id: group.id,
-//         name: group.groupName,
-//     });
-
-//     await group.save();
-//     await user.save();
-
-//     res.send(groupId);
-// };
 
 /** @api { get } /group/members/:groupId
  *  @apiDescription Get members of group with given groupId
@@ -234,7 +174,7 @@ let changeSubgroup = async (req, res, next) => {
 };
 
 let updateLocation = async (req, res) => {
-    let { groupId, locationTag } = req.body
+    let { groupId, locationTag } = req.body;
     let { id } = req.token;
     let group = await Group.findById(groupId).exec();
     group.people.find(person => person.id === id).location = locationTag;
@@ -250,9 +190,9 @@ let pingOrganizer = async (req, res) => {
     let newHelp = new Help({
         caller: {
             id,
-            fullName
+            fullName,
         },
-        called: organizerId
+        called: organizerId,
     });
     newHelp.save();
     if(notifToken) {
@@ -260,7 +200,7 @@ let pingOrganizer = async (req, res) => {
             notification: {
                 title: `${fullName} is searching for you!`,
                 body: `Find him at ${callLocation}`,
-                sound: 'default'
+                sound: 'default',
             },
             data: {
                 title: `${fullName} is searching for you!`,
@@ -268,7 +208,7 @@ let pingOrganizer = async (req, res) => {
                 location: callLocation,
                 callerId: newHelp.id,
                 action: 'findOrganizer',
-            },
+            }
         };
         sendNotif(payload, notifToken.notifToken);
     };
@@ -290,9 +230,9 @@ let nearest = async (req, res) => {
     let newHelp = new Help({
         caller: {
             id,
-            fullName
+            fullName,
         },
-        called: otherUsersId
+        called: otherUsersId,
     });
     await newHelp.save();
     if(usersNotifTokens) {
@@ -300,7 +240,7 @@ let nearest = async (req, res) => {
             notification: {
                 title: `${fullName} is calling for help!`,
                 body: `Find him at ${userLocation}`,
-                sound: 'default'
+                sound: 'default',
             },
             data: {
                 title: `${fullName} is calling for help!`,
@@ -324,12 +264,12 @@ let response = async (req, res) => {
     if(response) helpSchema.accepted.push(id);
     else helpSchema.declined.push(id);
     await helpSchema.save();
-    response = response ? 'accepted' : 'declined'
+    response = response ? 'accepted' : 'declined';
     let payload = {
         notification: {
             title: `${fullName} has ${response} your request!`,
             body: 'Hooray!',
-            sound: 'default'
+            sound: 'default',
         },
         data: {
             title: `${fullName} has ${response} your request!`,
@@ -349,12 +289,11 @@ let listHelp = async (req, res) => {
 module.exports = {
     create,
     join,
-    //acceptInvitation,
     members,
     changeSubgroup,
     updateLocation,
     nearest,
     pingOrganizer,
     response,
-    listHelp
+    listHelp,
 };
