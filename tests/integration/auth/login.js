@@ -14,11 +14,7 @@ describe('LOGIN INTEGRATION TESTS', () =>{
         .post('/auth/login')
         .send(userData)
         .set('Accept', 'application/json')
-        .expect(200)
-        .end((err, res) => {
-            expect(res.body).to.have.property(token);
-            console.log(userData);
-        });
+        .expect(200);
     });
     it('Failed without email', async () => {
         let userCase = {
@@ -34,11 +30,11 @@ describe('LOGIN INTEGRATION TESTS', () =>{
         let userCase = {
             email: userData.email
         };
-            request(server)
-            .post('/auth/login')
-            .send(userCase)
-            .set('Accept', 'application/json')
-            .expect(401);
+        request(server)
+        .post('/auth/login')
+        .send(userCase)
+        .set('Accept', 'application/json')
+        .expect(401);
     });
     it('Failed for no user with email given', async () => {
         let userCase = {
