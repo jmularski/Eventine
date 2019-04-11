@@ -59,15 +59,15 @@ mongoose.connect(dbUrl, (err) => {
     if(err) console.error(err);
 });
 
-
 // setup firebase
-const admin = require('firebase-admin');
-const serviceAccount = require(`../${process.env.FIREBASE_PRIVATE_KEY}`);
-console.log(process.env.FIREBASE_PRIVATE_KEY)
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: 'https://kalejdoskopapp.firebaseio.com',
-});
+if(nconf.get('NODE_ENV') != 'test' && nconf.get('NODE_ENV') != undefined){
+    const admin = require('firebase-admin');
+    const serviceAccount = require(`../${process.env.FIREBASE_PRIVATE_KEY}`);
+    admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount),
+        databaseURL: 'https://kalejdoskopapp.firebaseio.com',
+    });
+}
 
 // express-validator
 const validator = require('express-validator');
@@ -76,7 +76,7 @@ app.use(validator());
 // morgan
 const morgan = require('morgan');
 app.use(morgan('dev'));
-
+try{
 // routes
 const auth = require('./routes/auth');
 app.use('/auth', auth);
@@ -109,8 +109,10 @@ const ignoreFavicon = require('./middlewares/ignoreFavicon');
 
 app.use(express.static(__dirname + '/public'));
 app.use(ignoreFavicon);
-app.use(botFucker);
+app.use(botCatcher);
 app.use(notFound);
 app.use(errorHandler);
-
+} catch(e) {
+    console.log(e)
+}
 module.exports = app;
