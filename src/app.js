@@ -60,7 +60,7 @@ mongoose.connect(dbUrl, (err) => {
 });
 
 // setup firebase
-if(nconf.get('NODE_ENV') != 'test' && nconf.get('NODE_ENV') != undefined){
+if(nconf.get('NODE_ENV') != 'test' && nconf.get('NODE_ENV') != 'CI' && nconf.get('NODE_ENV') != undefined){
     const admin = require('firebase-admin');
     const serviceAccount = require(`../${process.env.FIREBASE_PRIVATE_KEY}`);
     admin.initializeApp({
