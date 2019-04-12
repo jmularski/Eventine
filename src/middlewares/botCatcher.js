@@ -1,4 +1,4 @@
-// What is the reason for this middleware? 
+// What is the reason for this middleware?
 // Lots of chinese bots pinging our server to search for php vulnerabilities
 // Blocked all IPs requesting for *php* ¯\_(ツ)_/¯
 

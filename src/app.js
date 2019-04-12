@@ -1,15 +1,15 @@
 const express = require('express');
 const app = express();
 
-//setup dotenv
-const dotenv = require('dotenv')
-const result = dotenv.config()
+// setup dotenv
+const dotenv = require('dotenv');
+const result = dotenv.config();
 
-if (result.error) {
-    throw result.error
+if(result.error) {
+    throw result.error;
 }
 
-console.log(result)
+console.log(result);
 
 // helmet
 const helmet = require('helmet');
@@ -60,7 +60,7 @@ mongoose.connect(dbUrl, (err) => {
 });
 
 // setup firebase
-if(nconf.get('NODE_ENV') != 'test' && nconf.get('NODE_ENV') != 'CI' && nconf.get('NODE_ENV') != undefined){
+if(nconf.get('NODE_ENV') != 'test' && nconf.get('NODE_ENV') != 'CI' && nconf.get('NODE_ENV') != undefined) {
     const admin = require('firebase-admin');
     const serviceAccount = require(`../${process.env.FIREBASE_PRIVATE_KEY}`);
     admin.initializeApp({
@@ -76,7 +76,7 @@ app.use(validator());
 // morgan
 const morgan = require('morgan');
 app.use(morgan('dev'));
-try{
+try {
 // routes
 const auth = require('./routes/auth');
 app.use('/auth', auth);
@@ -113,6 +113,6 @@ app.use(botCatcher);
 app.use(notFound);
 app.use(errorHandler);
 } catch(e) {
-    console.log(e)
+    console.log(e);
 }
 module.exports = app;

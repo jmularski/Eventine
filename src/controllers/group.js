@@ -208,7 +208,7 @@ let pingOrganizer = async (req, res) => {
                 location: callLocation,
                 callerId: newHelp.id,
                 action: 'findOrganizer',
-            }
+            },
         };
         sendNotif(payload, notifToken.notifToken);
     };
