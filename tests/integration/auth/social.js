@@ -9,7 +9,11 @@ describe("SOCIAL INTEGRATION TESTS", () => {
     describe("Successful attempt", () => {
         const userData = {
             facebookId: generateFakeSocialToken(),
+<<<<<<< HEAD
+            fullName: "Test Test"
+=======
             fullName: "Marcin Michno"
+>>>>>>> 5f19adf3cce4dd3c4d46deb4fc7337bef199dadb
         };
         it("Returns 200.", () => {
             request(server)
@@ -22,7 +26,11 @@ describe("SOCIAL INTEGRATION TESTS", () => {
     describe("Unsuccessful attempts", () => {
         describe("Has no token", () => {
             const userData = {
+<<<<<<< HEAD
+                fullName: "Test Test"
+=======
                 fullName: "Marcin Michno"
+>>>>>>> 5f19adf3cce4dd3c4d46deb4fc7337bef199dadb
             };
             it("Should return 401", () => {
                 request(server)

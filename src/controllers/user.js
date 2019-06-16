@@ -55,7 +55,10 @@ let invitations = async (req, res, next) => {
 };
 
 
+<<<<<<< HEAD
+=======
 // this is bad, rewrite this, maybe rewrite whole system?
+>>>>>>> 5f19adf3cce4dd3c4d46deb4fc7337bef199dadb
 let getTasks = async (req, res, next) => {
     let { id } = req.token;
     let user = await User.findById(id).exec();
@@ -96,7 +99,10 @@ let getTasks = async (req, res, next) => {
  *  }]}
  */
 
+<<<<<<< HEAD
+=======
 // this has too much data, remove unnecessary data!
+>>>>>>> 5f19adf3cce4dd3c4d46deb4fc7337bef199dadb
 let returnFriends = async (req, res) => {
     let { id } = req.token;
     let user = User.findById(id).exec();
@@ -110,13 +116,22 @@ let returnFriends = async (req, res) => {
     res.send({users});
 };
 
+<<<<<<< HEAD
+
+//not used, turn off
+=======
+>>>>>>> 5f19adf3cce4dd3c4d46deb4fc7337bef199dadb
 let setCaretaker = async (req, res) => {
     let { caretakerId, partnerAccId } = req.body;
     let { id } = req.token;
     await User.findByIdAndUpdate(partnerAccId, {careTaker: caretakerId});
     res.sendStatus(200);
 };
+<<<<<<< HEAD
+//^
+=======
 
+>>>>>>> 5f19adf3cce4dd3c4d46deb4fc7337bef199dadb
 let callCaretaker = async (req, res) => {
     let { id } = req.token;
 

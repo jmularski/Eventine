@@ -148,8 +148,18 @@ const list = async (req, res) => {
 const inProgress = async (req, res) => {
     let { pingId } = req.body;
     let { id, fullName } = req.token;
+<<<<<<< HEAD
+    try {
+        await Action.findByIdAndUpdate(pingId, { progressor: {id, name: fullName}, status: 'inProgress' });
+        res.sendStatus(200);
+    } catch (e) {
+        res.send({'error': 'Action does not exist!'});
+    }
+    
+=======
     await Action.findByIdAndUpdate(pingId, { progressor: {id, name: fullName}, status: 'inProgress' });
     res.sendStatus(200);
+>>>>>>> 5f19adf3cce4dd3c4d46deb4fc7337bef199dadb
 };
 
 /** @api { post } /ping/end
@@ -166,9 +176,18 @@ const inProgress = async (req, res) => {
 const end = async (req, res, next) => {
     let { pingId } = req.body;
     let { id, fullName } = req.token;
+<<<<<<< HEAD
+    try {
+        await Action.findByIdAndUpdate(pingId, { executor: { id, name: fullName }, status: 'done' });
+        res.sendStatus(200);
+    } catch (e) {
+        res.send({'error': 'Action does not exist!'})
+    }
+=======
     // fix me pls
     await Action.findByIdAndUpdate(pingId, { executor: { id, name: fullName }, status: 'done' });
     res.sendStatus(200);
+>>>>>>> 5f19adf3cce4dd3c4d46deb4fc7337bef199dadb
 };
 
 module.exports = {

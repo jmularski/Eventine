@@ -7,10 +7,24 @@ var winston = require('winston');
 require('winston-loggly-bulk');
 const encryptUtils = require('../lib/encryptUtils');
 const createToken = require('../lib/createToken');
-// TODO: unit testing, integration tests
+
+let groupJoin = async (token, groupName, isPartner) => {
+    let { id, fullName } = decryptToken(token);
+    let subgroup = isPartner ? 'partner' : 'user';
+    let data = {
+        id,
+        name: fullName,
+        subgroup,
+        location: '',
+    };
+    if(!groupName) return false;
+    let groupUpdated = await Group.findOneAndUpdate({groupName}, { $push: { people: data }}).exec();
+    await User.findOneAndUpdate({'_id': id}, { $push: { groups: { id: groupUpdated.id, name: groupUpdated.groupName }}});
+    return groupUpdated.id;
+};
 
 async function joinDefaultGroup(token, isPartner) {
-    await GroupController.join(token, 'GrupaTest1', isPartner);
+    await groupJoin(token, 'GrupaTest1', isPartner);
 };
 
 /** @api { post } /auth/login Login
