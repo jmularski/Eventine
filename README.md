@@ -10,11 +10,7 @@ I was mostly responsible for backend and orchestrating a mini team of developers
 
 ## Why did it fail
 
-<<<<<<< HEAD
 Everybody had personal issues. After all, maybe high schoolers aren't supposed to run startups (ツ). There were some scalability issues also, due to us using beacons and all the struggle of setting them up.
-=======
-Everybody had personal issues. After all, maybe high schoolers aren't supposed to run startups (ツ)
->>>>>>> 5f19adf3cce4dd3c4d46deb4fc7337bef199dadb
 
 ## Technological stack
 
