@@ -55,12 +55,7 @@ typings/
 .yarn-integrity
 
 # server files
-kalejdoskopapp-privatekey.json
-<<<<<<< HEAD
-findme4*
-=======
-findme4-209120-6cfa6ca86363.json
->>>>>>> 5f19adf3cce4dd3c4d46deb4fc7337bef199dadb
+kalejdoskopapp*
 app.yaml
 keys.json
 

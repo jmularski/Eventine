@@ -10,6 +10,7 @@ services:
       - "3000:3000"
     links: 
       - mongo
+      - redis
     networks: 
       - main_network
   mongo:
@@ -19,6 +20,15 @@ services:
       - ./data:/data/db
     ports:
       - "27017:27017"
+    networks:
+      - main_network
+  redis:
+    container_name: redis
+    image: redis
+    volumes: 
+      - ./data:/data/redis
+    ports:
+      - "6379:6379"
     networks:
       - main_network
 networks:

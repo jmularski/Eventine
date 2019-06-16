@@ -2,6 +2,7 @@ const User = require('../models/user');
 const Group = require('../models/group');
 const Action = require('../models/action');
 const sendNotif = require('../lib/sendNotif');
+const redis = require('../lib/redis');
 
 /**
  * Get user data from specific field
@@ -11,7 +12,10 @@ const sendNotif = require('../lib/sendNotif');
  */
 
 async function getUserData(id, field) {
+    //const redisAction = redis.get(field + id);
+    //if(redisAction.result[field].length !== 0) return redisAction.result;
     let result = await User.findById(id).select(field).exec();
+    //redis.set(field + id, result);
     return result;
 };
 
@@ -28,7 +32,7 @@ async function getUserData(id, field) {
  *  }]}
  */
 
-let groupList = async (req, res, next) => {
+let groupList = async (req, res) => {
     let { id } = req.token;
     let groups = await getUserData(id, 'groups');
     res.send({groups: groups.groups});
@@ -55,10 +59,6 @@ let invitations = async (req, res, next) => {
 };
 
 
-<<<<<<< HEAD
-=======
-// this is bad, rewrite this, maybe rewrite whole system?
->>>>>>> 5f19adf3cce4dd3c4d46deb4fc7337bef199dadb
 let getTasks = async (req, res, next) => {
     let { id } = req.token;
     let user = await User.findById(id).exec();
@@ -99,10 +99,6 @@ let getTasks = async (req, res, next) => {
  *  }]}
  */
 
-<<<<<<< HEAD
-=======
-// this has too much data, remove unnecessary data!
->>>>>>> 5f19adf3cce4dd3c4d46deb4fc7337bef199dadb
 let returnFriends = async (req, res) => {
     let { id } = req.token;
     let user = User.findById(id).exec();
@@ -116,22 +112,15 @@ let returnFriends = async (req, res) => {
     res.send({users});
 };
 
-<<<<<<< HEAD
 
 //not used, turn off
-=======
->>>>>>> 5f19adf3cce4dd3c4d46deb4fc7337bef199dadb
 let setCaretaker = async (req, res) => {
     let { caretakerId, partnerAccId } = req.body;
     let { id } = req.token;
     await User.findByIdAndUpdate(partnerAccId, {careTaker: caretakerId});
     res.sendStatus(200);
 };
-<<<<<<< HEAD
 //^
-=======
-
->>>>>>> 5f19adf3cce4dd3c4d46deb4fc7337bef199dadb
 let callCaretaker = async (req, res) => {
     let { id } = req.token;
 

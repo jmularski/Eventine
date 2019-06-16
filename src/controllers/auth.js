@@ -1,31 +1,10 @@
 require('express-validator');
 const NotAuthenticated = require('../lib/errors/NotAuthenticated');
 const User = require('../models/user');
-const GroupController = require('./group.js');
-const jwt = require('jsonwebtoken');
 var winston = require('winston');
 require('winston-loggly-bulk');
 const encryptUtils = require('../lib/encryptUtils');
 const createToken = require('../lib/createToken');
-
-let groupJoin = async (token, groupName, isPartner) => {
-    let { id, fullName } = decryptToken(token);
-    let subgroup = isPartner ? 'partner' : 'user';
-    let data = {
-        id,
-        name: fullName,
-        subgroup,
-        location: '',
-    };
-    if(!groupName) return false;
-    let groupUpdated = await Group.findOneAndUpdate({groupName}, { $push: { people: data }}).exec();
-    await User.findOneAndUpdate({'_id': id}, { $push: { groups: { id: groupUpdated.id, name: groupUpdated.groupName }}});
-    return groupUpdated.id;
-};
-
-async function joinDefaultGroup(token, isPartner) {
-    await groupJoin(token, 'GrupaTest1', isPartner);
-};
 
 /** @api { post } /auth/login Login
  *  @apiDescription Login user with given email and password
@@ -117,7 +96,6 @@ let register = async (req, res, next) => {
     });
     await newUser.save();
     let token = createToken(newUser.fullName, newUser.id);
-    await joinDefaultGroup(token, isPartner);
     winston.log('info', 'User registered!', {tags: 'auth'});
     res.status(200).send({success: true, token, fullName, isPartner});
 };
@@ -148,7 +126,7 @@ let social = async (req, res, next) => {
     if(validationErrors) return next(new NotAuthenticated(validationErrors[0]));
 
     // facebook register
-    let { facebookId, fullName, isPartner } = req.body;
+    let { facebookId, fullName } = req.body;
 
     let user = await User.findOne({facebookId}).exec();
     let token;
@@ -159,7 +137,6 @@ let social = async (req, res, next) => {
         });
         await newUser.save();
         token = createToken(newUser.fullName, newUser.id);
-        await joinDefaultGroup(token, false);
     } else {
         token = createToken(user.fullName, user.id);
     }

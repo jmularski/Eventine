@@ -59,6 +59,11 @@ mongoose.connect(dbUrl, (err) => {
     if(err) console.error(err);
 });
 
+//setup caching
+//const redis = require('./lib/redis');
+//console.log("I see you");
+//redis.connect(nconf.get('NODE_ENV'));
+
 // setup firebase
 if(nconf.get('NODE_ENV') != 'test' && nconf.get('NODE_ENV') != 'CI' && nconf.get('NODE_ENV') != undefined) {
     const admin = require('firebase-admin');

@@ -1,17 +1,7 @@
-<<<<<<< HEAD
 const request = require('supertest');
 const server = require('../../../src/config/www');
 const { generateUser } = require('../../helper/object-generator');
 describe('LOGIN INTEGRATION TESTS', () => {
-=======
-const expect = require('chai').expect;
-
-const request = require('supertest');
-const server = require('../../../src/config/www');
-const mongoose = require('mongoose');
-const { generateUser } = require('../../helper/object-generator');
-describe('LOGIN INTEGRATION TESTS', () =>{
->>>>>>> 5f19adf3cce4dd3c4d46deb4fc7337bef199dadb
     var userData;
     before( async () => {
         userData = await generateUser();
@@ -22,58 +12,17 @@ describe('LOGIN INTEGRATION TESTS', () =>{
         .send(userData)
         .set('Accept', 'application/json')
         .expect(200);
-<<<<<<< HEAD
     });
     it('Failed without email', async () => {
         let userCase = {
             password: 'test',
         };
-=======
-    });
-    it('Failed without email', async () => {
-        let userCase = {
-            password: 'michno',
-        };
         request(server)
         .post('/auth/login')
         .send(userCase)
         .set('Accept', 'application/json')
         .expect(401);
     });
-    it('Failed without password', async () => {
-        let userCase = {
-            email: userData.email
-        };
-        request(server)
-        .post('/auth/login')
-        .send(userCase)
-        .set('Accept', 'application/json')
-        .expect(401);
-    });
-    it('Failed for no user with email given', async () => {
-        let userCase = {
-            email: 'marcin@michnov2.pl',
-            password: 'michno123',
-        };
-        request(server)
-        .post('/auth/login')
-        .send(userCase)
-        .set('Accept', 'application/json')
-        .expect(401);
-    });
-    it('Failed with wrong password given', async () => {
-        let userCase = {
-            email: userData.email,
-            password: 'michno123',
-        };    
->>>>>>> 5f19adf3cce4dd3c4d46deb4fc7337bef199dadb
-        request(server)
-        .post('/auth/login')
-        .send(userCase)
-        .set('Accept', 'application/json')
-        .expect(401);
-    });
-<<<<<<< HEAD
     it('Failed without password', async () => {
         let userCase = {
             email: userData.email
@@ -106,6 +55,4 @@ describe('LOGIN INTEGRATION TESTS', () =>{
         .set('Accept', 'application/json')
         .expect(401);
     });
-=======
->>>>>>> 5f19adf3cce4dd3c4d46deb4fc7337bef199dadb
 })

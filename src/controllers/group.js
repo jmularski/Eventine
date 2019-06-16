@@ -1,11 +1,10 @@
 require('express-validator');
-const admin = require('firebase-admin');
 const Group = require('../models/group');
 const User = require('../models/user');
 const Help = require('../models/help');
 const GroupError = require('../lib/errors/GroupError');
-const decryptToken = require('../lib/decryptToken');
 const sendNotif = require('../lib/sendNotif');
+const redis = require('../lib/redis');
 var winston = require('winston');
 require('winston-loggly-bulk');
 
@@ -51,11 +50,6 @@ let create = async (req, res, next) => {
 
     let peopleData = normalData.concat(facebookData);
 
-<<<<<<< HEAD
-=======
-    let peopleIds = peopleData.map(person => person.id);
-
->>>>>>> 5f19adf3cce4dd3c4d46deb4fc7337bef199dadb
     // adding admin to groups
     await User.update({'_id': id}, {$push: {groups: {id: newGroup.id, name: groupName}}}).exec();
 
@@ -92,6 +86,9 @@ let create = async (req, res, next) => {
         sendNotif(payload, notifIds);
     }
 
+    //purge cached data
+    //redis.del('groups' + id);
+
     res.send(newGroup.id);
 };
 
@@ -101,17 +98,13 @@ let create = async (req, res, next) => {
  *  @apiGroup group
  *
  *  @apiParam (Body) {String} groupName - name of group, required parameter
-<<<<<<< HEAD
  *  @apiParam (Body) {String} isPartner - whether user should be into partner group, optional parameter
-=======
->>>>>>> 5f19adf3cce4dd3c4d46deb4fc7337bef199dadb
  *  @apiParam (Header) {String} X-Token - token received from /auth routes
  *
  *
  *  @apiSuccess {String} string containing id of joined group
  */
 
-<<<<<<< HEAD
 let join = async (req, res, next) => {
     req.checkBody({
         groupName: {
@@ -135,25 +128,14 @@ let join = async (req, res, next) => {
     try {
         const groupUpdated = await Group.findOneAndUpdate({groupName}, { $push: { people: userData }}).exec();
         await User.findOneAndUpdate({'_id': id}, { $push: { groups: { id: groupUpdated.id, name: groupUpdated.groupName }}});
+
+        //purge cache
+        //redis.del('groups' + id);
+
         res.send(groupUpdated.id);
     } catch (e) {
         return next(new GroupError(e));
     };
-=======
-let join = async (token, groupName, isPartner) => {
-    let { id, fullName } = decryptToken(token);
-    let subgroup = isPartner ? 'partner' : 'user';
-    let data = {
-        id: id,
-        name: fullName,
-        subgroup: subgroup,
-        location: '',
-    };
-    if(!groupName) res.sendStatus(403);
-    let groupUpdated = await Group.findOneAndUpdate({groupName}, { $push: { people: data }}).exec();
-    await User.findOneAndUpdate({'_id': id}, { $push: { groups: { id: groupUpdated.id, name: groupUpdated.groupName }}});
-    res.send(groupUpdated.id);
->>>>>>> 5f19adf3cce4dd3c4d46deb4fc7337bef199dadb
 };
 
 /** @api { get } /group/members/:groupId
@@ -161,7 +143,6 @@ let join = async (token, groupName, isPartner) => {
  *  @apiName groupJoin
  *  @apiGroup group
  *
-<<<<<<< HEAD
  *  @apiParam (Body) {Int} groupId - id of group, you can get it from /user/invitations
  *  @apiParam (Header) {String} X-Token - token received from /auth routes
  *
@@ -181,17 +162,6 @@ let members = async (req, res, next) => {
     let validationErrors = req.validationErrors();
     if(validationErrors) return next(new GroupError(validationErrors[0]));
     
-=======
- *  @apiParam (Body) {String} groupId - id of group, you can get it from /user/invitations
- *  @apiParam (Header) {String} X-Token - token received from /auth routes
- *
- *  @apiSuccess {Object} Some weird JSON object, structured (I guess) like this - {"people": [{id: id,
-        name: fullName,
-        subgroup: subgroup}]}
- */
-
-let members = async (req, res, next) => {
->>>>>>> 5f19adf3cce4dd3c4d46deb4fc7337bef199dadb
     let { groupId } = req.params;
     let groupMembers = await Group.findById(groupId).select('-_id people').exec();
 
@@ -203,21 +173,13 @@ let members = async (req, res, next) => {
  *  @apiName groupChangeSubgroup
  *  @apiGroup group
  *
-<<<<<<< HEAD
  *  @apiParam (Body) {Int} groupId - id of group, you can get it from /user/invitations
-=======
- *  @apiParam (Body) {String} groupId - id of group, you can get it from /user/invitations
->>>>>>> 5f19adf3cce4dd3c4d46deb4fc7337bef199dadb
  *  @apiParam (Body) {String} changingId - id of person, that you want to change groups
  *  @apiParam (Body) {String} changedSubgroup - name of subgroup you want to move person to
  *  @apiParam (Header) {String} X-Token - token received from /auth routes
  *
-<<<<<<< HEAD
  *  @apiSuccess {Int} 200 if succeed
  *  @apiFailure {Int} 403 if not in organizer subgroup
-=======
- *  @apiSuccess {Int} Only 200
->>>>>>> 5f19adf3cce4dd3c4d46deb4fc7337bef199dadb
  */
 
 let changeSubgroup = async (req, res, next) => {
@@ -241,7 +203,6 @@ let changeSubgroup = async (req, res, next) => {
     }
 };
 
-<<<<<<< HEAD
 /**
  * @api /group/location
  * @apiDescription update location of a given user
@@ -255,8 +216,6 @@ let changeSubgroup = async (req, res, next) => {
  * @apiSuccess {Int} 200 if succeed
  */
 
-=======
->>>>>>> 5f19adf3cce4dd3c4d46deb4fc7337bef199dadb
 let updateLocation = async (req, res) => {
     let { groupId, locationTag } = req.body;
     let { id } = req.token;
@@ -267,7 +226,6 @@ let updateLocation = async (req, res) => {
     res.sendStatus(200);
 };
 
-<<<<<<< HEAD
 /**
  * @api /group/pingOrganizer
  * @apiDescription ping closest organizer to given user
@@ -281,8 +239,6 @@ let updateLocation = async (req, res) => {
  * @apiSuccess {Int} 200 and sends notification if succeed
  */
 
-=======
->>>>>>> 5f19adf3cce4dd3c4d46deb4fc7337bef199dadb
 let pingOrganizer = async (req, res) => {
     let { organizerId, callLocation } = req.body;
     let { id, fullName } = req.token;
@@ -316,7 +272,6 @@ let pingOrganizer = async (req, res) => {
     res.sendStatus(200);
 };
 
-<<<<<<< HEAD
 /**
  * @api /group/nearest
  * @apiDescription ping closest people to given user
@@ -329,8 +284,6 @@ let pingOrganizer = async (req, res) => {
  * @apiSuccess {Int} 200 and sends notif
  */
 
-=======
->>>>>>> 5f19adf3cce4dd3c4d46deb4fc7337bef199dadb
 let nearest = async (req, res) => {
     let { groupId } = req.body;
     let { id, fullName} = req.token;
@@ -371,7 +324,6 @@ let nearest = async (req, res) => {
     res.sendStatus(200);
 };
 
-<<<<<<< HEAD
 /**
  * @api /group/response
  * @apiDescription get response to ping from nearest or pingOrganizers
@@ -385,8 +337,6 @@ let nearest = async (req, res) => {
  * @apiSuccess 200 and notification
  */
 
-=======
->>>>>>> 5f19adf3cce4dd3c4d46deb4fc7337bef199dadb
 let response = async (req, res) => {
     let { callerId, response } = req.body;
     let { id, fullName } = req.token;
@@ -412,14 +362,10 @@ let response = async (req, res) => {
     res.sendStatus(200);
 };
 
-<<<<<<< HEAD
 
 
 //not used, remove
 let listHelp = async (res) => {
-=======
-let listHelp = async (req, res) => {
->>>>>>> 5f19adf3cce4dd3c4d46deb4fc7337bef199dadb
     let helps = await Help.find();
     res.send(helps);
 };
