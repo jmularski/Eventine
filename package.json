@@ -23,7 +23,7 @@
   "homepage": "https://github.com/dragt12/KalejdoskopApp#readme",
   "dependencies": {
     "axios": "0.18.1",
-    "bcrypt": "2.0.1",
+    "bcrypt": "5.0.0",
     "body-parser": "1.18.2",
     "cors": "2.8.4",
     "dotenv": "^7.0.0",
