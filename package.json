@@ -37,7 +37,7 @@
     "mocha": "^5.2.0",
     "mongoose": "^5.4.20",
     "morgan": "^1.9.1",
-    "nconf": "0.10.0",
+    "nconf": "0.11.4",
     "randomstring": "1.1.5",
     "validator": "10.2.0",
     "winston-loggly-bulk": "^2.0.3"
